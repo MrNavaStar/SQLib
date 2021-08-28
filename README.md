@@ -36,6 +36,7 @@ Table playerData = new Table("PlayerData");
 In order to store data in the table you need a dataContainer object. This will simply provide a way to handle your data in an object orientied manner:
 ```
 DataContainer player = new DataContainer(playerUuid);
+playerData.put(player);
 ```
 Finally, you can use the dataContainer to put, get, and drop data:
 
