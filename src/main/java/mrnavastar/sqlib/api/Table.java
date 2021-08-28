@@ -1,6 +1,5 @@
 package mrnavastar.sqlib.api;
 
-import com.google.gson.JsonObject;
 import mrnavastar.sqlib.util.Database;
 import mrnavastar.sqlib.util.SqlManager;
 
@@ -20,43 +19,23 @@ public class Table {
         ArrayList<String> ids = SqlManager.listIds(this.name);
         if (ids != null) {
             for (String id : ids) {
-                JsonObject obj = new JsonObject();
-                obj.addProperty("ID", id);
-                obj.add("STRINGS", SqlManager.readJson(this.name, id, "STRINGS"));
-                obj.add("INTS", SqlManager.readJson(this.name, id, "INTS"));
-                obj.add("BOOLEANS", SqlManager.readJson(this.name, id, "BOOLEANS"));
-                obj.add("JSON", SqlManager.readJson(this.name, id, "JSON"));
-
-                obj.add("NBT", SqlManager.readJson(this.name, id, "NBT"));
-
-                DataContainer dataContainer = new DataContainer(obj);
+                DataContainer dataContainer = new DataContainer(id);
                 dataContainers.add(dataContainer);
+                dataContainer.setTableName(this.name);
             }
         }
         Database.disconnect();
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public ArrayList<DataContainer> getDataContainers() {
-        return dataContainers;
-    }
-
     public void put(DataContainer dataContainer) {
         dataContainers.add(dataContainer);
+        dataContainer.setTableName(this.name);
     }
 
-    public void save(){
-        Database.connect();
-        Database.saveTable(this);
-        Database.disconnect();
-    }
-
-    public void saveDataContainer(DataContainer dataContainer) {
-        Database.connect();
-        Database.saveDataContainer(this, dataContainer);
-        Database.disconnect();
+    public DataContainer get(String id) {
+        for (DataContainer dataContainer : this.dataContainers) {
+            if (dataContainer.getId().equals(id)) return dataContainer;
+        }
+        return null;
     }
 }
