@@ -1,0 +1,102 @@
+package mrnavastar.sqlib.util;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import java.sql.*;
+import java.util.ArrayList;
+
+public class SqlManager {
+
+    private static Connection connection;
+
+    public static void connectSQLITE(String path, String databaseName) {
+        try {
+            String url = "jdbc:sqlite:" + path + "/" + databaseName + ".db";
+            connection = DriverManager.getConnection(url);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void connectMYSQL(String address, String port, String databaseName, String user, String pass) {
+        try {
+            String url = "jdbc:mysql://" + address + ":" + port + "/" + databaseName;
+            connection = DriverManager.getConnection(url, user, pass);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void disconnect() {
+        try {
+            connection.close();
+            connection = null;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void createTable(String name) {
+        try {
+            String sql = "CREATE TABLE IF NOT EXISTS " + name + " (ID TEXT PRIMARY KEY, STRINGS TEXT, INTS TEXT, BOOLEANS TEXT, JSON TEXT, NBT TEXT)";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void createRow(String tableName, String id) {
+        try {
+            String sql = "INSERT OR REPLACE INTO " + tableName + " (ID) VALUES(?)";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setString(1, id);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static ArrayList<String> listIds(String tableName) {
+        try {
+            String sql = "SELECT ID FROM " + tableName;
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            ArrayList<String> ids = new ArrayList<>();
+            ResultSet resultSet = stmt.executeQuery();
+
+            while (resultSet.next()) ids.add(resultSet.getString(1));
+            return ids;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static JsonObject readJson(String tableName, String id, String dataType) {
+        try {
+            String sql = "SELECT * FROM " + tableName + " WHERE ID = ?";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setString(1, id);
+            ResultSet resultSet = stmt.executeQuery();
+            JsonParser parser = new JsonParser();
+
+            return parser.parse(resultSet.getString(dataType)).getAsJsonObject();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static void writeJson(String tableName, String id, String dataType, JsonObject data) {
+        try {
+            String sql = "UPDATE " + tableName + " SET " + dataType + " = ? WHERE ID = ?";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setString(1, data.toString());
+            stmt.setString(2, id);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+}

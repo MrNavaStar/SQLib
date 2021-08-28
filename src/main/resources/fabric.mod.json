@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "sqlib",
+  "version": "${version}",
+  "name": "Sqlib",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/sqlib/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "mrnavastar.sqlib.client.SqlibClient"
+    ],
+    "main": [
+      "mrnavastar.sqlib.Sqlib"
+    ]
+  },
+  "mixins": [
+    "sqlib.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.11.6",
+    "fabric": "*",
+    "minecraft": "1.17.1"
+  }
+}
