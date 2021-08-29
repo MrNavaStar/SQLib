@@ -32,6 +32,10 @@ public class Table {
         dataContainer.setTableName(this.name);
     }
 
+    public void drop(String id) {
+        dataContainers.remove(get(id));
+    }
+
     public DataContainer get(String id) {
         for (DataContainer dataContainer : this.dataContainers) {
             if (dataContainer.getId().equals(id)) return dataContainer;

@@ -11,7 +11,7 @@ public class Database {
     //General
     public static String DATABASE_NAME;
     //SQLITE
-    public static String SQLITE_PATH;
+    public static String SQLITE_DIRECTORY;
     //MYSQL
     public static String MYSQL_ADDRESS;
     public static String MYSQL_PORT;
@@ -21,7 +21,7 @@ public class Database {
     private static final ArrayList<Table> tables = new ArrayList<>();
 
     public static void connect() {
-        if (TYPE.equals(SqlTypes.SQLITE)) SqlManager.connectSQLITE(SQLITE_PATH, DATABASE_NAME);
+        if (TYPE.equals(SqlTypes.SQLITE)) SqlManager.connectSQLITE(SQLITE_DIRECTORY, DATABASE_NAME);
         if (TYPE.equals(SqlTypes.MYSQL)) SqlManager.connectMYSQL(MYSQL_ADDRESS, MYSQL_PORT, DATABASE_NAME, MYSQL_USERNAME, MYSQL_PASSWORD);
     }
 
