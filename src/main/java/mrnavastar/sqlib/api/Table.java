@@ -4,6 +4,7 @@ import mrnavastar.sqlib.util.Database;
 import mrnavastar.sqlib.util.SqlManager;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Table {
 
@@ -16,7 +17,7 @@ public class Table {
         SqlManager.createTable(name);
         Database.addTable(this);
 
-        ArrayList<String> ids = SqlManager.listIds(this.name);
+        List<String> ids = this.getIds();
         if (ids != null) {
             for (String id : ids) {
                 DataContainer dataContainer = new DataContainer(id);
@@ -25,6 +26,10 @@ public class Table {
             }
         }
         Database.disconnect();
+    }
+
+    public List<String> getIds() {
+        return SqlManager.listIds(this.name);
     }
 
     public void put(DataContainer dataContainer) {

@@ -5,6 +5,7 @@ import com.google.gson.JsonParser;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class SqlManager {
 
@@ -58,11 +59,11 @@ public class SqlManager {
         }
     }
 
-    public static ArrayList<String> listIds(String tableName) {
+    public static List<String> listIds(String tableName) {
         try {
             String sql = "SELECT ID FROM " + tableName;
             PreparedStatement stmt = connection.prepareStatement(sql);
-            ArrayList<String> ids = new ArrayList<>();
+            List<String> ids = new ArrayList<>();
             ResultSet resultSet = stmt.executeQuery();
 
             while (resultSet.next()) ids.add(resultSet.getString(1));
