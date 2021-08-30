@@ -1,8 +1,6 @@
 plugins {
-    id 'java'
     id 'fabric-loom' version '0.9.50'
     id 'maven-publish'
-    id 'signing'
 }
 
 version = project.mod_version
@@ -14,8 +12,8 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
     // JDBC SQLITE
-    implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.36.0.2'
-    include group: 'org.xerial', name: 'sqlite-jdbc', version: '3.36.0.2'
+    implementation group: 'org.xerial', name: 'sqlite-jdbc', version: project.sqlite_version
+    include group: 'org.xerial', name: 'sqlite-jdbc', version: project.sqlite_version
 }
 
 processResources {
@@ -39,11 +37,6 @@ tasks.withType(JavaCompile).configureEach {
     }
 }
 
-task javadocJar(type: Jar) {
-    classifier = 'javadoc'
-    from javadoc
-}
-
 java {
     def javaVersion = JavaVersion.toVersion(targetJavaVersion)
     if (JavaVersion.current() < javaVersion) {
@@ -59,5 +52,28 @@ java {
 jar {
     from("LICENSE") {
         rename { "${it}_${project.archivesBaseName}" }
+    }
+}
+
+// configure the maven publication
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            // add all the jars that should be included when publishing to maven
+            artifact(remapJar) {
+                builtBy remapJar
+            }
+            artifact(sourcesJar) {
+                builtBy remapSourcesJar
+            }
+        }
+    }
+
+    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+    repositories {
+        // Add repositories to publish to here.
+        // Notice: This block does NOT have the same function as the block in the top level.
+        // The repositories here will be used for publishing your artifact, not for
+        // retrieving dependencies.
     }
 }
