@@ -6,6 +6,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import mrnavastar.sqlib.util.Database;
 import mrnavastar.sqlib.util.SqlManager;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.StringNbtReader;
 
 public class DataContainer {
@@ -53,7 +54,11 @@ public class DataContainer {
     }
 
     public void put(String key, NbtCompound value) {
-        putIntoDatabase("NBT", key, value);
+        putIntoDatabase("NBT_COMPOUNDS", key, value);
+    }
+
+    public void put(String key, NbtList value) {
+        putIntoDatabase("NBT_LISTS", key, value);
     }
 
     private void dropFromDatabase(String type, String key) {
@@ -82,8 +87,12 @@ public class DataContainer {
         dropFromDatabase("JSON", key);
     }
 
-    public void dropNbt(String key) {
-        dropFromDatabase("NBT", key);
+    public void dropNbtCompound(String key) {
+        dropFromDatabase("NBT_COMPOUNDS", key);
+    }
+
+    public void dropNbtList(String key) {
+        dropFromDatabase("NBT_LISTS", key);
     }
 
     private JsonElement getFromDatabase(String type, String key) {
@@ -110,9 +119,18 @@ public class DataContainer {
         return getFromDatabase("JSON", key).getAsJsonObject();
     }
 
-    public NbtCompound getNbt(String key) {
+    public NbtCompound getNbtCompound(String key) {
         try {
-            return StringNbtReader.parse(getFromDatabase("NBT", key).getAsString());
+            return StringNbtReader.parse(getFromDatabase("NBT_COMPOUNDS", key).getAsString());
+        } catch (CommandSyntaxException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public NbtCompound getNbtList(String key) {
+        try {
+            return StringNbtReader.parse(getFromDatabase("NBT_LISTS", key).getAsString());
         } catch (CommandSyntaxException e) {
             e.printStackTrace();
         }
