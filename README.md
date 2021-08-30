@@ -6,6 +6,22 @@ This library is not a full fledged sql wrapper, and does not provide full access
 The main focus of this library is to provide an easy and simple way to store data in your mods.
 If you are looking for a more advanced database I recomend taking a look at something like [Nitrite](https://github.com/nitrite/nitrite-java).
 
+# Setup
+The library first needs to be included into your project. The simplest way to do this is through [Jitpack](https://jitpack.io/).
+In you build.gradle make sure to include:
+
+``` gradle
+repositories {
+    maven { url 'https://jitpack.io' }
+}
+```
+And
+``` gradle
+dependencies {
+  modImplementation 'com.github.MrNavaStar:SQLib:v1.0'
+}
+```
+
 # Usage
 The database must first be setup to use either sqlite or mysql like so:
 
