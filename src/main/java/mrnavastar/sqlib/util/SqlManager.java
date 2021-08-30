@@ -32,7 +32,6 @@ public class SqlManager {
     public static void disconnect() {
         try {
             connection.close();
-            connection = null;
         } catch (SQLException e) {
             e.printStackTrace();
         }
