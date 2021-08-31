@@ -66,7 +66,7 @@ player.put("NickName", "Bob Ross");
 player.put("Health", 100);
 
 String name = player.getString("NickName");
-String health = player.getInt("Health);
+String health = player.getInt("Health");
 
 player.dropString("NickName");
 player.dropInt("Health");
