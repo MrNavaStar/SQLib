@@ -19,6 +19,19 @@ public class Database {
 
     private static final ArrayList<Table> tables = new ArrayList<>();
 
+
+    public static void setType(String type) {
+        TYPE = type;
+    }
+
+    public static void setDatabaseName(String name) {
+        DATABASE_NAME = name;
+    }
+
+    public static void setSqliteDirectory(String path) {
+        SQLITE_DIRECTORY = path;
+    }
+
     public static void connect() {
         if (TYPE.equals("SQLITE")) SqlManager.connectSQLITE(SQLITE_DIRECTORY, DATABASE_NAME);
         if (TYPE.equals("MYSQL")) SqlManager.connectMYSQL(MYSQL_ADDRESS, MYSQL_PORT, DATABASE_NAME, MYSQL_USERNAME, MYSQL_PASSWORD);
