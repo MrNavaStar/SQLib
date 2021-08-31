@@ -28,11 +28,9 @@ public class DataContainer {
     private void putIntoDatabase(String type, String key, Object value) {
         Database.connect();
         JsonObject obj = SqlManager.readJson(this.tableName, this.id, type);
-        Database.disconnect();
         if (obj == null) obj = new JsonObject();
-        else if (obj.get(key) != null) obj.remove(key);
+        else obj.remove(key);
         obj.addProperty(key, value.toString());
-        Database.connect();
         SqlManager.writeJson(this.tableName, this.id, type, obj);
         Database.disconnect();
     }
