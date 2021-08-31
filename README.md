@@ -1,5 +1,7 @@
 [![](https://jitpack.io/v/MrNavaStar/SQLib.svg)](https://jitpack.io/#MrNavaStar/SQLib)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Naereen/StrapDown.js/graphs/commit-activity)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+
 
 # SQLib
 A simple fabric based sql wrapper made with a focus on minecraft use cases
