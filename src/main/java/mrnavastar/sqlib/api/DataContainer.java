@@ -1,6 +1,5 @@
 package mrnavastar.sqlib.api;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -60,7 +59,6 @@ public class DataContainer {
         putIntoDatabase("JSON", key, value);
     }
 
-
     public void put(String key, NbtCompound value) {
         putIntoDatabase("NBT_COMPOUNDS", key, value);
     }
@@ -107,41 +105,41 @@ public class DataContainer {
         dropFromDatabase("NBT_LISTS", key);
     }
 
-    private JsonElement getFromDatabase(String type, String key) {
+    private JsonObject getFromDatabase(String type) {
         Database.connect();
         JsonObject obj = SqlManager.readJson(this.tableName, this.id, type);
         Database.disconnect();
         if (obj == null) obj = new JsonObject();
-        return obj.get(key);
+        return obj;
     }
 
     public String getString(String key) {
-        return getFromDatabase("STRINGS", key).getAsString();
+        return getFromDatabase("STRINGS").get(key).getAsString();
     }
 
     public int getInt(String key) {
-       return getFromDatabase("INTS", key).getAsInt();
+       return getFromDatabase("INTS").get(key).getAsInt();
     }
 
     public float getFloat(String key) {
-        return getFromDatabase("FLOATS", key).getAsFloat();
+        return getFromDatabase("FLOATS").get(key).getAsFloat();
     }
 
     public double getDouble(String key) {
-        return getFromDatabase("DOUBLES", key).getAsDouble();
+        return getFromDatabase("DOUBLES").get(key).getAsDouble();
     }
 
     public boolean getBoolean(String key) {
-        return getFromDatabase("BOOLEANS", key).getAsBoolean();
+        return getFromDatabase("BOOLEANS").get(key).getAsBoolean();
     }
 
     public JsonElement getJson(String key) {
-        return getFromDatabase("JSON", key);
+        return getFromDatabase("JSON").get(key);
     }
 
     public NbtCompound getNbtCompound(String key) {
         try {
-            return StringNbtReader.parse(getFromDatabase("NBT_COMPOUNDS", key).getAsString());
+            return StringNbtReader.parse(getFromDatabase("NBT_COMPOUNDS").get(key).getAsString());
         } catch (CommandSyntaxException e) {
             e.printStackTrace();
         }
