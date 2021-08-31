@@ -79,6 +79,8 @@ public class SqlManager {
     public static JsonObject readJson(String tableName, String id, String dataType) {
         try {
             System.out.println(dataType);
+            System.out.println(tableName);
+            System.out.println(id);
 
             String sql = "SELECT " + dataType + " FROM " + tableName + " WHERE ID = ?";
             PreparedStatement stmt = connection.prepareStatement(sql);
