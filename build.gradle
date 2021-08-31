@@ -13,8 +13,8 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     // JDBC SQLITE
-    implementation group: 'org.xerial', name: 'sqlite-jdbc', version: project.sqlite_version
-    include group: 'org.xerial', name: 'sqlite-jdbc', version: project.sqlite_version
+    compileOnly group: 'org.xerial', name: 'sqlite-jdbc', version: project.sqlite_version
+    //include group: 'org.xerial', name: 'sqlite-jdbc', version: project.sqlite_version
 }
 
 processResources {
