@@ -35,6 +35,7 @@ public class Table {
     public void put(DataContainer dataContainer) {
         for (DataContainer d : this.dataContainers) {
             if (!d.getId().equals(dataContainer.getId())) {
+                SqlManager.createRow(this.name, dataContainer.getId());
                 dataContainers.add(dataContainer);
                 dataContainer.setTableName(this.name);
             }
