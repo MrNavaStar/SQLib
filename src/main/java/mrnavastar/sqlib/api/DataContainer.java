@@ -43,6 +43,14 @@ public class DataContainer {
         putIntoDatabase("INTS", key, value);
     }
 
+    public void put(String key, float value) {
+        putIntoDatabase("FLOATS", key, value);
+    }
+
+    public void put(String key, double value) {
+        putIntoDatabase("DOUBLES", key, value);
+    }
+
     public void put(String key, boolean value) {
         putIntoDatabase("BOOLEANS", key, value);
     }
@@ -71,6 +79,14 @@ public class DataContainer {
 
     public void dropInt(String key) {
         dropFromDatabase("INTS", key);
+    }
+
+    public void dropFloat(String key) {
+        dropFromDatabase("FLOATS", key);
+    }
+
+    public void dropDouble(String key) {
+        dropFromDatabase("DOUBLES", key);
     }
 
     public void dropBoolean(String key) {
@@ -103,6 +119,14 @@ public class DataContainer {
 
     public int getInt(String key) {
        return getFromDatabase("INTS", key).getAsInt();
+    }
+
+    public float getFloat(String key) {
+        return getFromDatabase("FLOATS", key).getAsFloat();
+    }
+
+    public double getDouble(String key) {
+        return getFromDatabase("DOUBLES", key).getAsDouble();
     }
 
     public boolean getBoolean(String key) {

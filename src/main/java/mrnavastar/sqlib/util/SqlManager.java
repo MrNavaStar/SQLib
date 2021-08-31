@@ -78,21 +78,13 @@ public class SqlManager {
 
     public static JsonObject readJson(String tableName, String id, String dataType) {
         try {
-            System.out.println(dataType);
-            System.out.println(tableName);
-            System.out.println(id);
-
             String sql = "SELECT " + dataType + " FROM " + tableName + " WHERE ID = ?";
             PreparedStatement stmt = connection.prepareStatement(sql);
-
-            System.out.println(stmt.toString());
             stmt.setQueryTimeout(30);
             stmt.setString(1, id);
             ResultSet resultSet = stmt.executeQuery();
             JsonParser parser = new JsonParser();
             String data = resultSet.getString(dataType);
-
-            System.out.println(data);
 
             if (data != null) return parser.parse(data).getAsJsonObject();
         } catch (SQLException e) {
