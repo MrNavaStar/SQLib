@@ -42,7 +42,9 @@ public class Table {
     }
 
     public void drop(String id) {
-        dataContainers.remove(get(id));
+        DataContainer dataContainer = this.get(id);
+        dataContainer.setTableName(null);
+        dataContainers.remove(dataContainer);
     }
 
     public DataContainer get(String id) {
