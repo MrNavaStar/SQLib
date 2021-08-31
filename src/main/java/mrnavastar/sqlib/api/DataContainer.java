@@ -6,7 +6,6 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import mrnavastar.sqlib.util.Database;
 import mrnavastar.sqlib.util.SqlManager;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.StringNbtReader;
 
 public class DataContainer {
@@ -31,7 +30,7 @@ public class DataContainer {
         JsonObject obj = SqlManager.readJson(this.tableName, this.id, type);
         if (obj == null) obj = new JsonObject();
         obj.addProperty(key, value.toString());
-        SqlManager.writeJson(this.tableName, id, type, obj);
+        SqlManager.writeJson(this.tableName, this.id, type, obj);
         Database.disconnect();
     }
 
