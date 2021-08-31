@@ -56,13 +56,10 @@ public class DataContainer {
         putIntoDatabase("BOOLEANS", key, value);
     }
 
-    public void put(String key, JsonObject value) {
+    public void put(String key, JsonElement value) {
         putIntoDatabase("JSON", key, value);
     }
 
-    public void put(String key, JsonArray value) {
-        putIntoDatabase("JSON_ARRAYS", key, value);
-    }
 
     public void put(String key, NbtCompound value) {
         putIntoDatabase("NBT_COMPOUNDS", key, value);
@@ -102,10 +99,6 @@ public class DataContainer {
         dropFromDatabase("JSON", key);
     }
 
-    public void dropJsonArray(String key) {
-        dropFromDatabase("JSON_ARRAY", key);
-    }
-
     public void dropNbtCompound(String key) {
         dropFromDatabase("NBT_COMPOUNDS", key);
     }
@@ -142,12 +135,8 @@ public class DataContainer {
         return getFromDatabase("BOOLEANS", key).getAsBoolean();
     }
 
-    public JsonObject getJson(String key) {
-        return getFromDatabase("JSON", key).getAsJsonObject();
-    }
-
-    public JsonArray getJsonArray(String key) {
-        return getFromDatabase("JSON_ARRAYS", key).getAsJsonArray();
+    public JsonElement getJson(String key) {
+        return getFromDatabase("JSON", key);
     }
 
     public NbtCompound getNbtCompound(String key) {
