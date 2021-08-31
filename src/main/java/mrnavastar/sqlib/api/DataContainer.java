@@ -53,7 +53,14 @@ public class DataContainer {
     }
 
     public void put(String key, NbtCompound value) {
-        putIntoDatabase("NBT_COMPOUNDS", key, value);
+        Database.connect();
+        JsonObject obj = SqlManager.readJson(this.tableName, this.id, "NBT_COMPOUNDS");
+        System.out.println("JSON READ: " + obj);
+        if (obj == null) obj = new JsonObject();
+        else if (obj.get(key) != null) obj.remove(key);
+        obj.addProperty(key, value.asString());
+        SqlManager.writeJson(this.tableName, this.id, "NBT_COMPOUNDS", obj);
+        Database.disconnect();
     }
 
     private void dropFromDatabase(String type, String key) {
