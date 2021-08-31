@@ -1,5 +1,6 @@
 package mrnavastar.sqlib.api;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -59,6 +60,10 @@ public class DataContainer {
         putIntoDatabase("JSON", key, value);
     }
 
+    public void put(String key, JsonArray value) {
+        putIntoDatabase("JSON_ARRAYS", key, value);
+    }
+
     public void put(String key, NbtCompound value) {
         putIntoDatabase("NBT_COMPOUNDS", key, value);
     }
@@ -95,6 +100,10 @@ public class DataContainer {
 
     public void dropJson(String key) {
         dropFromDatabase("JSON", key);
+    }
+
+    public void dropJsonArray(String key) {
+        dropFromDatabase("JSON_ARRAY", key);
     }
 
     public void dropNbtCompound(String key) {
@@ -135,6 +144,10 @@ public class DataContainer {
 
     public JsonObject getJson(String key) {
         return getFromDatabase("JSON", key).getAsJsonObject();
+    }
+
+    public JsonArray getJsonArray(String key) {
+        return getFromDatabase("JSON_ARRAYS", key).getAsJsonArray();
     }
 
     public NbtCompound getNbtCompound(String key) {
