@@ -39,7 +39,7 @@ public class SqlManager {
 
     public static void createTable(String name) {
         try {
-            String sql = "CREATE TABLE IF NOT EXISTS " + name + " (ID TEXT PRIMARY KEY, STRINGS TEXT, INTS TEXT, FLOATS TEXT, DOUBLES TEXT BOOLEANS TEXT, JSON TEXT, NBT_COMPOUNDS TEXT)";
+            String sql = "CREATE TABLE IF NOT EXISTS " + name + " (ID TEXT PRIMARY KEY, STRINGS TEXT, INTS TEXT, FLOATS TEXT, DOUBLES TEXT BOOLEANS TEXT, JSON TEXT, NBT TEXT)";
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setQueryTimeout(30);
             stmt.executeUpdate();

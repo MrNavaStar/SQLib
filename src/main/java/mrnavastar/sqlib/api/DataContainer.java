@@ -56,11 +56,17 @@ public class DataContainer {
     }
 
     public void put(String key, JsonElement value) {
-        putIntoDatabase("JSON", key, value);
+        Database.connect();
+        JsonObject obj = SqlManager.readJson(this.tableName, this.id, "JSON");
+        if (obj == null) obj = new JsonObject();
+        else obj.remove(key);
+        obj.add(key, value);
+        SqlManager.writeJson(this.tableName, this.id, "JSON", obj);
+        Database.disconnect();
     }
 
     public void put(String key, NbtCompound value) {
-        putIntoDatabase("NBT_COMPOUNDS", key, value);
+        putIntoDatabase("NBT", key, value);
     }
 
     private void dropFromDatabase(String type, String key) {
@@ -98,48 +104,44 @@ public class DataContainer {
     }
 
     public void dropNbtCompound(String key) {
-        dropFromDatabase("NBT_COMPOUNDS", key);
+        dropFromDatabase("NBT", key);
     }
 
-    public void dropNbtList(String key) {
-        dropFromDatabase("NBT_LISTS", key);
-    }
-
-    private JsonObject getFromDatabase(String type) {
+    private JsonElement getFromDatabase(String type, String key) {
         Database.connect();
         JsonObject obj = SqlManager.readJson(this.tableName, this.id, type);
         Database.disconnect();
         if (obj == null) obj = new JsonObject();
-        return obj;
+        return obj.get(key);
     }
 
     public String getString(String key) {
-        return getFromDatabase("STRINGS").get(key).getAsString();
+        return getFromDatabase("STRINGS", key).getAsString();
     }
 
     public int getInt(String key) {
-       return getFromDatabase("INTS").get(key).getAsInt();
+       return getFromDatabase("INTS", key).getAsInt();
     }
 
     public float getFloat(String key) {
-        return getFromDatabase("FLOATS").get(key).getAsFloat();
+        return getFromDatabase("FLOATS", key).getAsFloat();
     }
 
     public double getDouble(String key) {
-        return getFromDatabase("DOUBLES").get(key).getAsDouble();
+        return getFromDatabase("DOUBLES", key).getAsDouble();
     }
 
     public boolean getBoolean(String key) {
-        return getFromDatabase("BOOLEANS").get(key).getAsBoolean();
+        return getFromDatabase("BOOLEANS", key).getAsBoolean();
     }
 
     public JsonElement getJson(String key) {
-        return getFromDatabase("JSON").get(key);
+        return getFromDatabase("JSON", key);
     }
 
     public NbtCompound getNbtCompound(String key) {
         try {
-            return StringNbtReader.parse(getFromDatabase("NBT_COMPOUNDS").get(key).getAsString());
+            return StringNbtReader.parse(getFromDatabase("NBT", key).getAsString());
         } catch (CommandSyntaxException e) {
             e.printStackTrace();
         }
