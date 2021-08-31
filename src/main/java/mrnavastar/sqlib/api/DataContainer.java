@@ -29,10 +29,9 @@ public class DataContainer {
     private void putIntoDatabase(String type, String key, Object value) {
         Database.connect();
         JsonObject obj = SqlManager.readJson(this.tableName, this.id, type);
-        if (obj != null) {
-            obj.addProperty(key, value.toString());
-            SqlManager.writeJson(this.tableName, id, type, obj);
-        }
+        if (obj == null) obj = new JsonObject();
+        obj.addProperty(key, value.toString());
+        SqlManager.writeJson(this.tableName, id, type, obj);
         Database.disconnect();
     }
 
@@ -54,10 +53,6 @@ public class DataContainer {
 
     public void put(String key, NbtCompound value) {
         putIntoDatabase("NBT_COMPOUNDS", key, value);
-    }
-
-    public void put(String key, NbtList value) {
-        putIntoDatabase("NBT_LISTS", key, value);
     }
 
     private void dropFromDatabase(String type, String key) {
@@ -98,7 +93,7 @@ public class DataContainer {
         Database.connect();
         JsonObject obj = SqlManager.readJson(this.tableName, this.id, type);
         Database.disconnect();
-        assert obj != null;
+        if (obj == null) obj = new JsonObject();
         return obj.get(key);
     }
 
@@ -121,15 +116,6 @@ public class DataContainer {
     public NbtCompound getNbtCompound(String key) {
         try {
             return StringNbtReader.parse(getFromDatabase("NBT_COMPOUNDS", key).getAsString());
-        } catch (CommandSyntaxException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public NbtCompound getNbtList(String key) {
-        try {
-            return StringNbtReader.parse(getFromDatabase("NBT_LISTS", key).getAsString());
         } catch (CommandSyntaxException e) {
             e.printStackTrace();
         }
