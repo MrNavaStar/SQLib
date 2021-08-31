@@ -84,8 +84,9 @@ public class SqlManager {
             stmt.setString(1, id);
             ResultSet resultSet = stmt.executeQuery();
             JsonParser parser = new JsonParser();
+            String data = resultSet.getString(dataType);
 
-            return parser.parse(resultSet.getString(dataType)).getAsJsonObject();
+            if (data != null) return parser.parse(data).getAsJsonObject();
         } catch (SQLException e) {
             e.printStackTrace();
         }
