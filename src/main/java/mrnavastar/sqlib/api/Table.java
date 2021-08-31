@@ -33,8 +33,12 @@ public class Table {
     }
 
     public void put(DataContainer dataContainer) {
-        dataContainers.add(dataContainer);
-        dataContainer.setTableName(this.name);
+        for (DataContainer d : this.dataContainers) {
+            if (!d.getId().equals(dataContainer.getId())) {
+                dataContainers.add(dataContainer);
+                dataContainer.setTableName(this.name);
+            }
+        }
     }
 
     public void drop(String id) {
