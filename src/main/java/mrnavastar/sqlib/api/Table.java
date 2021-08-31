@@ -33,14 +33,12 @@ public class Table {
     }
 
     public void put(DataContainer dataContainer) {
-        for (DataContainer d : this.dataContainers) {
-            if (!d.getId().equals(dataContainer.getId())) {
-                Database.connect();
-                SqlManager.createRow(this.name, dataContainer.getId());
-                Database.disconnect();
-                dataContainers.add(dataContainer);
-                dataContainer.setTableName(this.name);
-            }
+        if (this.get(dataContainer.getId()) == null) {
+            Database.connect();
+            SqlManager.createRow(this.name, dataContainer.getId());
+            Database.disconnect();
+            dataContainers.add(dataContainer);
+            dataContainer.setTableName(this.name);
         }
     }
 
