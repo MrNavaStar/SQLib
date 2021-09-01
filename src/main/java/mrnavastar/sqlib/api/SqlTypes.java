@@ -1,6 +1,6 @@
 package mrnavastar.sqlib.api;
 
-public enum SqlTypes {
-    SQLITE,
-    MYSQL
+public class SqlTypes {
+    public static String SQLITE = "SQLITE";
+    public static String MYSQL = "MYSQL";
 }
