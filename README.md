@@ -24,6 +24,9 @@ And
 ``` gradle
 dependencies {
   modImplementation 'com.github.MrNavaStar:SQLib:v1.0'
+  
+  //Or if you wish to include with the mod:
+  include(modImplementation('com.github.MrNavaStar:SQLib:v1.0'))
 }
 ```
 
