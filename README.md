@@ -53,7 +53,7 @@ Database.init();
 Now a table can be added to store data. This table will automatically be added to the database (Note that it is not required to include your mod id in the 
 table name, however doing so will result in less conflict with other mods that name their tables the same):
 ``` java
-Table playerData = new Table("PlayerData@" + MODID);
+Table playerData = new Table(MODID + "PlayerData");
 ```
 In order to store data in the table you need a DataContainer object. This will simply provide a way to handle your data in an object orientied manner:
 ``` java
