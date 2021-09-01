@@ -15,6 +15,9 @@ dependencies {
     // JDBC SQL
     modImplementation group: 'org.xerial', name: 'sqlite-jdbc', version: project.sqlite_version
     modImplementation group: 'mysql', name: 'mysql-connector-java', version: project.mysql_version
+
+    include group: 'org.xerial', name: 'sqlite-jdbc', version: project.sqlite_version
+    include group: 'mysql', name: 'mysql-connector-java', version: project.mysql_version
 }
 
 processResources {
