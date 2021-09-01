@@ -7,12 +7,8 @@
   "authors": [],
   "contact": {},
   "license": "MIT",
-  "icon": "assets/sqlib/icon.png",
   "environment": "*",
   "entrypoints": {
-    "client": [
-      "mrnavastar.sqlib.client.SqlibClient"
-    ],
     "main": [
       "mrnavastar.sqlib.Sqlib"
     ]
@@ -23,6 +19,6 @@
   "depends": {
     "fabricloader": ">=0.11.6",
     "fabric": "*",
-    "minecraft": "1.17.1"
+    "minecraft": "1.17.x"
   }
 }
