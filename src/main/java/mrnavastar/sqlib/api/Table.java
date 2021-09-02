@@ -55,9 +55,9 @@ public class Table {
 
     public void put(DataContainer dataContainer) {
         if (this.get(dataContainer.getId()) == null) {
-            Database.connect();
+            if (!this.inTransaction) Database.connect();
             SqlManager.createRow(this.name, dataContainer.getId());
-            Database.disconnect();
+            if (!this.inTransaction) Database.disconnect();
             dataContainers.add(dataContainer);
             dataContainer.setTable(this);
         }

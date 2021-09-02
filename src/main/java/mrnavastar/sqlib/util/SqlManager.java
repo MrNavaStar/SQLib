@@ -40,9 +40,9 @@ public class SqlManager {
     public static void beginTransaction() {
         try {
             String sql = "BEGIN EXCLUSIVE TRANSACTION;";
-            PreparedStatement stmt = connection.prepareStatement(sql);
+            Statement stmt = connection.createStatement();
             stmt.setQueryTimeout(30);
-            stmt.execute();
+            stmt.execute(sql);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -51,9 +51,9 @@ public class SqlManager {
     public static void endTransaction() {
         try {
             String sql = "COMMIT TRANSACTION;";
-            PreparedStatement stmt = connection.prepareStatement(sql);
+            Statement stmt = connection.createStatement();
             stmt.setQueryTimeout(30);
-            stmt.execute();
+            stmt.execute(sql);
         } catch (SQLException e) {
             e.printStackTrace();
         }
