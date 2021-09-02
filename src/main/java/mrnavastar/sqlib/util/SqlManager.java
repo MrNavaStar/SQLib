@@ -37,9 +37,20 @@ public class SqlManager {
         }
     }
 
-    private static void lockTable(String name) {
+    public static void beginTransaction() {
         try {
-            String sql = "LOCK TABLE " + name + " IN EXCLUSIVE MODE";
+            String sql = "BEGIN EXCLUSIVE TRANSACTION;";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setQueryTimeout(30);
+            stmt.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void endTransaction() {
+        try {
+            String sql = "COMMIT TRANSACTION;";
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setQueryTimeout(30);
             stmt.execute();
@@ -61,7 +72,6 @@ public class SqlManager {
 
     public static void createRow(String tableName, String id) {
         try {
-            lockTable(tableName);
             String sql = "INSERT OR REPLACE INTO " + tableName + " (ID) VALUES(?)";
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setQueryTimeout(30);
@@ -74,7 +84,6 @@ public class SqlManager {
 
     public static List<String> listIds(String tableName) {
         try {
-            lockTable(tableName);
             String sql = "SELECT ID FROM " + tableName;
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setQueryTimeout(30);
@@ -91,7 +100,6 @@ public class SqlManager {
 
     public static JsonObject readJson(String tableName, String id, String dataType) {
         try {
-            lockTable(tableName);
             String sql = "SELECT " + dataType + " FROM " + tableName + " WHERE ID = ?";
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setQueryTimeout(30);
@@ -109,7 +117,6 @@ public class SqlManager {
 
     public static void writeJson(String tableName, String id, String dataType, JsonObject data) {
         try {
-            lockTable(tableName);
             String sql = "UPDATE " + tableName + " SET " + dataType + " = ? WHERE ID = ?";
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setQueryTimeout(30);

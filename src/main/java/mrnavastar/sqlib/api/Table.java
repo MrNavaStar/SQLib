@@ -10,6 +10,7 @@ public class Table {
 
     private final String name;
     private final ArrayList<DataContainer> dataContainers = new ArrayList<>();
+    private boolean inTransaction = false;
 
     public Table(String name) {
         this.name = name;
@@ -22,10 +23,30 @@ public class Table {
             for (String id : ids) {
                 DataContainer dataContainer = new DataContainer(id);
                 dataContainers.add(dataContainer);
-                dataContainer.setTableName(this.name);
+                dataContainer.setTable(this);
             }
         }
         Database.disconnect();
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void beginTransaction() {
+        Database.connect();
+        SqlManager.beginTransaction();
+        this.inTransaction = true;
+    }
+
+    public void endTransaction() {
+        SqlManager.endTransaction();
+        Database.disconnect();
+        this.inTransaction = false;
+    }
+
+    public boolean isInTransaction() {
+        return inTransaction;
     }
 
     public List<String> getIds() {
@@ -38,14 +59,14 @@ public class Table {
             SqlManager.createRow(this.name, dataContainer.getId());
             Database.disconnect();
             dataContainers.add(dataContainer);
-            dataContainer.setTableName(this.name);
+            dataContainer.setTable(this);
         }
     }
 
     public void drop(String id) {
         DataContainer dataContainer = this.get(id);
         if (dataContainer != null) {
-            dataContainer.setTableName(null);
+            dataContainer.setTable(null);
             dataContainers.remove(dataContainer);
         }
     }

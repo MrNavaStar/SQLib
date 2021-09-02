@@ -10,7 +10,7 @@ import net.minecraft.nbt.StringNbtReader;
 
 public class DataContainer {
 
-    private String tableName;
+    private Table table;
     private final String id;
 
     public DataContainer(String id) {
@@ -21,18 +21,18 @@ public class DataContainer {
         return this.id;
     }
 
-    public void setTableName(String name) {
-        this.tableName = name;
+    public void setTable(Table table) {
+        this.table = table;
     }
 
     private void putIntoDatabase(String type, String key, Object value) {
-        Database.connect();
-        JsonObject obj = SqlManager.readJson(this.tableName, this.id, type);
+        if (!this.table.isInTransaction()) Database.connect();
+        JsonObject obj = SqlManager.readJson(this.table.getName(), this.id, type);
         if (obj == null) obj = new JsonObject();
         else obj.remove(key);
         obj.addProperty(key, value.toString());
-        SqlManager.writeJson(this.tableName, this.id, type, obj);
-        Database.disconnect();
+        SqlManager.writeJson(this.table.getName(), this.id, type, obj);
+        if (!this.table.isInTransaction()) Database.disconnect();
     }
 
     public void put(String key, String value) {
@@ -56,13 +56,13 @@ public class DataContainer {
     }
 
     public void put(String key, JsonElement value) {
-        Database.connect();
-        JsonObject obj = SqlManager.readJson(this.tableName, this.id, "JSON");
+        if (!this.table.isInTransaction()) Database.connect();
+        JsonObject obj = SqlManager.readJson(this.table.getName(), this.id, "JSON");
         if (obj == null) obj = new JsonObject();
         else obj.remove(key);
         obj.add(key, value);
-        SqlManager.writeJson(this.tableName, this.id, "JSON", obj);
-        Database.disconnect();
+        SqlManager.writeJson(this.table.getName(), this.id, "JSON", obj);
+        if (!this.table.isInTransaction()) Database.disconnect();
     }
 
     public void put(String key, NbtCompound value) {
@@ -70,13 +70,13 @@ public class DataContainer {
     }
 
     private void dropFromDatabase(String type, String key) {
-        Database.connect();
-        JsonObject obj = SqlManager.readJson(this.tableName, this.id, type);
+        if (!this.table.isInTransaction()) Database.connect();
+        JsonObject obj = SqlManager.readJson(this.table.getName(), this.id, type);
         if (obj != null) {
             obj.remove(key);
-            SqlManager.writeJson(this.tableName, id, type, obj);
+            SqlManager.writeJson(this.table.getName(), id, type, obj);
         }
-        Database.disconnect();
+        if (!this.table.isInTransaction()) Database.disconnect();
     }
 
     public void dropString(String key) {
@@ -108,9 +108,9 @@ public class DataContainer {
     }
 
     private JsonElement getFromDatabase(String type, String key) {
-        Database.connect();
-        JsonObject obj = SqlManager.readJson(this.tableName, this.id, type);
-        Database.disconnect();
+        if (!this.table.isInTransaction()) Database.connect();
+        JsonObject obj = SqlManager.readJson(this.table.getName(), this.id, type);
+        if (!this.table.isInTransaction()) Database.disconnect();
         if (obj == null) obj = new JsonObject();
         return obj.get(key);
     }
