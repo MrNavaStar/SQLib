@@ -37,9 +37,9 @@ public class SqlManager {
         }
     }
 
-    public static void setLockingMode() {
+    private static void lockTable(String name) {
         try {
-            String sql = "PRAGMA locking_mode = EXCLUSIVE";
+            String sql = "LOCK TABLE " + name + " IN EXCLUSIVE MODE";
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setQueryTimeout(30);
             stmt.execute();
@@ -61,6 +61,7 @@ public class SqlManager {
 
     public static void createRow(String tableName, String id) {
         try {
+            lockTable(tableName);
             String sql = "INSERT OR REPLACE INTO " + tableName + " (ID) VALUES(?)";
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setQueryTimeout(30);
@@ -73,6 +74,7 @@ public class SqlManager {
 
     public static List<String> listIds(String tableName) {
         try {
+            lockTable(tableName);
             String sql = "SELECT ID FROM " + tableName;
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setQueryTimeout(30);
@@ -89,6 +91,7 @@ public class SqlManager {
 
     public static JsonObject readJson(String tableName, String id, String dataType) {
         try {
+            lockTable(tableName);
             String sql = "SELECT " + dataType + " FROM " + tableName + " WHERE ID = ?";
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setQueryTimeout(30);
@@ -106,6 +109,7 @@ public class SqlManager {
 
     public static void writeJson(String tableName, String id, String dataType, JsonObject data) {
         try {
+            lockTable(tableName);
             String sql = "UPDATE " + tableName + " SET " + dataType + " = ? WHERE ID = ?";
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setQueryTimeout(30);
