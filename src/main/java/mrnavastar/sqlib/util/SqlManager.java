@@ -37,11 +37,22 @@ public class SqlManager {
         }
     }
 
+    public static void enableJournalMode() {
+        try {
+            String sql = "PRAGMA journal_mode;";
+            Statement stmt = connection.createStatement();
+            stmt.setQueryTimeout(30);
+            stmt.execute(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void beginTransaction() {
         try {
             String sql = "BEGIN EXCLUSIVE;";
             Statement stmt = connection.createStatement();
-            //stmt.setQueryTimeout(30);
+            stmt.setQueryTimeout(30);
             stmt.execute(sql);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -52,7 +63,7 @@ public class SqlManager {
         try {
             String sql = "COMMIT;";
             Statement stmt = connection.createStatement();
-            //stmt.setQueryTimeout(30);
+            stmt.setQueryTimeout(30);
             stmt.execute(sql);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -63,7 +74,7 @@ public class SqlManager {
         try {
             String sql = "CREATE TABLE IF NOT EXISTS " + name + " (ID TEXT PRIMARY KEY, STRINGS TEXT, INTS TEXT, FLOATS TEXT, DOUBLES TEXT BOOLEANS TEXT, JSON TEXT, NBT TEXT)";
             PreparedStatement stmt = connection.prepareStatement(sql);
-            //stmt.setQueryTimeout(30);
+            stmt.setQueryTimeout(30);
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -74,7 +85,7 @@ public class SqlManager {
         try {
             String sql = "INSERT OR REPLACE INTO " + tableName + " (ID) VALUES(?)";
             PreparedStatement stmt = connection.prepareStatement(sql);
-            //stmt.setQueryTimeout(30);
+            stmt.setQueryTimeout(30);
             stmt.setString(1, id);
             stmt.executeUpdate();
         } catch (SQLException e) {
@@ -86,7 +97,7 @@ public class SqlManager {
         try {
             String sql = "SELECT ID FROM " + tableName;
             PreparedStatement stmt = connection.prepareStatement(sql);
-            //stmt.setQueryTimeout(30);
+            stmt.setQueryTimeout(30);
             List<String> ids = new ArrayList<>();
             ResultSet resultSet = stmt.executeQuery();
 
@@ -102,7 +113,7 @@ public class SqlManager {
         try {
             String sql = "SELECT " + dataType + " FROM " + tableName + " WHERE ID = ?";
             PreparedStatement stmt = connection.prepareStatement(sql);
-            //stmt.setQueryTimeout(30);
+            stmt.setQueryTimeout(30);
             stmt.setString(1, id);
             ResultSet resultSet = stmt.executeQuery();
             JsonParser parser = new JsonParser();
@@ -119,7 +130,7 @@ public class SqlManager {
         try {
             String sql = "UPDATE " + tableName + " SET " + dataType + " = ? WHERE ID = ?";
             PreparedStatement stmt = connection.prepareStatement(sql);
-            //stmt.setQueryTimeout(30);
+            stmt.setQueryTimeout(30);
             stmt.setString(1, data.toString());
             stmt.setString(2, id);
             stmt.executeUpdate();

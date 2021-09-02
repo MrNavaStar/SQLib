@@ -30,6 +30,7 @@ public class Database {
 
     public static void init() {
         connect();
+        SqlManager.enableJournalMode();
         disconnect();
     }
 
