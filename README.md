@@ -3,6 +3,8 @@
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/)
 
+<img src="https://github.com/MrNavaStar/SQLib/blob/master/SQLib.png" width="300" height="300">
+
 # SQLib
 A simple fabric based sql wrapper made with a focus on minecraft use cases
 
@@ -13,7 +15,7 @@ If you are looking for a more advanced database I recommend taking a look at som
 
 # Setup
 The library first needs to be included into your project. The simplest way to do this is through [Jitpack](https://jitpack.io/).
-In you build.gradle make sure to include:
+In your build.gradle make sure to include:
 
 ``` gradle
 repositories {
