@@ -14,7 +14,7 @@ public class Table {
 
     public Table(String name) {
         this.name = name;
-        Database.connect();
+        this.beginTransaction();
         SqlManager.createTable(name);
         Database.addTable(this);
 
@@ -26,7 +26,7 @@ public class Table {
                 dataContainer.setTable(this);
             }
         }
-        Database.disconnect();
+        this.endTransaction();
     }
 
     public String getName() {
@@ -50,7 +50,10 @@ public class Table {
     }
 
     public List<String> getIds() {
-        return SqlManager.listIds(this.name);
+        if (!this.inTransaction) Database.connect();
+        List<String> ids = SqlManager.listIds(this.name);
+        if (!this.inTransaction) Database.disconnect();
+        return ids;
     }
 
     public void put(DataContainer dataContainer) {
