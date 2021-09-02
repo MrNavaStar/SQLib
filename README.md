@@ -15,7 +15,7 @@ If you are looking for a more advanced database I recommend taking a look at som
 
 # Setup
 The library first needs to be included into your project. The simplest way to do this is through [Jitpack](https://jitpack.io/).
-In you build.gradle make sure to include:
+In your build.gradle make sure to include:
 
 ``` gradle
 repositories {
