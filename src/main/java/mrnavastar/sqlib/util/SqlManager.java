@@ -39,7 +39,7 @@ public class SqlManager {
 
     public static void beginTransaction() {
         try {
-            String sql = "BEGIN EXCLUSIVE TRANSACTION;";
+            String sql = "BEGIN EXCLUSIVE;";
             Statement stmt = connection.createStatement();
             stmt.setQueryTimeout(30);
             stmt.execute(sql);
@@ -50,7 +50,7 @@ public class SqlManager {
 
     public static void endTransaction() {
         try {
-            String sql = "COMMIT TRANSACTION;";
+            String sql = "COMMIT;";
             Statement stmt = connection.createStatement();
             stmt.setQueryTimeout(30);
             stmt.execute(sql);
