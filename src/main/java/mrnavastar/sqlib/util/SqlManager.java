@@ -37,17 +37,6 @@ public class SqlManager {
         }
     }
 
-    public static void enableJournalMode() {
-        try {
-            String sql = "PRAGMA journal_mode;";
-            Statement stmt = connection.createStatement();
-            stmt.setQueryTimeout(30);
-            stmt.execute(sql);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
     public static void beginTransaction() {
         try {
             String sql = "BEGIN EXCLUSIVE;";
