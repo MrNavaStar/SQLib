@@ -6,7 +6,7 @@
 <img src="https://github.com/MrNavaStar/SQLib/blob/master/SQLibIcon.png" width="300" height="300">
 
 # SQLib
-A simple fabric based sql wrapper made with a focus on minecraft use cases
+SQLib is the easiest way to store data for all your minecraft needs! Its simple fabric based sql wrapper made with a focus on minecraft use cases.
 
 # Important Note:
 This library is not a full fledged sql wrapper, and does not provide full access to many sql features. 
