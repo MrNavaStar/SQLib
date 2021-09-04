@@ -2,11 +2,11 @@ package mrnavastar.sqlib.api;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import mrnavastar.sqlib.util.Database;
+import mrnavastar.sqlib.util.Parser;
 import mrnavastar.sqlib.util.SqlManager;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.StringNbtReader;
+import net.minecraft.util.math.BlockPos;
 
 public class DataContainer {
 
@@ -69,6 +69,10 @@ public class DataContainer {
         putIntoDatabase("NBT", key, value);
     }
 
+    public void put(String key, BlockPos value) {
+        putIntoDatabase("BLOCKPOS", key, value);
+    }
+
     private void dropFromDatabase(String type, String key) {
         if (!this.table.isInTransaction()) Database.connect();
         JsonObject obj = SqlManager.readJson(this.table.getName(), this.id, type);
@@ -107,6 +111,10 @@ public class DataContainer {
         dropFromDatabase("NBT", key);
     }
 
+    public void dropBlockPos(String key) {
+        dropFromDatabase("BLOCKPOS", key);
+    }
+
     private JsonElement getFromDatabase(String type, String key) {
         if (!this.table.isInTransaction()) Database.connect();
         JsonObject obj = SqlManager.readJson(this.table.getName(), this.id, type);
@@ -140,11 +148,10 @@ public class DataContainer {
     }
 
     public NbtCompound getNbtCompound(String key) {
-        try {
-            return StringNbtReader.parse(getFromDatabase("NBT", key).getAsString());
-        } catch (CommandSyntaxException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return Parser.nbtFromString(getFromDatabase("NBT", key).getAsString());
+    }
+
+    public BlockPos getBlockPos(String key) {
+        return Parser.blockPosFromString(getFromDatabase("BLOCKPOS", key).getAsString());
     }
 }
