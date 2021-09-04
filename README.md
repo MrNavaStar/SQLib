@@ -60,7 +60,7 @@ table name, however doing so will result in less conflict with other mods that n
 ``` java
 Table playerData = new Table(MODID + "PlayerData");
 ```
-In order to store data in the table you need a DataContainer object. This will simply provide a way to handle your data in an object orientied manner:
+In order to store data in the table you need a DataContainer object. This will simply provide a way to handle your data in an object orientied manner (Note that you must always add a DataContainer to a table before you can use it):
 ``` java
 DataContainer player = new DataContainer(playerUuid);
 playerData.put(player);
