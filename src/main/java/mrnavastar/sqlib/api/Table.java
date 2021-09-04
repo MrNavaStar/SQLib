@@ -57,21 +57,31 @@ public class Table {
     }
 
     public void put(DataContainer dataContainer) {
-        if (this.get(dataContainer.getId()) == null) {
-            if (!this.inTransaction) Database.connect();
-            SqlManager.createRow(this.name, dataContainer.getId());
-            if (!this.inTransaction) Database.disconnect();
-            dataContainers.add(dataContainer);
-            dataContainer.setTable(this);
-        }
+        if (this.get(dataContainer.getId()) != null) this.drop(dataContainer);
+        if (!this.inTransaction) Database.connect();
+        SqlManager.createRow(this.name, dataContainer.getId());
+        if (!this.inTransaction) Database.disconnect();
+        dataContainers.add(dataContainer);
+        dataContainer.setTable(this);
     }
 
     public void drop(String id) {
         DataContainer dataContainer = this.get(id);
         if (dataContainer != null) {
+            Database.connect();
+            SqlManager.deleteRow(this.getName(), id);
+            Database.disconnect();
             dataContainer.setTable(null);
             dataContainers.remove(dataContainer);
         }
+    }
+
+    public void drop(DataContainer dataContainer) {
+        Database.connect();
+        SqlManager.deleteRow(this.getName(), dataContainer.getId());
+        Database.disconnect();
+        dataContainer.setTable(null);
+        dataContainers.remove(dataContainer);
     }
 
     public DataContainer get(String id) {

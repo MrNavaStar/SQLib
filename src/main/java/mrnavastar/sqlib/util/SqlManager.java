@@ -82,6 +82,18 @@ public class SqlManager {
         }
     }
 
+    public static void deleteRow(String tableName, String id) {
+        try {
+            String sql = "DELETE FROM " + tableName + " WHERE ID = ?";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setQueryTimeout(30);
+            stmt.setString(1, id);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static List<String> listIds(String tableName) {
         try {
             String sql = "SELECT ID FROM " + tableName;
