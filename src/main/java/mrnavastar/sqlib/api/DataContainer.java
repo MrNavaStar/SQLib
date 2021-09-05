@@ -13,14 +13,22 @@ import java.util.UUID;
 public class DataContainer {
 
     private Table table;
-    private final String id;
+    private final Object id;
 
     public DataContainer(String id) {
         this.id = id;
     }
 
+    public DataContainer(UUID id) {
+        this.id = id;
+    }
+
     public String getId() {
-        return this.id;
+        return (String) this.id;
+    }
+
+    public UUID getUuid() {
+        return (UUID) this.id;
     }
 
     public void setTable(Table table) {
@@ -29,11 +37,11 @@ public class DataContainer {
 
     private void putIntoDatabase(String type, String key, Object value) {
         if (!this.table.isInTransaction()) Database.connect();
-        JsonObject obj = SqlManager.readJson(this.table.getName(), this.id, type);
+        JsonObject obj = SqlManager.readJson(this.table.getName(), this.id.toString(), type);
         if (obj == null) obj = new JsonObject();
         else obj.remove(key);
         obj.addProperty(key, value.toString());
-        SqlManager.writeJson(this.table.getName(), this.id, type, obj);
+        SqlManager.writeJson(this.table.getName(), this.id.toString(), type, obj);
         if (!this.table.isInTransaction()) Database.disconnect();
     }
 
@@ -59,11 +67,11 @@ public class DataContainer {
 
     public void put(String key, JsonElement value) {
         if (!this.table.isInTransaction()) Database.connect();
-        JsonObject obj = SqlManager.readJson(this.table.getName(), this.id, "JSON");
+        JsonObject obj = SqlManager.readJson(this.table.getName(), this.id.toString(), "JSON");
         if (obj == null) obj = new JsonObject();
         else obj.remove(key);
         obj.add(key, value);
-        SqlManager.writeJson(this.table.getName(), this.id, "JSON", obj);
+        SqlManager.writeJson(this.table.getName(), this.id.toString(), "JSON", obj);
         if (!this.table.isInTransaction()) Database.disconnect();
     }
 
@@ -81,10 +89,10 @@ public class DataContainer {
 
     private void dropFromDatabase(String type, String key) {
         if (!this.table.isInTransaction()) Database.connect();
-        JsonObject obj = SqlManager.readJson(this.table.getName(), this.id, type);
+        JsonObject obj = SqlManager.readJson(this.table.getName(), this.id.toString(), type);
         if (obj != null) {
             obj.remove(key);
-            SqlManager.writeJson(this.table.getName(), id, type, obj);
+            SqlManager.writeJson(this.table.getName(), this.id.toString(), type, obj);
         }
         if (!this.table.isInTransaction()) Database.disconnect();
     }
@@ -127,7 +135,7 @@ public class DataContainer {
 
     private JsonElement getFromDatabase(String type, String key) {
         if (!this.table.isInTransaction()) Database.connect();
-        JsonObject obj = SqlManager.readJson(this.table.getName(), this.id, type);
+        JsonObject obj = SqlManager.readJson(this.table.getName(), this.id.toString(), type);
         if (!this.table.isInTransaction()) Database.disconnect();
         if (obj == null) obj = new JsonObject();
         return obj.get(key);
