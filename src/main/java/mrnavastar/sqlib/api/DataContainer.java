@@ -8,6 +8,8 @@ import mrnavastar.sqlib.util.SqlManager;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.BlockPos;
 
+import java.util.UUID;
+
 public class DataContainer {
 
     private Table table;
@@ -73,6 +75,10 @@ public class DataContainer {
         putIntoDatabase("BLOCKPOS", key, value);
     }
 
+    public void put(String key, UUID value) {
+        putIntoDatabase("UUIDS", key, value);
+    }
+
     private void dropFromDatabase(String type, String key) {
         if (!this.table.isInTransaction()) Database.connect();
         JsonObject obj = SqlManager.readJson(this.table.getName(), this.id, type);
@@ -115,6 +121,10 @@ public class DataContainer {
         dropFromDatabase("BLOCKPOS", key);
     }
 
+    public void dropUuid(String key) {
+        dropFromDatabase("UUIDS", key);
+    }
+
     private JsonElement getFromDatabase(String type, String key) {
         if (!this.table.isInTransaction()) Database.connect();
         JsonObject obj = SqlManager.readJson(this.table.getName(), this.id, type);
@@ -153,5 +163,9 @@ public class DataContainer {
 
     public BlockPos getBlockPos(String key) {
         return Parser.blockPosFromString(getFromDatabase("BLOCKPOS", key).getAsString());
+    }
+
+    public UUID getUuid(String key) {
+        return UUID.fromString(getFromDatabase("UUIDS", key).getAsString());
     }
 }
