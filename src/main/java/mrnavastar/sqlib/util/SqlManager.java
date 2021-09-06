@@ -110,6 +110,23 @@ public class SqlManager {
         return null;
     }
 
+    public static String search(String tableName, String dataType, Object data) {
+        try {
+            String sql = "SELECT ID FROM " + tableName + " WHERE " + dataType + " = ?";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setQueryTimeout(30);
+            stmt.setString(1, (String) data);
+            ResultSet resultSet = stmt.executeQuery();
+            JsonParser parser = new JsonParser();
+            String id = resultSet.getString("ID");
+
+            if (data != null) return id;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static JsonObject readJson(String tableName, String id, String dataType) {
         try {
             String sql = "SELECT " + dataType + " FROM " + tableName + " WHERE ID = ?";
