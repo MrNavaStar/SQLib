@@ -19,16 +19,8 @@ public class DataContainer {
         this.id = id;
     }
 
-    public DataContainer(UUID id) {
-        this.id = id;
-    }
-
     public String getId() {
         return (String) this.id;
-    }
-
-    public UUID getUuid() {
-        return (UUID) this.id;
     }
 
     public void setTable(Table table) {
