@@ -176,7 +176,7 @@ public class DataContainer {
         return getFromDatabase("JSON", key);
     }
 
-    public NbtElement getNbtCompound(String key) {
+    public NbtElement getNbt(String key) {
         NbtCompound nbt = Parser.nbtFromString(getFromDatabase("NBT", "DATA").getAsString());
         if (nbt != null) return nbt.get(key);
         return null;
