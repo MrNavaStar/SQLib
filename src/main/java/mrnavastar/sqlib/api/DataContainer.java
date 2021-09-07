@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import mrnavastar.sqlib.util.Database;
 import mrnavastar.sqlib.util.Parser;
 import mrnavastar.sqlib.util.SqlManager;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
@@ -84,9 +85,7 @@ public class DataContainer {
     }
 
     public void put(String key, ItemStack value) {
-        NbtCompound nbt = new NbtCompound();
-        nbt.put(key, value.getNbt());
-        putIntoDatabase("ITEMSTACKS", "DATA", value);
+        putIntoDatabase("ITEMSTACKS", key, value.getNbt());
     }
 
     private void dropFromDatabase(String type, String key) {
@@ -142,9 +141,7 @@ public class DataContainer {
     }
 
     public void dropItemStack(String key) {
-        NbtCompound nbt = Parser.nbtFromString(getFromDatabase("ITEMSTACKS", "DATA").getAsString());
-        if (nbt != null) nbt.remove(key);
-        putIntoDatabase("ITEMSTACKS", "DATA", nbt);
+        dropFromDatabase("ITEMSTACKS", key);
     }
 
     private JsonElement getFromDatabase(String type, String key) {
@@ -198,8 +195,8 @@ public class DataContainer {
     }
 
     public ItemStack getItemStack(String key) {
-        NbtCompound nbt = Parser.nbtFromString(getFromDatabase("ITEMSTACKS", "DATA").getAsString());
-        if (nbt != null) return ItemStack.fromNbt((NbtCompound) nbt.get(key));
+        NbtCompound nbt = Parser.nbtFromString(getFromDatabase("ITEMSTACKS", key).getAsString());
+        if (nbt != null) return ItemStack.fromNbt(nbt);
         return null;
     }
 }
