@@ -5,7 +5,10 @@ import com.google.gson.JsonObject;
 import mrnavastar.sqlib.util.Database;
 import mrnavastar.sqlib.util.Parser;
 import mrnavastar.sqlib.util.SqlManager;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.text.LiteralText;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.UUID;
@@ -32,7 +35,8 @@ public class DataContainer {
         JsonObject obj = SqlManager.readJson(this.table.getName(), this.id.toString(), type);
         if (obj == null) obj = new JsonObject();
         else obj.remove(key);
-        obj.addProperty(key, value.toString());
+        if (type.equals("JSON")) obj.add(key, (JsonElement) value);
+        else obj.addProperty(key, value.toString());
         SqlManager.writeJson(this.table.getName(), this.id.toString(), type, obj);
         if (!this.table.isInTransaction()) Database.disconnect();
     }
@@ -58,17 +62,13 @@ public class DataContainer {
     }
 
     public void put(String key, JsonElement value) {
-        if (!this.table.isInTransaction()) Database.connect();
-        JsonObject obj = SqlManager.readJson(this.table.getName(), this.id.toString(), "JSON");
-        if (obj == null) obj = new JsonObject();
-        else obj.remove(key);
-        obj.add(key, value);
-        SqlManager.writeJson(this.table.getName(), this.id.toString(), "JSON", obj);
-        if (!this.table.isInTransaction()) Database.disconnect();
+        putIntoDatabase("JSON", key, value);
     }
 
-    public void put(String key, NbtCompound value) {
-        putIntoDatabase("NBT", key, value);
+    public void put(String key, NbtElement value) {
+        NbtCompound nbt = new NbtCompound();
+        nbt.put(key, value);
+        putIntoDatabase("NBT", "DATA", nbt);
     }
 
     public void put(String key, BlockPos value) {
@@ -77,6 +77,16 @@ public class DataContainer {
 
     public void put(String key, UUID value) {
         putIntoDatabase("UUIDS", key, value);
+    }
+
+    public void put(String key, LiteralText value) {
+        putIntoDatabase("LITERALTEXTS", key, value);
+    }
+
+    public void put(String key, ItemStack value) {
+        NbtCompound nbt = new NbtCompound();
+        nbt.put(key, value.getNbt());
+        putIntoDatabase("ITEMSTACKS", "DATA", value);
     }
 
     private void dropFromDatabase(String type, String key) {
@@ -113,8 +123,10 @@ public class DataContainer {
         dropFromDatabase("JSON", key);
     }
 
-    public void dropNbtCompound(String key) {
-        dropFromDatabase("NBT", key);
+    public void dropNbt(String key) {
+        NbtCompound nbt = Parser.nbtFromString(getFromDatabase("NBT", "DATA").getAsString());
+        if (nbt != null) nbt.remove(key);
+        putIntoDatabase("NBT", "DATA", nbt);
     }
 
     public void dropBlockPos(String key) {
@@ -123,6 +135,16 @@ public class DataContainer {
 
     public void dropUuid(String key) {
         dropFromDatabase("UUIDS", key);
+    }
+
+    public void dropLiteralText(String key) {
+        dropFromDatabase("LITERALTEXTS", key);
+    }
+
+    public void dropItemStack(String key) {
+        NbtCompound nbt = Parser.nbtFromString(getFromDatabase("ITEMSTACKS", "DATA").getAsString());
+        if (nbt != null) nbt.remove(key);
+        putIntoDatabase("ITEMSTACKS", "DATA", nbt);
     }
 
     private JsonElement getFromDatabase(String type, String key) {
@@ -157,8 +179,10 @@ public class DataContainer {
         return getFromDatabase("JSON", key);
     }
 
-    public NbtCompound getNbtCompound(String key) {
-        return Parser.nbtFromString(getFromDatabase("NBT", key).getAsString());
+    public NbtElement getNbtCompound(String key) {
+        NbtCompound nbt = Parser.nbtFromString(getFromDatabase("NBT", "DATA").getAsString());
+        if (nbt != null) return nbt.get(key);
+        return null;
     }
 
     public BlockPos getBlockPos(String key) {
@@ -167,5 +191,15 @@ public class DataContainer {
 
     public UUID getUuid(String key) {
         return UUID.fromString(getFromDatabase("UUIDS", key).getAsString());
+    }
+
+    public LiteralText getLiteralText(String key) {
+        return new LiteralText(getFromDatabase("LITERALTEXTS", key).getAsString());
+    }
+
+    public ItemStack getItemStack(String key) {
+        NbtCompound nbt = Parser.nbtFromString(getFromDatabase("ITEMSTACKS", "DATA").getAsString());
+        if (nbt != null) return ItemStack.fromNbt((NbtCompound) nbt.get(key));
+        return null;
     }
 }
