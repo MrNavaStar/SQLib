@@ -56,6 +56,10 @@ public class Table {
         return ids;
     }
 
+    public List<DataContainer> getDataContainers() {
+        return this.dataContainers;
+    }
+
     public void put(DataContainer dataContainer) {
         if (this.get(dataContainer.getId()) != null) this.drop(dataContainer);
         if (!this.inTransaction) Database.connect();

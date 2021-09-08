@@ -5,7 +5,6 @@ import com.google.gson.JsonObject;
 import mrnavastar.sqlib.util.Database;
 import mrnavastar.sqlib.util.Parser;
 import mrnavastar.sqlib.util.SqlManager;
-import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
