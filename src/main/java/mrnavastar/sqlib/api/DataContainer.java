@@ -9,6 +9,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.UUID;
@@ -83,6 +85,10 @@ public class DataContainer {
         putIntoDatabase("LITERALTEXTS", key, value);
     }
 
+    public void put(String key, MutableText value) {
+        putIntoDatabase("MUTABLETEXTS", key, value);
+    }
+
     public void put(String key, ItemStack value) {
         putIntoDatabase("ITEMSTACKS", key, value.getNbt());
     }
@@ -139,6 +145,10 @@ public class DataContainer {
         dropFromDatabase("LITERALTEXTS", key);
     }
 
+    public void dropMutableText(String key) {
+        dropFromDatabase("MUTABLETEXTS", key);
+    }
+
     public void dropItemStack(String key) {
         dropFromDatabase("ITEMSTACKS", key);
     }
@@ -191,6 +201,10 @@ public class DataContainer {
 
     public LiteralText getLiteralText(String key) {
         return new LiteralText(getFromDatabase("LITERALTEXTS", key).getAsString());
+    }
+
+    public MutableText getMutableText(String key) {
+        return Text.Serializer.fromJson(getFromDatabase("MUTABLETEXTS", key));
     }
 
     public ItemStack getItemStack(String key) {
