@@ -117,12 +117,10 @@ public class SqlManager {
             String sql = "SELECT ID FROM " + tableName + " WHERE " + dataType + " = ?";
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setQueryTimeout(30);
-            stmt.setString(1, (String) data);
+            stmt.setString(1, data.toString());
             ResultSet resultSet = stmt.executeQuery();
-            JsonParser parser = new JsonParser();
-            String id = resultSet.getString("ID");
 
-            if (data != null) return id;
+            return resultSet.getString("ID");
         } catch (SQLException e) {
             e.printStackTrace();
         }
