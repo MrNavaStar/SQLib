@@ -69,23 +69,18 @@ public class Table {
         dataContainer.setTable(this);
     }
 
-    public void drop(String id) {
-        DataContainer dataContainer = this.get(id);
+    public void drop(DataContainer dataContainer) {
         if (dataContainer != null) {
             if (!this.inTransaction) Database.connect();
-            SqlManager.deleteRow(this.getName(), id);
+            SqlManager.deleteRow(this.getName(), dataContainer.getId());
             if (!this.inTransaction) Database.disconnect();
             dataContainer.setTable(null);
             dataContainers.remove(dataContainer);
         }
     }
 
-    public void drop(DataContainer dataContainer) {
-        if (!this.inTransaction) Database.connect();
-        SqlManager.deleteRow(this.getName(), dataContainer.getId());
-        if (!this.inTransaction) Database.disconnect();
-        dataContainer.setTable(null);
-        dataContainers.remove(dataContainer);
+    public void drop(String id) {
+        drop(this.get(id));
     }
 
     public DataContainer get(String id) {
@@ -93,12 +88,5 @@ public class Table {
             if (dataContainer.getId().equals(id)) return dataContainer;
         }
         return null;
-    }
-
-    public DataContainer getWhere(String type, Object value) {
-        if (!this.inTransaction) Database.connect();
-        String id = SqlManager.search(this.getName(), type, value);
-        if (!this.inTransaction) Database.disconnect();
-        return this.get(id);
     }
 }
