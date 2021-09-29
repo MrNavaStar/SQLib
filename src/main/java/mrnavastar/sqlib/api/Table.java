@@ -89,4 +89,11 @@ public class Table {
         }
         return null;
     }
+
+    public boolean contains(String id) {
+        for (DataContainer dataContainer : this.dataContainers) {
+            if (dataContainer.getId().equals(id)) return true;
+        }
+        return false;
+    }
 }
