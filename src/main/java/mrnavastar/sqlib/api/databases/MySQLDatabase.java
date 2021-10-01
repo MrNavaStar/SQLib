@@ -15,6 +15,8 @@ public class MySQLDatabase extends Database {
         this.port = port;
         this.username = username;
         this.password = password;
+        this.connect();
+        this.disconnect();
     }
 
     @Override

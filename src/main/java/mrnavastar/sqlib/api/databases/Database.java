@@ -12,8 +12,6 @@ public abstract class Database {
 
     public Database(String name) {
         this.name = name;
-        connect();
-        disconnect();
     }
 
     public abstract void connect();

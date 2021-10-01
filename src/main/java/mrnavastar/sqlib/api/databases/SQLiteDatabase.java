@@ -9,6 +9,8 @@ public class SQLiteDatabase extends Database{
     public SQLiteDatabase(String name, String directory) {
         super(name);
         this.directory = directory;
+        this.connect();
+        this.disconnect();
     }
 
     @Override
