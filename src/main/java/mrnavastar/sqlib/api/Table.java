@@ -5,6 +5,7 @@ import mrnavastar.sqlib.api.databases.Database;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class Table {
 
@@ -68,6 +69,14 @@ public class Table {
         DataContainer dataContainer = new DataContainer(id);
         this.put(dataContainer);
         return dataContainer;
+    }
+
+    public DataContainer createDataContainer(UUID id) {
+       return createDataContainer(id.toString());
+    }
+
+    public DataContainer createDataContainer(int id) {
+       return createDataContainer(String.valueOf(id));
     }
 
     public void put(DataContainer dataContainer) {
