@@ -2,7 +2,7 @@ package mrnavastar.sqlib.api;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import mrnavastar.sqlib.util.Database;
+import mrnavastar.sqlib.api.databases.Database;
 import mrnavastar.sqlib.util.Parser;
 import mrnavastar.sqlib.util.SqlManager;
 import net.minecraft.item.ItemStack;
@@ -18,29 +18,47 @@ import java.util.UUID;
 public class DataContainer {
 
     private Table table;
-    private final Object id;
+    private Database database;
+    private final String id;
 
     public DataContainer(String id) {
         this.id = id;
     }
 
-    public String getId() {
-        return (String) this.id;
+    public DataContainer(UUID id) {
+        this.id = id.toString();
     }
 
-    public void setTable(Table table) {
+    public DataContainer(int id) {
+        this.id = String.valueOf(id);
+    }
+
+    public String getId() {
+        return this.id;
+    }
+
+    public UUID getIdAsUuid() {
+        return UUID.fromString(this.id);
+    }
+
+    public int getIdAsInt() {
+        return Integer.parseInt(this.id);
+    }
+
+    public void link(Table table, Database database) {
         this.table = table;
+        this.database = database;
     }
 
     private void putIntoDatabase(String type, String key, Object value) {
-        if (!this.table.isInTransaction()) Database.connect();
-        JsonObject obj = SqlManager.readJson(this.table.getName(), this.id.toString(), type);
+        if (!this.table.isInTransaction()) this.database.connect();
+        JsonObject obj = SqlManager.readJson(this.table.getName(), this.id, type);
         if (obj == null) obj = new JsonObject();
         else obj.remove(key);
         if (type.equals("JSON")) obj.add(key, (JsonElement) value);
         else obj.addProperty(key, value.toString());
-        SqlManager.writeJson(this.table.getName(), this.id.toString(), type, obj);
-        if (!this.table.isInTransaction()) Database.disconnect();
+        SqlManager.writeJson(this.table.getName(), this.id, type, obj);
+        if (!this.table.isInTransaction()) this.database.disconnect();
     }
 
     public void put(String key, String value) {
@@ -68,8 +86,8 @@ public class DataContainer {
     }
 
     public void put(String key, NbtElement value) {
-        NbtCompound nbt = new NbtCompound();
-        nbt.put(key, value);
+        NbtCompound nbt = Parser.nbtFromString(getFromDatabase("NBT", "DATA").getAsString());
+        if (nbt != null) nbt.put(key, value);
         putIntoDatabase("NBT", "DATA", nbt);
     }
 
@@ -94,13 +112,13 @@ public class DataContainer {
     }
 
     private void dropFromDatabase(String type, String key) {
-        if (!this.table.isInTransaction()) Database.connect();
-        JsonObject obj = SqlManager.readJson(this.table.getName(), this.id.toString(), type);
+        if (!this.table.isInTransaction()) this.database.connect();
+        JsonObject obj = SqlManager.readJson(this.table.getName(), this.id, type);
         if (obj != null) {
             obj.remove(key);
-            SqlManager.writeJson(this.table.getName(), this.id.toString(), type, obj);
+            SqlManager.writeJson(this.table.getName(), this.id, type, obj);
         }
-        if (!this.table.isInTransaction()) Database.disconnect();
+        if (!this.table.isInTransaction()) this.database.disconnect();
     }
 
     public void dropString(String key) {
@@ -154,9 +172,9 @@ public class DataContainer {
     }
 
     private JsonElement getFromDatabase(String type, String key) {
-        if (!this.table.isInTransaction()) Database.connect();
-        JsonObject obj = SqlManager.readJson(this.table.getName(), this.id.toString(), type);
-        if (!this.table.isInTransaction()) Database.disconnect();
+        if (!this.table.isInTransaction()) this.database.connect();
+        JsonObject obj = SqlManager.readJson(this.table.getName(), this.id, type);
+        if (!this.table.isInTransaction()) this.database.disconnect();
         if (obj == null) obj = new JsonObject();
         return obj.get(key);
     }
@@ -166,7 +184,7 @@ public class DataContainer {
     }
 
     public int getInt(String key) {
-       return getFromDatabase("INTS", key).getAsInt();
+        return getFromDatabase("INTS", key).getAsInt();
     }
 
     public float getFloat(String key) {

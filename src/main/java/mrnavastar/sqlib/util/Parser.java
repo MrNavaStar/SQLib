@@ -13,7 +13,7 @@ public class Parser {
         } catch (CommandSyntaxException e) {
             e.printStackTrace();
         }
-        return null;
+        return new NbtCompound();
     }
 
     public static BlockPos blockPosFromString(String pos) {
