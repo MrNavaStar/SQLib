@@ -8,6 +8,7 @@ import net.minecraft.util.math.BlockPos;
 public class Parser {
 
     public static NbtCompound nbtFromString(String nbt) {
+        System.out.println("[SQLIB] " + nbt);
         if (nbt.isEmpty()) return null;
         try {
             return StringNbtReader.parse(nbt);
