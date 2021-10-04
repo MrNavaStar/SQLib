@@ -16,6 +16,14 @@ public class Table {
 
     public Table(String name) {
         this.name = name;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void addToDatabase(Database database) {
+        this.database = database;
         this.beginTransaction();
         SqlManager.createTable(name);
 
@@ -28,14 +36,6 @@ public class Table {
             }
         }
         this.endTransaction();
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public void addToDatabase(Database database) {
-        this.database = database;
     }
 
     public Database getDatabase() {

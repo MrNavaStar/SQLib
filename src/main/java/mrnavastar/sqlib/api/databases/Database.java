@@ -22,11 +22,11 @@ public abstract class Database {
 
     public Table createTable(String name) {
         Table table = new Table(name);
-        addTable(table);
+        add(table);
         return table;
     }
 
-    public void addTable(Table table) {
+    public void add(Table table) {
         if (!tables.contains(table)) {
             table.addToDatabase(this);
             tables.add(table);
