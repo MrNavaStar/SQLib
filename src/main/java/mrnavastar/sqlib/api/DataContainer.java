@@ -87,7 +87,8 @@ public class DataContainer {
 
     public void put(String key, NbtElement value) {
         NbtCompound nbt = Parser.nbtFromString(getFromDatabase("NBT", "DATA").getAsString());
-        if (nbt != null) nbt.put(key, value);
+        if (nbt == null) nbt = new NbtCompound();
+        nbt.put(key, value);
         putIntoDatabase("NBT", "DATA", nbt);
     }
 

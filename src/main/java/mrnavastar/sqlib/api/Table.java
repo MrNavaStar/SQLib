@@ -84,7 +84,7 @@ public class Table {
         if (!this.isInTransaction) this.database.connect();
         SqlManager.createRow(this.name, dataContainer.getId());
         if (!this.isInTransaction) this.database.disconnect();
-        dataContainers.add(dataContainer);
+        this.dataContainers.add(dataContainer);
         dataContainer.link(this, this.database);
     }
 
@@ -93,7 +93,7 @@ public class Table {
         SqlManager.deleteRow(this.getName(), dataContainer.getId());
         if (!this.isInTransaction) this.database.disconnect();
         dataContainer.link(null, null);
-        dataContainers.remove(dataContainer);
+        this.dataContainers.remove(dataContainer);
     }
 
     public void drop(String id) {
