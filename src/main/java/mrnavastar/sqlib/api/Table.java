@@ -107,6 +107,14 @@ public class Table {
         return null;
     }
 
+    public DataContainer get(UUID id) {
+        return get(id.toString());
+    }
+
+    public DataContainer get(int id) {
+        return get(String.valueOf(id));
+    }
+
     public ArrayList<DataContainer> getDataContainers() {
         return this.dataContainers;
     }
@@ -116,5 +124,13 @@ public class Table {
             if (dataContainer.getId().equals(id)) return true;
         }
         return false;
+    }
+
+    public boolean contains(UUID id) {
+        return contains(id.toString());
+    }
+
+    public boolean contains(int id) {
+        return contains(String.valueOf(id));
     }
 }
