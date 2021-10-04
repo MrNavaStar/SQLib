@@ -8,12 +8,13 @@ import net.minecraft.util.math.BlockPos;
 public class Parser {
 
     public static NbtCompound nbtFromString(String nbt) {
+        if (nbt.isEmpty()) return null;
         try {
             return StringNbtReader.parse(nbt);
         } catch (CommandSyntaxException e) {
             e.printStackTrace();
         }
-        return new NbtCompound();
+        return null;
     }
 
     public static BlockPos blockPosFromString(String pos) {
