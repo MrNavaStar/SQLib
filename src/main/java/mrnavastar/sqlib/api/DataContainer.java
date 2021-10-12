@@ -8,6 +8,7 @@ import mrnavastar.sqlib.util.SqlManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.StringNbtReader;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -86,9 +87,10 @@ public class DataContainer {
     }
 
     public void put(String key, NbtElement value) {
-        NbtCompound nbt = Parser.nbtFromString(getFromDatabase("NBT", "DATA").getAsString());
-        if (nbt == null) nbt = new NbtCompound();
-        nbt.put(key, value);
+        JsonElement obj = getFromDatabase("NBT", "DATA");
+        NbtCompound nbt = new NbtCompound();
+        if (obj != null) nbt = Parser.nbtFromString(obj.getAsString());
+        if (nbt != null) nbt.put(key, value);
         putIntoDatabase("NBT", "DATA", nbt);
     }
 
@@ -176,7 +178,7 @@ public class DataContainer {
         if (!this.table.isInTransaction()) this.database.connect();
         JsonObject obj = SqlManager.readJson(this.table.getName(), this.id, type);
         if (!this.table.isInTransaction()) this.database.disconnect();
-        if (obj == null) obj = new JsonObject();
+        if (obj == null) return null;
         return obj.get(key);
     }
 
