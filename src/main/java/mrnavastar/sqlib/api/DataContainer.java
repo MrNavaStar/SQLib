@@ -8,7 +8,6 @@ import mrnavastar.sqlib.util.SqlManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.StringNbtReader;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -116,7 +115,7 @@ public class DataContainer {
     }
 
     public void put(String key, BlockPos value) {
-        putIntoDatabase("BLOCKPOS", key, value);
+        putIntoDatabase("BLOCKPOS", key, value.toShortString());
     }
 
     public void put(String key, UUID value) {
@@ -197,19 +196,27 @@ public class DataContainer {
     }
 
     public int getInt(String key) {
-        return getFromDatabase("INTS", key).getAsInt();
+        JsonElement json = getFromDatabase("INTS", key);
+        if (json != null) return json.getAsInt();
+        return -0;
     }
 
     public float getFloat(String key) {
-        return getFromDatabase("FLOATS", key).getAsFloat();
+        JsonElement json = getFromDatabase("FLOATS", key);
+        if (json != null) return json.getAsFloat();
+        return -0;
     }
 
     public double getDouble(String key) {
-        return getFromDatabase("DOUBLES", key).getAsDouble();
+        JsonElement json = getFromDatabase("DOUBLES", key);
+        if (json != null) return json.getAsDouble();
+        return -0;
     }
 
     public boolean getBoolean(String key) {
-        return getFromDatabase("BOOLEANS", key).getAsBoolean();
+        JsonElement json = getFromDatabase("BOOLEANS", key);
+        if (json != null) return json.getAsBoolean();
+        return false;
     }
 
     public JsonElement getJson(String key) {
@@ -226,15 +233,21 @@ public class DataContainer {
     }
 
     public BlockPos getBlockPos(String key) {
-        return Parser.blockPosFromString(getFromDatabase("BLOCKPOS", key).getAsString());
+        JsonElement json = getFromDatabase("BLOCKPOS", key);
+        if (json != null) return Parser.blockPosFromString(json.getAsString());
+        return null;
     }
 
     public UUID getUuid(String key) {
-        return UUID.fromString(getFromDatabase("UUIDS", key).getAsString());
+        JsonElement json = getFromDatabase("UUIDS", key);
+        if (json != null) return UUID.fromString(json.getAsString());
+        return null;
     }
 
     public LiteralText getLiteralText(String key) {
-        return new LiteralText(getFromDatabase("LITERALTEXTS", key).getAsString());
+        JsonElement json = getFromDatabase("LITERALTEXTS", key);
+        if (json != null) return new LiteralText(json.getAsString());
+        return null;
     }
 
     public MutableText getMutableText(String key) {
@@ -242,8 +255,11 @@ public class DataContainer {
     }
 
     public ItemStack getItemStack(String key) {
-        NbtCompound nbt = Parser.nbtFromString(getFromDatabase("ITEMSTACKS", key).getAsString());
-        if (nbt != null) return ItemStack.fromNbt(nbt);
+        JsonElement json = getFromDatabase("ITEMSTACKS", key);
+        if (json != null) {
+            NbtCompound nbt = Parser.nbtFromString(json.getAsString());
+            if (nbt != null) return ItemStack.fromNbt(nbt);
+        }
         return null;
     }
 }

@@ -17,8 +17,7 @@ public class Parser {
     }
 
     public static BlockPos blockPosFromString(String pos) {
-        String cleaned = pos.substring(10, pos.length() - 1).replaceAll("[xyz= ]", "");
-        String[] values = cleaned.split(",");
+        String[] values = pos.split(",");
         return new BlockPos(Integer.parseInt(values[0]), Integer.parseInt(values[1]), Integer.parseInt(values[2]));
     }
 }
