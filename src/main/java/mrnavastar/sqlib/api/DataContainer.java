@@ -104,13 +104,15 @@ public class DataContainer {
     }
 
     public void put(String key, NbtElement value) {
-        JsonElement obj = getFromDatabase("NBT", "DATA");
-        if (obj != null) {
-            NbtCompound nbt = Parser.nbtFromString(obj.getAsString());
-            if (nbt != null) {
-                nbt.put(key, value);
-                putIntoDatabase("NBT", "DATA", nbt);
-            }
+        JsonElement json = getFromDatabase("NBT", "DATA");
+        NbtCompound nbt;
+        if (json != null) nbt = Parser.nbtFromString(json.getAsString());
+        else nbt = new NbtCompound();
+
+        //should only be false if the data in the database is bad
+        if (nbt != null) {
+            nbt.put(key, value);
+            putIntoDatabase("NBT", "DATA", nbt);
         }
     }
 
@@ -159,10 +161,12 @@ public class DataContainer {
     }
 
     public void dropNbt(String key) {
-        JsonElement obj = getFromDatabase("NBT", "DATA");
-        if (obj != null) {
-            NbtCompound nbt = Parser.nbtFromString(obj.getAsString());
-            if (nbt != null) {
+        JsonElement json = getFromDatabase("NBT", "DATA");
+        if (json != null) {
+            NbtCompound nbt = Parser.nbtFromString(json.getAsString());
+
+            //should only be false if the data in the database is bad
+            if (nbt != null && nbt.contains(key)) {
                 nbt.remove(key);
                 putIntoDatabase("NBT", "DATA", nbt);
             }
@@ -224,10 +228,13 @@ public class DataContainer {
     }
 
     public NbtElement getNbt(String key) {
-        JsonElement obj = getFromDatabase("NBT", "DATA");
-        if (obj != null) {
-            NbtCompound nbt = Parser.nbtFromString(obj.getAsString());
-            if (nbt != null) return nbt.get(key);
+        JsonElement json = getFromDatabase("NBT", "DATA");
+        if (json != null) {
+            NbtCompound nbt = Parser.nbtFromString(json.getAsString());
+
+            //should only be false if the data in the database is bad
+            if (nbt == null || !nbt.contains(key)) return null;
+            return nbt.get(key);
         }
         return null;
     }
