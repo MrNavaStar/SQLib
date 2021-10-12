@@ -62,6 +62,24 @@ public class DataContainer {
         if (!this.table.isInTransaction()) this.database.disconnect();
     }
 
+    private void dropFromDatabase(String type, String key) {
+        if (!this.table.isInTransaction()) this.database.connect();
+        JsonObject obj = SqlManager.readJson(this.table.getName(), this.id, type);
+        if (obj != null) {
+            obj.remove(key);
+            SqlManager.writeJson(this.table.getName(), this.id, type, obj);
+        }
+        if (!this.table.isInTransaction()) this.database.disconnect();
+    }
+
+    private JsonElement getFromDatabase(String type, String key) {
+        if (!this.table.isInTransaction()) this.database.connect();
+        JsonObject obj = SqlManager.readJson(this.table.getName(), this.id, type);
+        if (!this.table.isInTransaction()) this.database.disconnect();
+        if (obj == null) return null;
+        return obj.get(key);
+    }
+
     public void put(String key, String value) {
         putIntoDatabase("STRINGS", key, value);
     }
@@ -88,10 +106,13 @@ public class DataContainer {
 
     public void put(String key, NbtElement value) {
         JsonElement obj = getFromDatabase("NBT", "DATA");
-        NbtCompound nbt = new NbtCompound();
-        if (obj != null) nbt = Parser.nbtFromString(obj.getAsString());
-        if (nbt != null) nbt.put(key, value);
-        putIntoDatabase("NBT", "DATA", nbt);
+        if (obj != null) {
+            NbtCompound nbt = Parser.nbtFromString(obj.getAsString());
+            if (nbt != null) {
+                nbt.put(key, value);
+                putIntoDatabase("NBT", "DATA", nbt);
+            }
+        }
     }
 
     public void put(String key, BlockPos value) {
@@ -112,16 +133,6 @@ public class DataContainer {
 
     public void put(String key, ItemStack value) {
         putIntoDatabase("ITEMSTACKS", key, value.getNbt());
-    }
-
-    private void dropFromDatabase(String type, String key) {
-        if (!this.table.isInTransaction()) this.database.connect();
-        JsonObject obj = SqlManager.readJson(this.table.getName(), this.id, type);
-        if (obj != null) {
-            obj.remove(key);
-            SqlManager.writeJson(this.table.getName(), this.id, type, obj);
-        }
-        if (!this.table.isInTransaction()) this.database.disconnect();
     }
 
     public void dropString(String key) {
@@ -149,9 +160,14 @@ public class DataContainer {
     }
 
     public void dropNbt(String key) {
-        NbtCompound nbt = Parser.nbtFromString(getFromDatabase("NBT", "DATA").getAsString());
-        if (nbt != null) nbt.remove(key);
-        putIntoDatabase("NBT", "DATA", nbt);
+        JsonElement obj = getFromDatabase("NBT", "DATA");
+        if (obj != null) {
+            NbtCompound nbt = Parser.nbtFromString(obj.getAsString());
+            if (nbt != null) {
+                nbt.remove(key);
+                putIntoDatabase("NBT", "DATA", nbt);
+            }
+        }
     }
 
     public void dropBlockPos(String key) {
@@ -174,16 +190,10 @@ public class DataContainer {
         dropFromDatabase("ITEMSTACKS", key);
     }
 
-    private JsonElement getFromDatabase(String type, String key) {
-        if (!this.table.isInTransaction()) this.database.connect();
-        JsonObject obj = SqlManager.readJson(this.table.getName(), this.id, type);
-        if (!this.table.isInTransaction()) this.database.disconnect();
-        if (obj == null) return null;
-        return obj.get(key);
-    }
-
     public String getString(String key) {
-        return getFromDatabase("STRINGS", key).getAsString();
+        JsonElement json = getFromDatabase("STRINGS", key);
+        if (json != null) return json.getAsString();
+        return null;
     }
 
     public int getInt(String key) {
@@ -207,8 +217,11 @@ public class DataContainer {
     }
 
     public NbtElement getNbt(String key) {
-        NbtCompound nbt = Parser.nbtFromString(getFromDatabase("NBT", "DATA").getAsString());
-        if (nbt != null) return nbt.get(key);
+        JsonElement obj = getFromDatabase("NBT", "DATA");
+        if (obj != null) {
+            NbtCompound nbt = Parser.nbtFromString(obj.getAsString());
+            if (nbt != null) return nbt.get(key);
+        }
         return null;
     }
 
