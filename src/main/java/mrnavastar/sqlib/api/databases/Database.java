@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public abstract class Database {
 
     protected final String name;
-    private static final ArrayList<Table> tables = new ArrayList<>();
+    private final ArrayList<Table> tables = new ArrayList<>();
 
     public Database(String name) {
         this.name = name;
@@ -20,16 +20,27 @@ public abstract class Database {
         SqlManager.disconnect();
     }
 
+    public void add(Table table) {
+        if (!tables.contains(table)) {
+            table.addToDatabase(this);
+            tables.add(table);
+        }
+    }
+
     public Table createTable(String name) {
         Table table = new Table(name);
         add(table);
         return table;
     }
 
-    public void add(Table table) {
-        if (!tables.contains(table)) {
-            table.addToDatabase(this);
-            tables.add(table);
+    public Table getTable(String name) {
+        for (Table table : this.tables) {
+            if (table.getName().equals(name)) return table;
         }
+        return null;
+    }
+
+    public ArrayList<Table> getTables() {
+        return this.tables;
     }
 }
