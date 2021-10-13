@@ -43,9 +43,11 @@ public class Table {
     }
 
     public void beginTransaction() {
-        database.connect();
-        SqlManager.beginTransaction();
-        this.isInTransaction = true;
+        if (!this.isInTransaction) {
+            database.connect();
+            SqlManager.beginTransaction();
+            this.isInTransaction = true;
+        }
     }
 
     public void endTransaction() {
