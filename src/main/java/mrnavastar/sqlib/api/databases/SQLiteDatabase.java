@@ -15,6 +15,7 @@ public class SQLiteDatabase extends Database{
 
     @Override
     public void connect() {
+        System.out.println("[SQLIB] CONNECTING TO DATABASE");
         SqlManager.connectSQLITE(this.directory, this.name);
     }
 }

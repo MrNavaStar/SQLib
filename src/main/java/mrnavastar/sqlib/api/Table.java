@@ -44,7 +44,6 @@ public class Table {
 
     public void beginTransaction() {
         if (!this.isInTransaction) {
-            System.out.println("[SQLIB] CONNECTING TO DATABASE");
             database.connect();
             SqlManager.beginTransaction();
             this.isInTransaction = true;
@@ -52,7 +51,6 @@ public class Table {
     }
 
     public void endTransaction() {
-        System.out.println("[SQLIB] DISCONNECTING FROM DATABASE");
         SqlManager.endTransaction();
         database.disconnect();
         this.isInTransaction = false;
