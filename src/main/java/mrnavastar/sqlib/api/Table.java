@@ -1,5 +1,6 @@
 package mrnavastar.sqlib.api;
 
+import com.google.common.primitives.Ints;
 import mrnavastar.sqlib.util.SqlManager;
 import mrnavastar.sqlib.api.databases.Database;
 
@@ -65,6 +66,18 @@ public class Table {
         List<String> ids = SqlManager.listIds(this.name);
         if (!this.isInTransaction) this.database.disconnect();
         return ids;
+    }
+
+    public List<UUID> getIdsAsUuids() {
+        List<UUID> uuids = new ArrayList<>();
+        for (String id : getIds()) uuids.add(UUID.fromString(id));
+        return uuids;
+    }
+
+    public int[] getIdsAsInts() {
+        List<Integer> ints = new ArrayList<>();
+        for (String id : getIds()) ints.add(Integer.parseInt(id));
+        return Ints.toArray(ints);
     }
 
     public DataContainer createDataContainer(String id) {

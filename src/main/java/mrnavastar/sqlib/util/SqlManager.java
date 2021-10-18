@@ -1,9 +1,9 @@
 package mrnavastar.sqlib.util;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import mrnavastar.sqlib.Sqlib;
+import org.apache.logging.log4j.Level;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -18,6 +18,7 @@ public class SqlManager {
             String url = "jdbc:sqlite:" + path + "/" + databaseName + ".db";
             connection = DriverManager.getConnection(url);
         } catch (SQLException e) {
+            Sqlib.log(Level.ERROR, "Failed to connect to database! Is there already a connection open?");
             e.printStackTrace();
         }
     }
@@ -27,6 +28,7 @@ public class SqlManager {
             String url = "jdbc:mysql://" + address + ":" + port + "/" + databaseName;
             connection = DriverManager.getConnection(url, user, pass);
         } catch (SQLException e) {
+            Sqlib.log(Level.ERROR, "Failed to connect to database! Is there already a connection open?");
             e.printStackTrace();
         }
     }
@@ -35,6 +37,7 @@ public class SqlManager {
         try {
             connection.close();
         } catch (SQLException e) {
+            Sqlib.log(Level.ERROR, "Gonna be honest, not sure how you got this one.");
             e.printStackTrace();
         }
     }
