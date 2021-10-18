@@ -17,7 +17,6 @@ public abstract class Database {
     public abstract void connect();
 
     public void disconnect() {
-        System.out.println("[SQLIB] DISCONNECTING FROM DATABASE");
         SqlManager.disconnect();
     }
 

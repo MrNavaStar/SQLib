@@ -82,20 +82,20 @@ public class Table {
     }
 
     public void put(DataContainer dataContainer) {
-        if (this.get(dataContainer.getId()) != null) this.drop(dataContainer);
         if (!this.isInTransaction) this.database.connect();
+        if (this.get(dataContainer.getId()) != null) this.drop(dataContainer);
         SqlManager.createRow(this.name, dataContainer.getId());
-        if (!this.isInTransaction) this.database.disconnect();
         this.dataContainers.add(dataContainer);
         dataContainer.link(this, this.database);
+        if (!this.isInTransaction) this.database.disconnect();
     }
 
     public void drop(DataContainer dataContainer) {
         if (!this.isInTransaction) this.database.connect();
         SqlManager.deleteRow(this.getName(), dataContainer.getId());
-        if (!this.isInTransaction) this.database.disconnect();
         dataContainer.link(null, null);
         this.dataContainers.remove(dataContainer);
+        if (!this.isInTransaction) this.database.disconnect();
     }
 
     public void drop(String id) {

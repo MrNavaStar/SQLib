@@ -104,6 +104,7 @@ public class DataContainer {
     }
 
     public void put(String key, NbtElement value) {
+        if (!this.table.isInTransaction()) this.database.connect();
         JsonElement json = getFromDatabase("NBT", "DATA");
         NbtCompound nbt;
         if (json != null) nbt = Parser.nbtFromString(json.getAsString());
@@ -114,6 +115,7 @@ public class DataContainer {
             nbt.put(key, value);
             putIntoDatabase("NBT", "DATA", nbt);
         }
+        if (!this.table.isInTransaction()) this.database.disconnect();
     }
 
     public void put(String key, BlockPos value) {
@@ -161,6 +163,7 @@ public class DataContainer {
     }
 
     public void dropNbt(String key) {
+        if (!this.table.isInTransaction()) this.database.connect();
         JsonElement json = getFromDatabase("NBT", "DATA");
         if (json != null) {
             NbtCompound nbt = Parser.nbtFromString(json.getAsString());
@@ -171,6 +174,7 @@ public class DataContainer {
                 putIntoDatabase("NBT", "DATA", nbt);
             }
         }
+        if (!this.table.isInTransaction()) this.database.disconnect();
     }
 
     public void dropBlockPos(String key) {
