@@ -102,6 +102,14 @@ public class Table {
         drop(this.get(id));
     }
 
+    public void drop(UUID uuid) {
+        drop(uuid.toString());
+    }
+
+    public void drop(int i) {
+        drop(String.valueOf(i));
+    }
+
     public DataContainer get(String id) {
         for (DataContainer dataContainer : this.dataContainers) {
             if (dataContainer.getId().equals(id)) return dataContainer;

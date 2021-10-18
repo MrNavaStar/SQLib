@@ -8,6 +8,7 @@ import java.util.ArrayList;
 public abstract class Database {
 
     protected final String name;
+    private boolean isInTransaction = false;
     private final ArrayList<Table> tables = new ArrayList<>();
 
     public Database(String name) {
@@ -18,6 +19,7 @@ public abstract class Database {
 
     public void disconnect() {
         SqlManager.disconnect();
+        this.isInTransaction = false;
     }
 
     public void add(Table table) {
@@ -42,5 +44,9 @@ public abstract class Database {
 
     public ArrayList<Table> getTables() {
         return this.tables;
+    }
+
+    public boolean isInTransaction() {
+        return this.isInTransaction;
     }
 }
