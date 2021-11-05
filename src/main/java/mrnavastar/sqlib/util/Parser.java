@@ -1,9 +1,14 @@
 package mrnavastar.sqlib.util;
 
+import com.google.common.primitives.Ints;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.StringNbtReader;
 import net.minecraft.util.math.BlockPos;
+import org.apache.commons.lang3.ArrayUtils;
+
+import java.util.ArrayList;
+import java.util.UUID;
 
 public class Parser {
 
@@ -23,5 +28,32 @@ public class Parser {
 
     public static String[] stringArrayFromString(String string) {
         return string.replaceAll("[{}]", "").split(", ");
+    }
+
+    public static int[] intArrayFromString(String string) {
+        String[] data = stringArrayFromString(string);
+        ArrayList<Integer> ints = new ArrayList<>();
+        for (String i : data) {
+            ints.add(Integer.parseInt(i));
+        }
+        return Ints.toArray(ints);
+    }
+
+    public static ArrayList<UUID> uuidArrayFromString(String string) {
+        String[] data = stringArrayFromString(string);
+        ArrayList<UUID> uuids = new ArrayList<>();
+        for (String uuid : data) {
+            uuids.add(UUID.fromString(uuid));
+        }
+        return uuids;
+    }
+
+    public static ArrayList<BlockPos> blockPosArrayFromString(String string) {
+        String[] data = stringArrayFromString(string);
+        ArrayList<BlockPos> blocks = new ArrayList<>();
+        for (String pos : data) {
+            blocks.add(blockPosFromString(pos));
+        }
+        return blocks;
     }
 }

@@ -5,7 +5,6 @@ import com.google.gson.JsonObject;
 import mrnavastar.sqlib.api.databases.Database;
 import mrnavastar.sqlib.util.Parser;
 import mrnavastar.sqlib.util.SqlManager;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.text.LiteralText;
@@ -13,6 +12,7 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class DataContainer {
@@ -91,6 +91,10 @@ public class DataContainer {
         putIntoDatabase("INTS", key, value);
     }
 
+    public void put(String key, int[] value) {
+        putIntoDatabase("INT_ARRAYS", key, value);
+    }
+
     public void put(String key, float value) {
         putIntoDatabase("FLOATS", key, value);
     }
@@ -126,8 +130,16 @@ public class DataContainer {
         putIntoDatabase("BLOCK_POS", key, value.toShortString());
     }
 
+    public void put(String key, BlockPos[] value) {
+        putIntoDatabase("BLOCK_POS_ARRAY", key, value);
+    }
+
     public void put(String key, UUID value) {
         putIntoDatabase("UUIDS", key, value);
+    }
+
+    public void put(String key, UUID[] value) {
+        putIntoDatabase("UUID_ARRAYS", key, value);
     }
 
     public void put(String key, LiteralText value) {
@@ -136,10 +148,6 @@ public class DataContainer {
 
     public void put(String key, MutableText value) {
         putIntoDatabase("MUTABLE_TEXTS", key, value);
-    }
-
-    public void put(String key, ItemStack value) {
-        putIntoDatabase("ITEM_STACKS", key, value.getNbt());
     }
 
     public void dropString(String key) {
@@ -152,6 +160,10 @@ public class DataContainer {
 
     public void dropInt(String key) {
         dropFromDatabase("INTS", key);
+    }
+
+    public void dropIntArray(String key) {
+        dropFromDatabase("INT_ARRAY", key);
     }
 
     public void dropFloat(String key) {
@@ -189,8 +201,16 @@ public class DataContainer {
         dropFromDatabase("BLOCK_POS", key);
     }
 
+    public void dropBlockPosArray(String key) {
+        dropFromDatabase("BLOCK_POS_ARRAY", key);
+    }
+
     public void dropUuid(String key) {
         dropFromDatabase("UUIDS", key);
+    }
+
+    public void dropUuidArray(String key) {
+        dropFromDatabase("UUID_ARRAYS", key);
     }
 
     public void dropLiteralText(String key) {
@@ -199,10 +219,6 @@ public class DataContainer {
 
     public void dropMutableText(String key) {
         dropFromDatabase("MUTABLE_TEXTS", key);
-    }
-
-    public void dropItemStack(String key) {
-        dropFromDatabase("ITEM_STACKS", key);
     }
 
     public String getString(String key) {
@@ -221,6 +237,12 @@ public class DataContainer {
         JsonElement json = getFromDatabase("INTS", key);
         if (json != null) return json.getAsInt();
         return -0;
+    }
+
+    public int[] getIntArray(String key) {
+        JsonElement json = getFromDatabase("INT_ARRAY", key);
+        if (json != null) return Parser.intArrayFromString(json.getAsString());
+        return null;
     }
 
     public float getFloat(String key) {
@@ -263,9 +285,21 @@ public class DataContainer {
         return null;
     }
 
+    public ArrayList<BlockPos> getBlockPosArray(String key) {
+        JsonElement json = getFromDatabase("BLOCK_POS_ARRAYS", key);
+        if (json != null) return Parser.blockPosArrayFromString(json.getAsString());
+        return null;
+    }
+
     public UUID getUuid(String key) {
         JsonElement json = getFromDatabase("UUIDS", key);
         if (json != null) return UUID.fromString(json.getAsString());
+        return null;
+    }
+
+    public ArrayList<UUID> getUuidArray(String key) {
+        JsonElement json = getFromDatabase("UUIDS", key);
+        if (json != null) return Parser.uuidArrayFromString(json.getAsString());
         return null;
     }
 
@@ -277,14 +311,5 @@ public class DataContainer {
 
     public MutableText getMutableText(String key) {
         return Text.Serializer.fromJson(getFromDatabase("MUTABLE_TEXTS", key));
-    }
-
-    public ItemStack getItemStack(String key) {
-        JsonElement json = getFromDatabase("ITEM_STACKS", key);
-        if (json != null) {
-            NbtCompound nbt = Parser.nbtFromString(json.getAsString());
-            if (nbt != null) return ItemStack.fromNbt(nbt);
-        }
-        return null;
     }
 }
