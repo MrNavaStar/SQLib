@@ -20,4 +20,8 @@ public class Parser {
         String[] values = pos.split(", ");
         return new BlockPos(Integer.parseInt(values[0]), Integer.parseInt(values[1]), Integer.parseInt(values[2]));
     }
+
+    public static String[] stringArrayFromString(String string) {
+        return string.replaceAll("[{}]", "").split(", ");
+    }
 }

@@ -83,6 +83,10 @@ public class DataContainer {
         putIntoDatabase("STRINGS", key, value);
     }
 
+    public void put(String key, String[] value) {
+        putIntoDatabase("STRING_ARRAYS", key, value);
+    }
+
     public void put(String key, int value) {
         putIntoDatabase("INTS", key, value);
     }
@@ -119,7 +123,7 @@ public class DataContainer {
     }
 
     public void put(String key, BlockPos value) {
-        putIntoDatabase("BLOCKPOS", key, value.toShortString());
+        putIntoDatabase("BLOCK_POS", key, value.toShortString());
     }
 
     public void put(String key, UUID value) {
@@ -127,19 +131,23 @@ public class DataContainer {
     }
 
     public void put(String key, LiteralText value) {
-        putIntoDatabase("LITERALTEXTS", key, value);
+        putIntoDatabase("LITERAL_TEXTS", key, value);
     }
 
     public void put(String key, MutableText value) {
-        putIntoDatabase("MUTABLETEXTS", key, value);
+        putIntoDatabase("MUTABLE_TEXTS", key, value);
     }
 
     public void put(String key, ItemStack value) {
-        putIntoDatabase("ITEMSTACKS", key, value.getNbt());
+        putIntoDatabase("ITEM_STACKS", key, value.getNbt());
     }
 
     public void dropString(String key) {
         dropFromDatabase("STRINGS", key);
+    }
+
+    public void dropStringArray(String key) {
+        dropFromDatabase("STRING_ARRAYS", key);
     }
 
     public void dropInt(String key) {
@@ -178,7 +186,7 @@ public class DataContainer {
     }
 
     public void dropBlockPos(String key) {
-        dropFromDatabase("BLOCKPOS", key);
+        dropFromDatabase("BLOCK_POS", key);
     }
 
     public void dropUuid(String key) {
@@ -186,20 +194,26 @@ public class DataContainer {
     }
 
     public void dropLiteralText(String key) {
-        dropFromDatabase("LITERALTEXTS", key);
+        dropFromDatabase("LITERAL_TEXTS", key);
     }
 
     public void dropMutableText(String key) {
-        dropFromDatabase("MUTABLETEXTS", key);
+        dropFromDatabase("MUTABLE_TEXTS", key);
     }
 
     public void dropItemStack(String key) {
-        dropFromDatabase("ITEMSTACKS", key);
+        dropFromDatabase("ITEM_STACKS", key);
     }
 
     public String getString(String key) {
         JsonElement json = getFromDatabase("STRINGS", key);
         if (json != null) return json.getAsString();
+        return null;
+    }
+
+    public String[] getStringArray(String key) {
+        JsonElement json = getFromDatabase("STRING_ARRAYS", key);
+        if (json != null) return Parser.stringArrayFromString(json.getAsString());
         return null;
     }
 
@@ -244,7 +258,7 @@ public class DataContainer {
     }
 
     public BlockPos getBlockPos(String key) {
-        JsonElement json = getFromDatabase("BLOCKPOS", key);
+        JsonElement json = getFromDatabase("BLOCK_POS", key);
         if (json != null) return Parser.blockPosFromString(json.getAsString());
         return null;
     }
@@ -256,17 +270,17 @@ public class DataContainer {
     }
 
     public LiteralText getLiteralText(String key) {
-        JsonElement json = getFromDatabase("LITERALTEXTS", key);
+        JsonElement json = getFromDatabase("LITERAL_TEXTS", key);
         if (json != null) return new LiteralText(json.getAsString());
         return null;
     }
 
     public MutableText getMutableText(String key) {
-        return Text.Serializer.fromJson(getFromDatabase("MUTABLETEXTS", key));
+        return Text.Serializer.fromJson(getFromDatabase("MUTABLE_TEXTS", key));
     }
 
     public ItemStack getItemStack(String key) {
-        JsonElement json = getFromDatabase("ITEMSTACKS", key);
+        JsonElement json = getFromDatabase("ITEM_STACKS", key);
         if (json != null) {
             NbtCompound nbt = Parser.nbtFromString(json.getAsString());
             if (nbt != null) return ItemStack.fromNbt(nbt);
