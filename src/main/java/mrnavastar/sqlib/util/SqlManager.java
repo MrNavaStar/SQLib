@@ -68,7 +68,7 @@ public class SqlManager {
         try {
             String sql = "CREATE TABLE IF NOT EXISTS " + name + " (ID TEXT PRIMARY KEY, STRINGS TEXT, STRING_ARRAYS TEXT, " +
                     "INTS TEXT, INT_ARRAYS TEXT, FLOATS TEXT, DOUBLES TEXT, BOOLEANS TEXT, JSON TEXT, NBT TEXT, BLOCK_POS TEXT, " +
-                    "BLOCK_POS_ARRAYS TEXT, UUIDS TEXT, UUID_ARRAYS TEXT, LITERAL_TEXTS TEXT, MUTABLE_TEXTS TEXT, ITEM_STACKS TEXT)";
+                    "BLOCK_POS_ARRAYS TEXT, UUIDS TEXT, UUID_ARRAYS TEXT, LITERAL_TEXTS TEXT, MUTABLE_TEXTS TEXT)";
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setQueryTimeout(30);
             stmt.executeUpdate();
