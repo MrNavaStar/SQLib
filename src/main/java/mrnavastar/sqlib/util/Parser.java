@@ -39,21 +39,21 @@ public class Parser {
         return Ints.toArray(ints);
     }
 
-    public static ArrayList<UUID> uuidArrayFromString(String string) {
+    public static UUID[] uuidArrayFromString(String string) {
         String[] data = stringArrayFromString(string);
         ArrayList<UUID> uuids = new ArrayList<>();
         for (String uuid : data) {
             uuids.add(UUID.fromString(uuid));
         }
-        return uuids;
+        return uuids.toArray(new UUID[]{});
     }
 
-    public static ArrayList<BlockPos> blockPosArrayFromString(String string) {
+    public static BlockPos[] blockPosArrayFromString(String string) {
         String[] data = stringArrayFromString(string);
         ArrayList<BlockPos> blocks = new ArrayList<>();
         for (String pos : data) {
             blocks.add(blockPosFromString(pos));
         }
-        return blocks;
+        return blocks.toArray(new BlockPos[]{});
     }
 }

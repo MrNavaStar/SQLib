@@ -285,7 +285,7 @@ public class DataContainer {
         return null;
     }
 
-    public ArrayList<BlockPos> getBlockPosArray(String key) {
+    public BlockPos[] getBlockPosArray(String key) {
         JsonElement json = getFromDatabase("BLOCK_POS_ARRAYS", key);
         if (json != null) return Parser.blockPosArrayFromString(json.getAsString());
         return null;
@@ -297,7 +297,7 @@ public class DataContainer {
         return null;
     }
 
-    public ArrayList<UUID> getUuidArray(String key) {
+    public UUID[] getUuidArray(String key) {
         JsonElement json = getFromDatabase("UUIDS", key);
         if (json != null) return Parser.uuidArrayFromString(json.getAsString());
         return null;
