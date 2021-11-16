@@ -309,6 +309,8 @@ public class DataContainer {
     }
 
     public MutableText getMutableText(String key) {
-        return Text.Serializer.fromJson(getFromDatabase("MUTABLE_TEXTS", key));
+        JsonElement json = getFromDatabase("MUTABLE_TEXTS", key);
+        if (json != null) return Text.Serializer.fromJson(json.getAsString());
+        return null;
     }
 }
