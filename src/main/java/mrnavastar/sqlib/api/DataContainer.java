@@ -310,7 +310,7 @@ public class DataContainer {
 
     public MutableText getMutableText(String key) {
         JsonElement json = getFromDatabase("MUTABLE_TEXTS", key);
-        if (json != null) return Text.Serializer.fromJson(json.toString());
+        if (json != null) return Text.Serializer.fromJson(json.getAsString());
         return null;
     }
 }
