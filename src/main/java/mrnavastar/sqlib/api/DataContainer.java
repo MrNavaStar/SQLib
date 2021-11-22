@@ -12,6 +12,7 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class DataContainer {
@@ -310,6 +311,13 @@ public class DataContainer {
 
     public MutableText getMutableText(String key) {
         JsonElement json = getFromDatabase("MUTABLE_TEXTS", key);
+
+        System.out.println("JSON: " +  json);
+        if (json != null) {
+            System.out.println("Get String: " + json.getAsString());
+            System.out.println("Mut Text String: " + Objects.requireNonNull(Text.Serializer.fromLenientJson(json.getAsString())).getString());
+        }
+
         if (json != null) return Text.Serializer.fromJson(json.getAsString());
         return null;
     }
