@@ -315,7 +315,7 @@ public class DataContainer {
         System.out.println("JSON: " +  json);
         if (json != null) {
             System.out.println("Get String: " + json.getAsString());
-            System.out.println("Mut Text String: " + Text.Serializer.fromLenientJson(json.getAsString()).getString());
+            System.out.println("Mut Text String: " + Text.Serializer.fromJson(json.getAsString()).getString());
         }
 
         if (json != null) return Text.Serializer.fromJson(json.getAsString());
