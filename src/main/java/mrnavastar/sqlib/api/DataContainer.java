@@ -147,7 +147,7 @@ public class DataContainer {
     }
 
     public void put(String key, MutableText value) {
-        putIntoDatabase("MUTABLE_TEXTS", key, value);
+        putIntoDatabase("MUTABLE_TEXTS", key, Text.Serializer.toJson(value));
     }
 
     public void dropString(String key) {
@@ -311,13 +311,6 @@ public class DataContainer {
 
     public MutableText getMutableText(String key) {
         JsonElement json = getFromDatabase("MUTABLE_TEXTS", key);
-
-        System.out.println("JSON: " +  json);
-        if (json != null) {
-            System.out.println("Get String: " + json.getAsString());
-            System.out.println("Mut Text String: " + Text.Serializer.fromJson(json.getAsString()).getString());
-        }
-
         if (json != null) return Text.Serializer.fromJson(json.getAsString());
         return null;
     }
