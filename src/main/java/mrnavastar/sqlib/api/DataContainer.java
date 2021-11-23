@@ -12,6 +12,8 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -131,7 +133,9 @@ public class DataContainer {
     }
 
     public void put(String key, BlockPos[] value) {
-        putIntoDatabase("BLOCK_POS_ARRAYS", key, value);
+        ArrayList<String> positions = new ArrayList<>();
+        Arrays.stream(value).iterator().forEachRemaining(pos -> positions.add(pos.toShortString()));
+        putIntoDatabase("BLOCK_POS_ARRAYS", key, positions);
     }
 
     public void put(String key, UUID value) {

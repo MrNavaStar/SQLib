@@ -27,7 +27,7 @@ public class Parser {
     }
 
     public static String[] stringArrayFromString(String string) {
-        return string.replaceAll("[{}]", "").split(", ");
+        return string.replace("]", "").replace("[", "").split(", ");
     }
 
     public static int[] intArrayFromString(String string) {
