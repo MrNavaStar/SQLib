@@ -52,7 +52,7 @@ public class Parser {
         String[] data = stringArrayFromString(string);
         ArrayList<BlockPos> blocks = new ArrayList<>();
         for (String pos : data) {
-            blocks.add(blockPosFromString(pos));
+            blocks.add(blockPosFromString(pos.replaceAll(";", ",")));
         }
         return blocks.toArray(new BlockPos[]{});
     }

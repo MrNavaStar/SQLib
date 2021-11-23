@@ -134,7 +134,7 @@ public class DataContainer {
 
     public void put(String key, BlockPos[] value) {
         ArrayList<String> positions = new ArrayList<>();
-        Arrays.stream(value).iterator().forEachRemaining(pos -> positions.add(pos.toShortString()));
+        Arrays.stream(value).iterator().forEachRemaining(pos -> positions.add(pos.toShortString().replaceAll(",", ";")));
         putIntoDatabase("BLOCK_POS_ARRAYS", key, positions);
     }
 
