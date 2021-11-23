@@ -131,7 +131,7 @@ public class DataContainer {
     }
 
     public void put(String key, BlockPos[] value) {
-        putIntoDatabase("BLOCK_POS_ARRAY", key, value);
+        putIntoDatabase("BLOCK_POS_ARRAYS", key, value);
     }
 
     public void put(String key, UUID value) {
