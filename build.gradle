@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '0.9.50'
+    id 'fabric-loom' version '0.10.62'
     id 'maven-publish'
 }
 
@@ -10,7 +10,6 @@ dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     // JDBC SQL
     modImplementation group: 'org.xerial', name: 'sqlite-jdbc', version: project.sqlite_version
@@ -29,7 +28,7 @@ processResources {
     }
 }
 
-def targetJavaVersion = 16
+def targetJavaVersion = 17
 tasks.withType(JavaCompile).configureEach {
     // ensure that the encoding is set to UTF-8, no matter what the system default is
     // this fixes some edge cases with special characters not displaying correctly
