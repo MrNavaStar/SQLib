@@ -21,9 +21,7 @@ In your build.gradle make sure to include:
 repositories {
     maven { url 'https://jitpack.io' }
 }
-```
-And
-``` gradle
+
 dependencies {
   modImplementation 'com.github.MrNavaStar:SQLib:v1.2.0'
   
