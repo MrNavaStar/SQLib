@@ -20,6 +20,12 @@ public abstract class Database {
         SqlManager.disconnect();
     }
 
+    public abstract void beginTransaction();
+
+    public void endTransaction() {
+        SqlManager.endTransaction();
+    }
+
     public void add(Table table) {
         if (!tables.contains(table)) {
             table.addToDatabase(this);

@@ -23,4 +23,9 @@ public class MySQLDatabase extends Database {
     public void connect() {
         SqlManager.connectMYSQL(this.address, this.port, this.name, this.username, this.password);
     }
+
+    @Override
+    public void beginTransaction() {
+        SqlManager.beginTransaction(false);
+    }
 }

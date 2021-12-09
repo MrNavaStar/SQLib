@@ -104,6 +104,10 @@ public class DataContainer {
         putIntoDatabase("DOUBLES", key, value);
     }
 
+    public void put(String key, long value) {
+        putIntoDatabase("LONGS", key, value);
+    }
+
     public void put(String key, boolean value) {
         putIntoDatabase("BOOLEANS", key, value);
     }
@@ -175,6 +179,10 @@ public class DataContainer {
 
     public void dropDouble(String key) {
         dropFromDatabase("DOUBLES", key);
+    }
+
+    public void dropLong(String key) {
+        dropFromDatabase("LONGS", key);
     }
 
     public void dropBoolean(String key) {
@@ -257,6 +265,12 @@ public class DataContainer {
     public double getDouble(String key) {
         JsonElement json = getFromDatabase("DOUBLES", key);
         if (json != null) return json.getAsDouble();
+        return -0;
+    }
+
+    public long getLong(String key) {
+        JsonElement json = getFromDatabase("LONGS", key);
+        if (json != null) return json.getAsLong();
         return -0;
     }
 

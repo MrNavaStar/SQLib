@@ -46,13 +46,13 @@ public class Table {
     public void beginTransaction() {
         if (!this.isInTransaction) {
             database.connect();
-            SqlManager.beginTransaction();
+            database.beginTransaction();
             this.isInTransaction = true;
         }
     }
 
     public void endTransaction() {
-        SqlManager.endTransaction();
+        database.endTransaction();
         database.disconnect();
         this.isInTransaction = false;
     }
