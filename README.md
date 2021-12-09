@@ -21,14 +21,12 @@ In your build.gradle make sure to include:
 repositories {
     maven { url 'https://jitpack.io' }
 }
-```
-And
-``` gradle
+
 dependencies {
-  modImplementation 'com.github.MrNavaStar:SQLib:v1.0.0'
+  modImplementation 'com.github.MrNavaStar:SQLib:v1.2.0'
   
   //Or if you wish to include with the mod:
-  include(modImplementation('com.github.MrNavaStar:SQLib:v1.0.0'))
+  include(modImplementation('com.github.MrNavaStar:SQLib:v1.2.0'))
 }
 ```
 
@@ -37,33 +35,21 @@ The database must first be setup to use either sqlite or mysql like so:
 
 - SQLITE
 ``` java
-Database.TYPE = SqlTypes.SQLITE;
-Database.DATABASE_NAME = "MyAmazingDatabase";
-Database.SQLITE_DIRECTORY = "/database/folder";
-
-Database.init();
+Database database = new SQLiteDatabase("name", "/awesome/dir");
 ```
 - MYSQL
 ``` java
-Database.TYPE = SqlTypes.MYSQL;
-Database.DATABASE_NAME = "MyAmazingDatabase";
-Database.MYSQL_ADDRESS = "127.0.0.1";
-Database.MYSQL_PORT = "3306";
-Database.MYSQL_USERNAME = "MrNavaStar";
-Database.MYSQL_PASSWORD = "123456";
-
-Database.init();
+Database database = new MySQLDatabase("name", "127.0.0.1", "3306", "username", "password");
 ```
 
 Now a table can be added to store data. This table will automatically be added to the database (Note that it is not required to include your mod id in the 
 table name, however doing so will result in less conflict with other mods that name their tables the same):
 ``` java
-Table playerData = new Table(MODID + "PlayerData");
+Table playerData = database.createTable(MODID + " name");
 ```
-In order to store data in the table you need a DataContainer object. This will simply provide a way to handle your data in an object orientied manner (Note that you must always add a DataContainer to a table before you can use it):
+In order to store data in the table you need a DataContainer object. This will simply provide a way to handle your data in an object orientied manner.
 ``` java
-DataContainer player = new DataContainer(playerUuid);
-playerData.put(player);
+DataContainer player = playerData.createDataContainer(id);
 ```
 Finally, you can use the DataContainer to put, get, and drop data:
 
