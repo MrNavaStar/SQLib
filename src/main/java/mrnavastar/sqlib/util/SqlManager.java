@@ -81,7 +81,7 @@ public class SqlManager {
 
     public static void createRow(String tableName, String id) {
         try {
-            String sql = "INSERT OR REPLACE INTO " + tableName + " (ID) VALUES(?)";
+            String sql = "REPLACE INTO " + tableName + " (ID) VALUES(?)";
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setQueryTimeout(30);
             stmt.setString(1, id);
@@ -126,6 +126,7 @@ public class SqlManager {
             stmt.setQueryTimeout(30);
             stmt.setString(1, id);
             ResultSet resultSet = stmt.executeQuery();
+            resultSet.next();
             JsonParser parser = new JsonParser();
             String data = resultSet.getString(dataType);
 
