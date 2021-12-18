@@ -13,6 +13,10 @@ public class SQLiteDatabase extends Database {
         this.disconnect();
     }
 
+    public String getType() {
+        return "sqlite";
+    }
+
     @Override
     public void connect() {
         SqlManager.connectSQLITE(this.directory, this.name);

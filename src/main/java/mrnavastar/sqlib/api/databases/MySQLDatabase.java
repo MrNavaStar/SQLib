@@ -19,6 +19,10 @@ public class MySQLDatabase extends Database {
         this.disconnect();
     }
 
+    public String getType() {
+        return "mysql";
+    }
+
     @Override
     public void connect() {
         SqlManager.connectMYSQL(this.address, this.port, this.name, this.username, this.password);

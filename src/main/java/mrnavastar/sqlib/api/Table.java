@@ -26,7 +26,7 @@ public class Table {
     public void addToDatabase(Database database) {
         this.database = database;
         this.beginTransaction();
-        SqlManager.createTable(name);
+        SqlManager.createTable(name, database.getType());
 
         List<String> ids = this.getIds();
         if (ids != null) {
