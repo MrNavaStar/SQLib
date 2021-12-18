@@ -66,14 +66,26 @@ public class SqlManager {
         }
     }
 
-    public static void createTable(String name) {
+    public static void createTable(String name, String type) {
         try {
-            String sql = "CREATE TABLE IF NOT EXISTS " + name + " (ID TEXT PRIMARY KEY, STRINGS TEXT, STRING_ARRAYS TEXT, " +
-                    "INTS TEXT, INT_ARRAYS TEXT, FLOATS TEXT, DOUBLES TEXT, LONGS TEXT, BOOLEANS TEXT, JSON TEXT, NBT TEXT, BLOCK_POS TEXT, " +
-                    "BLOCK_POS_ARRAYS TEXT, UUIDS TEXT, UUID_ARRAYS TEXT, LITERAL_TEXTS TEXT, MUTABLE_TEXTS TEXT)";
-            PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setQueryTimeout(30);
-            stmt.executeUpdate();
+            String sql = null;
+            if (type.equals("mysql")) {
+                sql = "CREATE TABLE IF NOT EXISTS " + name + " (ID MEDIUMTEXT, STRINGS MEDIUMTEXT, STRING_ARRAYS MEDIUMTEXT, " +
+                        "INTS MEDIUMTEXT, INT_ARRAYS MEDIUMTEXT, FLOATS MEDIUMTEXT, DOUBLES MEDIUMTEXT, LONGS MEDIUMTEXT, BOOLEANS MEDIUMTEXT, JSON MEDIUMTEXT, NBT MEDIUMTEXT, BLOCK_POS MEDIUMTEXT, " +
+                        "BLOCK_POS_ARRAYS MEDIUMTEXT, UUIDS MEDIUMTEXT, UUID_ARRAYS MEDIUMTEXT, LITERAL_TEXTS MEDIUMTEXT, MUTABLE_TEXTS MEDIUMTEXT, PRIMARY KEY (ID(255)))";
+            }
+
+            if (type.equals("sqlite")) {
+                sql = "CREATE TABLE IF NOT EXISTS " + name + " (ID TEXT PRIMARY KEY, STRINGS TEXT, STRING_ARRAYS TEXT, " +
+                        "INTS TEXT, INT_ARRAYS TEXT, FLOATS TEXT, DOUBLES TEXT, LONGS TEXT, BOOLEANS TEXT, JSON TEXT, NBT TEXT, BLOCK_POS TEXT, " +
+                        "BLOCK_POS_ARRAYS TEXT, UUIDS TEXT, UUID_ARRAYS TEXT, LITERAL_TEXTS TEXT, MUTABLE_TEXTS TEXT)";
+            }
+
+            if (sql != null) {
+                PreparedStatement stmt = connection.prepareStatement(sql);
+                stmt.setQueryTimeout(30);
+                stmt.executeUpdate();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -81,7 +93,7 @@ public class SqlManager {
 
     public static void createRow(String tableName, String id) {
         try {
-            String sql = "INSERT OR REPLACE INTO " + tableName + " (ID) VALUES(?)";
+            String sql = "REPLACE INTO " + tableName + " (ID) VALUES(?)";
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setQueryTimeout(30);
             stmt.setString(1, id);
@@ -126,6 +138,7 @@ public class SqlManager {
             stmt.setQueryTimeout(30);
             stmt.setString(1, id);
             ResultSet resultSet = stmt.executeQuery();
+            resultSet.next();
             JsonParser parser = new JsonParser();
             String data = resultSet.getString(dataType);
 

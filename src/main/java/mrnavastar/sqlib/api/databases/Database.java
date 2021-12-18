@@ -14,6 +14,8 @@ public abstract class Database {
         this.name = name;
     }
 
+    public abstract String getType();
+
     public abstract void connect();
 
     public void disconnect() {
