@@ -128,7 +128,7 @@ public class SqlManager {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return new ArrayList<>();
     }
 
     public static JsonObject readJson(String tableName, String id, String dataType) {
