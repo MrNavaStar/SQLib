@@ -7,7 +7,6 @@ import mrnavastar.sqlib.util.Parser;
 import mrnavastar.sqlib.util.SqlManager;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
-import net.minecraft.text.LiteralTextContent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
@@ -149,12 +148,8 @@ public class DataContainer {
         putIntoDatabase("UUID_ARRAYS", key, value);
     }
 
-    public void put(String key, LiteralTextContent value) {
-        putIntoDatabase("LITERAL_TEXTS", key, value);
-    }
-
     public void put(String key, MutableText value) {
-        putIntoDatabase("MUTABLE_TEXTS", key, Text.Serializer.toJson(value));
+        putIntoDatabase("TEXTS", key, Text.Serializer.toJson(value));
     }
 
     public void dropString(String key) {
@@ -320,14 +315,8 @@ public class DataContainer {
         return null;
     }
 
-    public LiteralTextContent getLiteralText(String key) {
-        JsonElement json = getFromDatabase("LITERAL_TEXTS", key);
-        if (json != null) return new LiteralTextContent(json.getAsString());
-        return null;
-    }
-
-    public MutableText getMutableText(String key) {
-        JsonElement json = getFromDatabase("MUTABLE_TEXTS", key);
+    public MutableText getText(String key) {
+        JsonElement json = getFromDatabase("TEXTS", key);
         if (json != null) return Text.Serializer.fromJson(json.getAsString());
         return null;
     }
