@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "sqlib",
   "version": "${version}",
-  "name": "Sqlib",
+  "name": "SQLib",
   "description": "A simple SQL wrapper with a focus on Minecraft use cases",
   "authors": ["MrNavaStar"],
   "contact": {},
@@ -13,14 +13,7 @@
       "mrnavastar.sqlib.Sqlib"
     ]
   },
-  "mixins": [
-    "sqlib.mixins.json"
-  ],
   "depends": {
-    "fabricloader": ">=0.11.6",
-    "minecraft": [
-      "1.18.x",
-      "1.17.x"
-    ]
+    "fabricloader": ">=0.11.6"
   }
 }
