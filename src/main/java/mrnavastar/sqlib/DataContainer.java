@@ -5,18 +5,21 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import mrnavastar.sqlib.sql.SQLConnection;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.StringNbtReader;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.time.Year;
 import java.util.UUID;
 
 public class DataContainer {
 
-    private Table table;
-    private SQLConnection sqlConnection;
+    private final Table table;
+    private final SQLConnection sqlConnection;
     private final String id;
 
     public DataContainer(String id, Table table, SQLConnection sqlConnection) {
@@ -25,8 +28,12 @@ public class DataContainer {
         this.sqlConnection = sqlConnection;
     }
 
-    public String getId() {
-        return this.id;
+    public String getIdAsString() {
+        return id;
+    }
+
+    public UUID getIdAsUUID() {
+        return UUID.fromString(id);
     }
 
     public void put(String field, String value) {
@@ -57,6 +64,10 @@ public class DataContainer {
         sqlConnection.writeField(table, id, field, value);
     }
 
+    public void put(String field, Timestamp value) {
+        sqlConnection.writeField(table, id, field, value);
+    }
+
     public void put(String field, Year value) {
         sqlConnection.writeField(table, id, field, value);
     }
@@ -75,6 +86,10 @@ public class DataContainer {
 
     public void put(String field, NbtElement value) {
         sqlConnection.writeField(table, id, field, value.asString());
+    }
+
+    public void put(String field, MutableText value) {
+        sqlConnection.writeField(table, id, field, MutableText.Serializer.toJson(value));
     }
 
     public void put(String field, UUID value) {
@@ -109,6 +124,10 @@ public class DataContainer {
         return sqlConnection.readField(table, id, field, Time.class);
     }
 
+    public Timestamp getTimestamp(String field) {
+        return sqlConnection.readField(table, id, field, Timestamp.class);
+    }
+
     public Year getYear(String field) {
         return sqlConnection.readField(table, id, field, Year.class);
     }
@@ -132,6 +151,10 @@ public class DataContainer {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public MutableText getText(String field) {
+        return Text.Serializer.fromJson(sqlConnection.readField(table, id, field, String.class));
     }
 
     public UUID getUUID(String field) {

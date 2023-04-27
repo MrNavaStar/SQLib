@@ -8,5 +8,9 @@
   "contact": {},
   "license": "MIT",
   "icon": "assets/sqlib/icon.png",
-  "environment": "*"
+  "environment": "*",
+  "depends": {
+    "fabric": "*",
+    "minecraft": ">=1.16.5"
+  }
 }

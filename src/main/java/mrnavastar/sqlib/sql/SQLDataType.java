@@ -8,15 +8,16 @@ public enum SQLDataType {
     BOOL("BOOL"),
     DATE("DATE"),
     TIME("TIME"),
-    //DATETIME(java.util.Date.class, "DATETIME"),
-    //TIMESTAMP("TIMESTAMP"),
+    TIMESTAMP("TIMESTAMP"),
     YEAR("YEAR"),
+    UUID("CHAR", 36),
 
+    //Minecraft Data types
     BLOCKPOS("BIGINT", 255),
     CHUNKPOS("BIGINT", 255),
     JSON("LONGTEXT"),
     NBT("LONGTEXT"),
-    UUID("CHAR", 36);
+    MUTABLE_TEXT("LONGTEXT");
 
     private final String sqlDataType;
     private int size = 0;
