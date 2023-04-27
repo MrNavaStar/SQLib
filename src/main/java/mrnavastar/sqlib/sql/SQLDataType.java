@@ -5,6 +5,7 @@ public enum SQLDataType {
     INT("INT", 255),
     FLOAT("FLOAT", 24),
     DOUBLE("DOUBLE", 53),
+    LONG("BIGINT", 255),
     BOOL("BOOL"),
     DATE("DATE"),
     TIME("TIME"),

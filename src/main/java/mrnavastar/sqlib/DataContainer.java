@@ -52,6 +52,10 @@ public class DataContainer {
         sqlConnection.writeField(table, id, field, value);
     }
 
+    public void put(String field, long value) {
+        sqlConnection.writeField(table, id, field, value);
+    }
+
     public void put(String field, boolean value) {
         sqlConnection.writeField(table, id, field, value);
     }
@@ -110,6 +114,10 @@ public class DataContainer {
 
     public double getDouble(String field) {
         return sqlConnection.readField(table, id, field, double.class);
+    }
+
+    public double getLong(String field) {
+        return sqlConnection.readField(table, id, field, long.class);
     }
 
     public boolean getBool(String field) {
