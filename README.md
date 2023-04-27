@@ -3,7 +3,7 @@
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/)
 
-<img src="https://github.com/MrNavaStar/SQLib/blob/master/src/main/resources/assets/sqlib/icon.png" width="300" height="300">
+<img src="https://raw.githubusercontent.com/MrNavaStar/SQLib/master/src/main/resources/assets/sqlib/icon.png" width="300" height="300">
 
 # SQLib
 SQLib is the easiest way to store data for all your minecraft needs! Its simple fabric based sql wrapper made with a focus on minecraft use cases.

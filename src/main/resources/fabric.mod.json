@@ -8,16 +8,5 @@
   "contact": {},
   "license": "MIT",
   "icon": "assets/sqlib/icon.png",
-  "environment": "*",
-  "entrypoints": {
-    "main": [
-      "mrnavastar.sqlib.Sqlib"
-    ]
-  },
-  "depends": {
-    "fabricloader": ">=0.11.6",
-    "minecraft": [
-      "1.19.x"
-    ]
-  }
+  "environment": "*"
 }
