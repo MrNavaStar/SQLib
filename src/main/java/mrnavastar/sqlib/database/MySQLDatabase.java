@@ -33,8 +33,8 @@ public class MySQLDatabase extends Database {
     }
 
     @Override
-    public String getTableCreationQuery(String tableName, String columns, String primaryKey, String primaryKeyType) {
-        return "CREATE TABLE IF NOT EXISTS %s (%s %s %s, PRIMARY KEY (%s))".formatted(tableName, columns, primaryKey, primaryKeyType, primaryKey);
+    public String getTableCreationQuery(String tableName, String columns) {
+        return "CREATE TABLE IF NOT EXISTS %s (%s ID MEDIUMTEXT, PRIMARY KEY (ID))".formatted(tableName, columns);
     }
 
     @Override

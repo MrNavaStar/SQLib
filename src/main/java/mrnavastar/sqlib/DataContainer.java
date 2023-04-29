@@ -36,6 +36,10 @@ public class DataContainer {
         return UUID.fromString(id);
     }
 
+    public int getIdAsInt() {
+        return Integer.parseInt(id);
+    }
+
     public void put(String field, String value) {
         sqlConnection.writeField(table, id, field, value);
     }
@@ -45,7 +49,7 @@ public class DataContainer {
     }
 
     public void put(String field, float value) {
-        sqlConnection.writeField(table, id, field, value);
+        sqlConnection.writeField(table, id, field, (double) value);
     }
 
     public void put(String field, double value) {
@@ -85,7 +89,7 @@ public class DataContainer {
     }
 
     public void put(String field, JsonElement value) {
-        sqlConnection.writeField(table, id, field, value.getAsString());
+        sqlConnection.writeField(table, id, field, value.toString());
     }
 
     public void put(String field, NbtElement value) {
@@ -105,47 +109,47 @@ public class DataContainer {
     }
 
     public int getInt(String field) {
-        return sqlConnection.readField(table, id, field, int.class);
+        return sqlConnection.readField(table, id, field, Integer.class);
     }
 
     public float getFloat(String field) {
-        return sqlConnection.readField(table, id, field, float.class);
+        return sqlConnection.readField(table, id, field, Double.class).floatValue();
     }
 
     public double getDouble(String field) {
-        return sqlConnection.readField(table, id, field, double.class);
+        return sqlConnection.readField(table, id, field, Double.class);
     }
 
     public double getLong(String field) {
-        return sqlConnection.readField(table, id, field, long.class);
+        return sqlConnection.readField(table, id, field, Integer.class);
     }
 
     public boolean getBool(String field) {
-        return sqlConnection.readField(table, id, field, boolean.class);
+        return sqlConnection.readField(table, id, field, Integer.class) > 0;
     }
 
     public Date getDate(String field) {
-        return sqlConnection.readField(table, id, field, Date.class);
+        return new Date(sqlConnection.readField(table, id, field, Long.class));
     }
 
     public Time getTime(String field) {
-        return sqlConnection.readField(table, id, field, Time.class);
+        return new Time(sqlConnection.readField(table, id, field, Integer.class));
     }
 
     public Timestamp getTimestamp(String field) {
-        return sqlConnection.readField(table, id, field, Timestamp.class);
+        return new Timestamp(sqlConnection.readField(table, id, field, Long.class));
     }
 
     public Year getYear(String field) {
-        return sqlConnection.readField(table, id, field, Year.class);
+        return Year.of(sqlConnection.readField(table, id, field, Integer.class));
     }
 
     public BlockPos getBlockPos(String field) {
-        return BlockPos.fromLong(sqlConnection.readField(table, id, field, long.class));
+        return BlockPos.fromLong(sqlConnection.readField(table, id, field, Long.class));
     }
 
     public ChunkPos getChunkPos(String field) {
-        return new ChunkPos(sqlConnection.readField(table, id, field, long.class));
+        return new ChunkPos(sqlConnection.readField(table, id, field, Long.class));
     }
 
     public JsonElement getJson(String field) {
@@ -161,7 +165,7 @@ public class DataContainer {
         }
     }
 
-    public MutableText getText(String field) {
+    public MutableText getMutableText(String field) {
         return Text.Serializer.fromJson(sqlConnection.readField(table, id, field, String.class));
     }
 

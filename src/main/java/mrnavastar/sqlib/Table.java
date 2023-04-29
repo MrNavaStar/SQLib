@@ -11,7 +11,6 @@ public class Table {
     private final String name;
     private final Database database;
     private final SQLConnection sqlConnection;
-    private String primaryKey = "";
 
     private final HashMap<String, SQLDataType> columns = new HashMap<>();
     private final HashMap<String, DataContainer> dataContainers = new HashMap<>();
@@ -19,10 +18,10 @@ public class Table {
     private boolean isInTransaction = false;
 
 
-    public Table(String name, Database database) {
+    public Table(String name, Database database, SQLConnection sqlConnection) {
         this.name = name;
         this.database = database;
-        this.sqlConnection = database.getSqlManager();
+        this.sqlConnection = sqlConnection;
     }
 
     public Table addColumn(String name, SQLDataType dataType) {
@@ -30,16 +29,10 @@ public class Table {
         return this;
     }
 
-    public Table setContainerId(String name) {
-        primaryKey = name;
-        return this;
-    }
-
     public Table finish() {
-        columns.remove(primaryKey);
+        sqlConnection.createTable(this);
         database.addTable(this);
-
-        getIds().forEach(this::createDataContainer);
+        sqlConnection.listPrimaryKeys(this).forEach(this::createDataContainer);
         return this;
     }
 
@@ -49,14 +42,6 @@ public class Table {
 
     public Database getDatabase() {
         return database;
-    }
-
-    public String getPrimaryKey() {
-        return primaryKey;
-    }
-
-    public SQLDataType getPrimaryKeyType() {
-        return SQLDataType.STRING;
     }
 
     public HashMap<String, SQLDataType> getColumns() {
@@ -79,14 +64,20 @@ public class Table {
         return isInTransaction;
     }
 
-    public List<String> getIds() {
-        return sqlConnection.listPrimaryKeys(this);
+    public ArrayList<String> getIds() {
+        return (ArrayList<String>) dataContainers.keySet().stream().toList();
     }
 
-    public List<UUID> getIdsAsUuids() {
-        List<UUID> uuids = new ArrayList<>();
+    public ArrayList<UUID> getIdsAsUUIDs() {
+        ArrayList<UUID> uuids = new ArrayList<>();
         dataContainers.keySet().forEach(id -> uuids.add(UUID.fromString(id)));
         return uuids;
+    }
+
+    public ArrayList<Integer> getIdsAsInts() {
+        ArrayList<Integer> ints = new ArrayList<>();
+        dataContainers.keySet().forEach(id -> ints.add(Integer.parseInt(id)));
+        return ints;
     }
 
     public DataContainer createDataContainer(String id) {
@@ -104,6 +95,10 @@ public class Table {
        return createDataContainer(id.toString());
     }
 
+    public DataContainer createDataContainer(int id) {
+       return createDataContainer(String.valueOf(id));
+    }
+
     public void drop(DataContainer dataContainer) {
         DataContainer container = dataContainers.remove(dataContainer.getIdAsString());
         if (container != null) sqlConnection.deleteRow(this, dataContainer.getIdAsString());
@@ -113,16 +108,24 @@ public class Table {
         drop(get(id));
     }
 
-    public void drop(UUID uuid) {
-        drop(uuid.toString());
+    public void drop(UUID id) {
+        drop(id.toString());
+    }
+
+    public void drop(int id) {
+        drop(String.valueOf(id));
     }
 
     public DataContainer get(String id) {
         return dataContainers.get(id);
     }
 
-   public DataContainer get(UUID id) {
+    public DataContainer get(UUID id) {
         return get(id.toString());
+    }
+
+    public DataContainer get(int id) {
+        return get(String.valueOf(id));
     }
 
     public boolean contains(String id) {
@@ -131,6 +134,10 @@ public class Table {
 
     public boolean contains(UUID id) {
         return contains(id.toString());
+    }
+
+    public boolean contains(int id) {
+        return contains(String.valueOf(id));
     }
 
     public Collection<DataContainer> getDataContainers() {

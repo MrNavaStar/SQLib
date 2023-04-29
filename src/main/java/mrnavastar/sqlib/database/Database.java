@@ -4,12 +4,13 @@ import mrnavastar.sqlib.Table;
 import mrnavastar.sqlib.sql.SQLConnection;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Properties;
 
 public abstract class Database {
 
     protected final String name;
-    private final ArrayList<Table> tables = new ArrayList<>();
+    private final HashMap<String, Table> tables = new HashMap<>();
     protected SQLConnection sqlConnection;
 
     public Database(String name) {
@@ -22,7 +23,7 @@ public abstract class Database {
         return new Properties();
     }
 
-    public abstract String getTableCreationQuery(String tableName, String columns, String primaryKey, String primaryKeyType);
+    public abstract String getTableCreationQuery(String tableName, String columns);
 
     public void open() {
         if (sqlConnection == null) sqlConnection = new SQLConnection(getConnectionUrl(), getConnectionProperties());
@@ -39,27 +40,19 @@ public abstract class Database {
         sqlConnection.endTransaction();
     }
 
-    public SQLConnection getSqlManager() {
-        return sqlConnection;
-    }
-
     public Table createTable(String name) {
-        return new Table(name, this);
+        return new Table(name, this, sqlConnection);
     }
 
     public void addTable(Table table) {
-        sqlConnection.createTable(table);
-        tables.add(table);
+        tables.put(table.getName(), table);
     }
 
     public Table getTable(String name) {
-        for (Table table : tables) {
-            if (table.getName().equals(name)) return table;
-        }
-        return null;
+        return tables.get(name);
     }
 
     public ArrayList<Table> getTables() {
-        return tables;
+        return (ArrayList<Table>) tables.values();
     }
 }

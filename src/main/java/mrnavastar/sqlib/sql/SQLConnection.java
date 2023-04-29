@@ -53,15 +53,12 @@ public class SQLConnection {
     }
 
     public void createTable(Table table) {
-        String primaryKey = table.getPrimaryKey();
         HashMap<String, SQLDataType> columns = table.getColumns();
-        String primaryKeyType = table.getPrimaryKeyType().toString();
-
         StringBuilder columnString = new StringBuilder();
         columns.forEach((name, dataType) -> columnString.append("%s %s,".formatted(name, dataType)));
 
         try {
-            String sql = table.getDatabase().getTableCreationQuery(table.getName(), columnString.toString(), primaryKey, primaryKeyType);
+            String sql = table.getDatabase().getTableCreationQuery(table.getName(), columnString.toString());
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setQueryTimeout(30);
             stmt.executeUpdate();
@@ -72,7 +69,7 @@ public class SQLConnection {
 
     public void createRow(Table table, String id) {
         try {
-            String sql = "REPLACE INTO %s (%s) VALUES(?)".formatted(table.getName(), table.getPrimaryKey());
+            String sql = "REPLACE INTO %s (ID) VALUES(?)".formatted(table.getName());
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setQueryTimeout(30);
             stmt.setString(1, id);
@@ -84,7 +81,7 @@ public class SQLConnection {
 
     public void deleteRow(Table table, String id) {
         try {
-            String sql = "DELETE FROM %s WHERE %s = ?".formatted(table.getName(), table.getPrimaryKey());
+            String sql = "DELETE FROM %s WHERE ID = ?".formatted(table.getName());
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setQueryTimeout(30);
             stmt.setString(1, id);
@@ -96,7 +93,7 @@ public class SQLConnection {
 
     public List<String> listPrimaryKeys(Table table) {
         try {
-            String sql = "SELECT %s FROM %s".formatted(table.getPrimaryKey(), table.getName());
+            String sql = "SELECT ID FROM %s".formatted(table.getName());
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setQueryTimeout(30);
             List<String> ids = new ArrayList<>();

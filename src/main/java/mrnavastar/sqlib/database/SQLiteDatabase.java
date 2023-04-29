@@ -16,8 +16,8 @@ public class SQLiteDatabase extends Database {
     }
 
     @Override
-    public String getTableCreationQuery(String tableName, String columns, String primaryKey, String primaryKeyType) {
-        return "CREATE TABLE IF NOT EXISTS %s (%s %s %s PRIMARY KEY)".formatted(tableName, columns, primaryKey, primaryKeyType);
+    public String getTableCreationQuery(String tableName, String columns) {
+        return "CREATE TABLE IF NOT EXISTS %s (%s ID MEDIUMTEXT PRIMARY KEY)".formatted(tableName, columns);
     }
 
     @Override
