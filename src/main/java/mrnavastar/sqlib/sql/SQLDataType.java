@@ -3,14 +3,9 @@ package mrnavastar.sqlib.sql;
 public enum SQLDataType {
     STRING("LONGTEXT"),
     INT("INT", 255),
-    FLOAT("FLOAT", 24),
-    DOUBLE("DOUBLE", 53),
+    DOUBLE("FLOAT", 53),
     LONG("BIGINT", 255),
-    BOOL("BOOL"),
-    DATE("DATE"),
-    TIME("TIME"),
-    TIMESTAMP("TIMESTAMP"),
-    YEAR("YEAR"),
+    BOOL("INT", 1),
     UUID("CHAR", 36),
 
     //Minecraft Data types

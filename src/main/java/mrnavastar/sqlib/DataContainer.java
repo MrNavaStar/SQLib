@@ -10,10 +10,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 
-import java.sql.Date;
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.time.Year;
 import java.util.UUID;
 
 public class DataContainer {
@@ -48,10 +44,6 @@ public class DataContainer {
         sqlConnection.writeField(table, id, field, value);
     }
 
-    public void put(String field, float value) {
-        sqlConnection.writeField(table, id, field, (double) value);
-    }
-
     public void put(String field, double value) {
         sqlConnection.writeField(table, id, field, value);
     }
@@ -61,23 +53,7 @@ public class DataContainer {
     }
 
     public void put(String field, boolean value) {
-        sqlConnection.writeField(table, id, field, value);
-    }
-
-    public void put(String field, Date value) {
-        sqlConnection.writeField(table, id, field, value);
-    }
-
-    public void put(String field, Time value) {
-        sqlConnection.writeField(table, id, field, value);
-    }
-
-    public void put(String field, Timestamp value) {
-        sqlConnection.writeField(table, id, field, value);
-    }
-
-    public void put(String field, Year value) {
-        sqlConnection.writeField(table, id, field, value);
+        sqlConnection.writeField(table, id, field, value ? 1 : 0); // Convert bool to int, SQLite compat
     }
 
     public void put(String field, BlockPos value) {
@@ -112,36 +88,16 @@ public class DataContainer {
         return sqlConnection.readField(table, id, field, Integer.class);
     }
 
-    public float getFloat(String field) {
-        return sqlConnection.readField(table, id, field, Double.class).floatValue();
-    }
-
     public double getDouble(String field) {
         return sqlConnection.readField(table, id, field, Double.class);
     }
 
     public double getLong(String field) {
-        return sqlConnection.readField(table, id, field, Integer.class);
+        return sqlConnection.readField(table, id, field, Long.class);
     }
 
     public boolean getBool(String field) {
-        return sqlConnection.readField(table, id, field, Integer.class) > 0;
-    }
-
-    public Date getDate(String field) {
-        return new Date(sqlConnection.readField(table, id, field, Long.class));
-    }
-
-    public Time getTime(String field) {
-        return new Time(sqlConnection.readField(table, id, field, Integer.class));
-    }
-
-    public Timestamp getTimestamp(String field) {
-        return new Timestamp(sqlConnection.readField(table, id, field, Long.class));
-    }
-
-    public Year getYear(String field) {
-        return Year.of(sqlConnection.readField(table, id, field, Integer.class));
+        return sqlConnection.readField(table, id, field, Integer.class) > 0; //Int to bool, SQLite compat
     }
 
     public BlockPos getBlockPos(String field) {

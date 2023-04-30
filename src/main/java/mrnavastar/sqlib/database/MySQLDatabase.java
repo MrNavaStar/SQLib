@@ -34,7 +34,7 @@ public class MySQLDatabase extends Database {
 
     @Override
     public String getTableCreationQuery(String tableName, String columns) {
-        return "CREATE TABLE IF NOT EXISTS %s (%s ID MEDIUMTEXT, PRIMARY KEY (ID))".formatted(tableName, columns);
+        return "CREATE TABLE IF NOT EXISTS %s (ID TEXT, %s PRIMARY KEY (ID(256)));".formatted(tableName, columns);
     }
 
     @Override
