@@ -1,7 +1,4 @@
-[![](https://jitpack.io/v/MrNavaStar/SQLib.svg)](https://jitpack.io/#MrNavaStar/SQLib)
-[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Naereen/StrapDown.js/graphs/commit-activity)\
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
-[![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Naereen/StrapDown.js/graphs/commit-activity)
 
 <img src="https://raw.githubusercontent.com/MrNavaStar/SQLib/master/src/main/resources/assets/sqlib/icon.png" width="300" height="300">
 
@@ -14,52 +11,66 @@ The main focus of this library is to provide an easy and simple way to store dat
 If you are looking for a more advanced database I recommend taking a look at something like [Nitrite](https://github.com/nitrite/nitrite-java).
 
 # Setup
-The library first needs to be included into your project. The simplest way to do this is through [Jitpack](https://jitpack.io/).
-In your build.gradle make sure to include:
+In your build.gradle include:
 
 ``` gradle
 repositories {
-    maven { url 'https://jitpack.io' }
+    maven { url "https://api.modrinth.com/maven" }
 }
 
 dependencies {
-  modImplementation 'com.github.MrNavaStar:SQLib:v1.2.0'
-  
-  //Or if you wish to include with the mod:
-  include(modImplementation('com.github.MrNavaStar:SQLib:v1.2.0'))
+  modImplementation("maven.modrinth:sqlib:2.0.0")
 }
 ```
 
-# Usage
-The database must first be setup to use either sqlite or mysql like so:
+# Supported Datatypes
+The datatypes can be accessed with the `SQLDataType` class.
+| Standard | Minecraft   |
+|----------|-------------|
+| String   | BlockPos    |
+| Int      | ChunkPos    |
+| Double   | NbtElement  |
+| Long     | Json        |
+| Bool     | MutableText |
+| UUID     |             |
 
-- SQLITE
-``` java
-Database database = new SQLiteDatabase("name", "/awesome/dir");
+# General Usage
+```java
+MySQLDatabase data = new MySQLDatabase("mydata", "192.168.1.69", "3306", "cooluser", "radman");
+// OR
+SQLiteDatabase data = new SQLiteDatabase("mydata", "some/dir");
+
+Table table = data.createTable("userdata")
+        .addColumn("username", SQLDataType.STRING)
+        .addColumn("home", SQLDataType.BLOCKPOS)
+        .addColumn("nbt", SQLDataType.NBT)
+        .finish();
+        
+DataContainer playerData = table.createDataContainer(UUID.randomUUID());
+playerData.put("username", "CoolGuy123");
+playerData.put("home", new BlockPos(304, 62, 37);
+playerData.put("nbt", new NbtCompound());
+
+System.out.println(playerdata.getString("username"));
+System.out.println(playerdata.getBlockPos("home"));
+System.out.println(playerdata.getNbt("nbt"));
+
+data.close();
 ```
-- MYSQL
-``` java
-Database database = new MySQLDatabase("name", "127.0.0.1", "3306", "username", "password");
-```
+# Transaction support
+This approuch will bach sql commands into one command for faster read/writes of large amounts of data. You can begin and end a transaction at anytime.
+```java
+Table table = data.createTable("userdata")
+        .addColumn("username", SQLDataType.STRING)
+        .addColumn("home", SQLDataType.BLOCKPOS)
+        .addColumn("nbt", SQLDataType.NBT)
+        .finish();
 
-Now a table can be added to store data. This table will automatically be added to the database (Note that it is not required to include your mod id in the 
-table name, however doing so will result in less conflict with other mods that name their tables the same):
-``` java
-Table playerData = database.createTable(MODID + " name");
-```
-In order to store data in the table you need a DataContainer object. This will simply provide a way to handle your data in an object orientied manner.
-``` java
-DataContainer player = playerData.createDataContainer(id);
-```
-Finally, you can use the DataContainer to put, get, and drop data:
+table.beginTransaction();
+DataContainer playerData = table.createDataContainer(UUID.randomUUID());
+playerData.put("username", "CoolGuy123");
+playerData.put("home", new BlockPos(304, 62, 37);
+table.endTransaction();
 
-``` java
-player.put("NickName", "Bob Ross");
-player.put("Health", 100);
-
-String name = player.getString("NickName");
-String health = player.getInt("Health");
-
-player.dropString("NickName");
-player.dropInt("Health");
+playerData.put("nbt", new NbtCompound());
 ```
