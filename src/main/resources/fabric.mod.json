@@ -10,7 +10,6 @@
   "icon": "assets/sqlib/icon.png",
   "environment": "*",
   "depends": {
-    "fabric": "*",
     "minecraft": ">=1.16.5"
   }
 }

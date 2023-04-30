@@ -1,0 +1,7 @@
+jobs:
+  publish:
+    steps:
+      - uses: Kir-Antipov/mc-publish@v3.2
+        with:
+          modrinth-id: IM84wwxs
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
