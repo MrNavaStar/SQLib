@@ -9,8 +9,8 @@ public class MySQLDatabase extends Database {
     private final String username;
     private final String password;
 
-    public MySQLDatabase(String name, String address, String port, String username, String password) {
-        super(name);
+    public MySQLDatabase(String modId, String name, String address, String port, String username, String password) {
+        super(modId, name);
         this.address = address;
         this.port = port;
         this.username = username;

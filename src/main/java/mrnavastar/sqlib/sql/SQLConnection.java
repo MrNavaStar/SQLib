@@ -58,7 +58,7 @@ public class SQLConnection {
         columns.forEach((name, dataType) -> columnString.append("%s %s,".formatted(name, dataType)));
 
         try {
-            String sql = table.getDatabase().getTableCreationQuery(table.getName(), columnString.toString());
+            String sql = table.getDatabase().getTableCreationQuery(table.getNoConflictName(), columnString.toString());
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setQueryTimeout(30);
             stmt.executeUpdate();
@@ -69,7 +69,7 @@ public class SQLConnection {
 
     public void createRow(Table table, String id) {
         try {
-            String sql = "REPLACE INTO %s (ID) VALUES(?)".formatted(table.getName());
+            String sql = "REPLACE INTO %s (ID) VALUES(?)".formatted(table.getNoConflictName());
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setQueryTimeout(30);
             stmt.setString(1, id);
@@ -81,7 +81,7 @@ public class SQLConnection {
 
     public void deleteRow(Table table, String id) {
         try {
-            String sql = "DELETE FROM %s WHERE ID = ?".formatted(table.getName());
+            String sql = "DELETE FROM %s WHERE ID = ?".formatted(table.getNoConflictName());
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setQueryTimeout(30);
             stmt.setString(1, id);
@@ -93,7 +93,7 @@ public class SQLConnection {
 
     public List<String> listPrimaryKeys(Table table) {
         try {
-            String sql = "SELECT ID FROM %s".formatted(table.getName());
+            String sql = "SELECT ID FROM %s".formatted(table.getNoConflictName());
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setQueryTimeout(30);
             List<String> ids = new ArrayList<>();
@@ -109,7 +109,7 @@ public class SQLConnection {
 
     public <T> T readField(Table table, Object primaryKey, String field, Class<T> type) {
         try {
-            String sql = "SELECT %s FROM %s WHERE ID = ?".formatted(field, table.getName());
+            String sql = "SELECT %s FROM %s WHERE ID = ?".formatted(field, table.getNoConflictName());
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setQueryTimeout(30);
             stmt.setObject(1, primaryKey);
@@ -125,7 +125,7 @@ public class SQLConnection {
 
     public void writeField(Table table, Object primaryKey, String field, Object value) {
         try {
-            String sql = "UPDATE %s SET %s = ? WHERE ID = ?".formatted(table.getName(), field);
+            String sql = "UPDATE %s SET %s = ? WHERE ID = ?".formatted(table.getNoConflictName(), field);
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setQueryTimeout(30);
             stmt.setObject(1, value);

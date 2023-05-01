@@ -4,8 +4,8 @@ public class SQLiteDatabase extends Database {
 
     private final String directory;
 
-    public SQLiteDatabase(String name, String directory) {
-        super(name);
+    public SQLiteDatabase(String modId, String name, String directory) {
+        super(modId, name);
         this.directory = directory;
         open();
     }

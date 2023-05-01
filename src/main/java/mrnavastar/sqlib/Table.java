@@ -9,6 +9,7 @@ import java.util.*;
 public class Table {
 
     private final String name;
+    private final String modId;
     private final Database database;
     private final SQLConnection sqlConnection;
 
@@ -17,9 +18,9 @@ public class Table {
 
     private boolean isInTransaction = false;
 
-
-    public Table(String name, Database database, SQLConnection sqlConnection) {
+    public Table(String modId, String name, Database database, SQLConnection sqlConnection) {
         this.name = name;
+        this.modId = modId;
         this.database = database;
         this.sqlConnection = sqlConnection;
     }
@@ -37,7 +38,11 @@ public class Table {
     }
 
     public String getName() {
-        return this.name;
+        return name;
+    }
+
+    public String getNoConflictName() {
+        return modId + ":" + name;
     }
 
     public Database getDatabase() {

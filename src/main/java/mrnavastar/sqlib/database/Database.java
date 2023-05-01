@@ -10,10 +10,12 @@ import java.util.Properties;
 public abstract class Database {
 
     protected final String name;
+    private final String modId;
     private final HashMap<String, Table> tables = new HashMap<>();
     protected SQLConnection sqlConnection;
 
-    public Database(String name) {
+    public Database(String modId, String name) {
+        this.modId = modId;
         this.name = name;
     }
 
@@ -41,7 +43,7 @@ public abstract class Database {
     }
 
     public Table createTable(String name) {
-        return new Table(name, this, sqlConnection);
+        return new Table(modId, name, this, sqlConnection);
     }
 
     public void addTable(Table table) {
@@ -49,7 +51,7 @@ public abstract class Database {
     }
 
     public Table getTable(String name) {
-        return tables.get(name);
+        return tables.get(modId + ":" + name);
     }
 
     public ArrayList<Table> getTables() {
