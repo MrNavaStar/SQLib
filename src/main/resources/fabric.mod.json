@@ -6,7 +6,7 @@
   "description": "A simple SQL wrapper with a focus on Minecraft use cases",
   "authors": ["MrNavaStar"],
   "contact": {},
-  "license": "MIT",
+  "license": "CC0-1.0",
   "icon": "assets/sqlib/icon.png",
   "environment": "*",
   "depends": {

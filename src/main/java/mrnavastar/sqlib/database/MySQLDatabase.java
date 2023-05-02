@@ -18,7 +18,6 @@ public class MySQLDatabase extends Database {
         open();
     }
 
-
     @Override
     public String getConnectionUrl() {
         return "jdbc:mysql://" + address + ":" + port + "/" + name;
