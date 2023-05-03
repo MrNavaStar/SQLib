@@ -6,7 +6,7 @@
 SQLib is the easiest way to store data for all your minecraft needs! Its simple fabric based sql wrapper made with a focus on minecraft use cases.
 
 # Important Note:
-This library is not a full fledged sql wrapper, and does not provide full access to many sql features. 
+This library is not a full-fledged sql wrapper, and does not provide full access to many sql features. 
 The main focus of this library is to provide an easy and simple way to store data in your mods.
 If you are looking for a more advanced database I recommend taking a look at something like [Nitrite](https://github.com/nitrite/nitrite-java).
 
@@ -36,9 +36,9 @@ The datatypes can be accessed with the `SQLDataType` class.
 
 # General Usage
 ```java
-MySQLDatabase data = new MySQLDatabase("mydata", "192.168.1.69", "3306", "cooluser", "radman");
+MySQLDatabase data = new MySQLDatabase("modId", "mydata", "192.168.1.69", "3306", "cooluser", "radman");
 // OR
-SQLiteDatabase data = new SQLiteDatabase("mydata", "some/dir");
+SQLiteDatabase data = new SQLiteDatabase("modId", "mydata", "some/dir");
 
 Table table = data.createTable("userdata")
         .addColumn("username", SQLDataType.STRING)
@@ -58,7 +58,7 @@ System.out.println(playerdata.getNbt("nbt"));
 data.close();
 ```
 # Transaction support
-This approuch will bach sql commands into one command for faster read/writes of large amounts of data. You can begin and end a transaction at anytime.
+This approach will bach sql commands into one command for faster read/writes of large amounts of data. You can begin and end a transaction at anytime.
 ```java
 Table table = data.createTable("userdata")
         .addColumn("username", SQLDataType.STRING)
