@@ -1,8 +1,7 @@
 name: Release New Version
 on:
-  push:
-    tags:
-      - '*'
+  release:
+    types: [published]
 
 jobs:
   build:
@@ -46,7 +45,7 @@ jobs:
       - name: Publish Release
         uses: Kir-Antipov/mc-publish@v3.2
         with:
-          name: ""
+          name: SQLib {{ version }}
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
 
           files: ${{ github.workspace }}/*.jar
