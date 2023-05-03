@@ -1,7 +1,20 @@
+on:
+  push:
+    tags:
+      - '*'
+
 jobs:
-  publish:
+  modrinth:
     steps:
       - uses: Kir-Antipov/mc-publish@v3.2
         with:
-          modrinth-id: IM84wwxs
+          name: ""
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+
+          files: build/libs/*.jar
+
+          version-resolver: releases
+          loaders: |
+            fabric
+            quilt
+          java: 17

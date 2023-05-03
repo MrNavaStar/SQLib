@@ -11,5 +11,10 @@
   "environment": "*",
   "depends": {
     "minecraft": ">=1.16.5"
+  },
+  "custom": {
+    "modmanager": {
+        "modrinth": "IM84wwxs"
+    }
   }
 }
