@@ -48,7 +48,6 @@ jobs:
         with:
           name: ""
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
 
           files: ${{ github.workspace }}/*.jar
 
