@@ -21,6 +21,7 @@ public class SQLConnection {
             Statement stmt = connection.createStatement();
             stmt.setQueryTimeout(30);
             stmt.execute(setupCommands);
+            stmt.close();
         } catch (SQLException e) {
             SQLib.log(Level.ERROR, "Failed to connect to database!");
             e.printStackTrace();
@@ -41,6 +42,7 @@ public class SQLConnection {
             Statement stmt = connection.createStatement();
             stmt.setQueryTimeout(30);
             stmt.execute((exclusive) ? "BEGIN;" : "BEGIN EXCLUSIVE;");
+            stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -51,6 +53,7 @@ public class SQLConnection {
             Statement stmt = connection.createStatement();
             stmt.setQueryTimeout(30);
             stmt.execute("COMMIT;");
+            stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -66,6 +69,7 @@ public class SQLConnection {
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setQueryTimeout(30);
             stmt.executeUpdate();
+            stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -78,6 +82,7 @@ public class SQLConnection {
             stmt.setQueryTimeout(30);
             stmt.setString(1, id);
             stmt.executeUpdate();
+            stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -90,6 +95,7 @@ public class SQLConnection {
             stmt.setQueryTimeout(30);
             stmt.setString(1, id);
             stmt.executeUpdate();
+            stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -102,6 +108,7 @@ public class SQLConnection {
             stmt.setQueryTimeout(30);
             List<String> ids = new ArrayList<>();
             ResultSet resultSet = stmt.executeQuery();
+            stmt.close();
             
             while (resultSet.next()) ids.add(resultSet.getString(1));
             return ids;
@@ -119,6 +126,7 @@ public class SQLConnection {
             stmt.setObject(1, primaryKey);
             ResultSet resultSet = stmt.executeQuery();
             resultSet.next();
+            stmt.close();
 
             return type.cast(resultSet.getObject(field));
         } catch (SQLException e) {
@@ -135,6 +143,7 @@ public class SQLConnection {
             stmt.setObject(1, value);
             stmt.setObject(2, primaryKey);
             stmt.executeUpdate();
+            stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

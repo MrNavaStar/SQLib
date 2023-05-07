@@ -1,6 +1,8 @@
 package mrnavastar.sqlib;
 
 import com.google.gson.Gson;
+import mrnavastar.sqlib.database.SQLiteDatabase;
+import mrnavastar.sqlib.sql.SQLDataType;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 
