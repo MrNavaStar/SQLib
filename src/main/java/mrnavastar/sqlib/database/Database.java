@@ -25,10 +25,14 @@ public abstract class Database {
         return new Properties();
     }
 
+    public String getSetupCommands() {
+        return "";
+    };
+
     public abstract String getTableCreationQuery(String tableName, String columns);
 
     public void open() {
-        if (sqlConnection == null) sqlConnection = new SQLConnection(getConnectionUrl(), getConnectionProperties());
+        if (sqlConnection == null) sqlConnection = new SQLConnection(getConnectionUrl(), getConnectionProperties(), getSetupCommands());
     }
 
     public void close() {

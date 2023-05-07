@@ -16,6 +16,11 @@ public class SQLiteDatabase extends Database {
     }
 
     @Override
+    public String getSetupCommands() {
+        return "PRAGMA journal_mode= WAL;";
+    }
+
+    @Override
     public String getTableCreationQuery(String tableName, String columns) {
         return "CREATE TABLE IF NOT EXISTS %s (%s ID MEDIUMTEXT PRIMARY KEY);".formatted(tableName, columns);
     }

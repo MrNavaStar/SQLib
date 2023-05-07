@@ -14,9 +14,13 @@ public class SQLConnection {
 
     private Connection connection;
 
-    public SQLConnection(String connectionUrl, Properties properties) {
+    public SQLConnection(String connectionUrl, Properties properties, String setupCommands) {
         try {
             connection = DriverManager.getConnection(connectionUrl, properties);
+
+            Statement stmt = connection.createStatement();
+            stmt.setQueryTimeout(30);
+            stmt.execute(setupCommands);
         } catch (SQLException e) {
             SQLib.log(Level.ERROR, "Failed to connect to database!");
             e.printStackTrace();
