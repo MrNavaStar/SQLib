@@ -42,7 +42,7 @@ public class Table {
     }
 
     public String getNoConflictName() {
-        return modId + ":" + name;
+        return modId + "_" + name;
     }
 
     public Database getDatabase() {

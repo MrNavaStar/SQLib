@@ -23,7 +23,7 @@ public class PostgreSQLDatabase extends Database {
         return "jdbc:postgresql://" + address + ":" + port + "/" + name;
     }
 
-        @Override
+    @Override
     public Properties getConnectionProperties() {
         Properties properties = new Properties();
         properties.put("user", username);

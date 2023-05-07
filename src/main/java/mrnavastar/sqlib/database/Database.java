@@ -51,7 +51,7 @@ public abstract class Database {
     }
 
     public Table getTable(String name) {
-        return tables.get(modId + ":" + name);
+        return tables.get(modId + "_" + name);
     }
 
     public ArrayList<Table> getTables() {
