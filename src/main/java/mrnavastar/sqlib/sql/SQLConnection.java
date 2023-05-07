@@ -5,10 +5,7 @@ import mrnavastar.sqlib.Table;
 import org.apache.logging.log4j.Level;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 public class SQLConnection {
 
@@ -108,9 +105,9 @@ public class SQLConnection {
             stmt.setQueryTimeout(30);
             List<String> ids = new ArrayList<>();
             ResultSet resultSet = stmt.executeQuery();
-            stmt.close();
             
             while (resultSet.next()) ids.add(resultSet.getString(1));
+            stmt.close();
             return ids;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -126,9 +123,10 @@ public class SQLConnection {
             stmt.setObject(1, primaryKey);
             ResultSet resultSet = stmt.executeQuery();
             resultSet.next();
+            Object object = resultSet.getObject(field);
             stmt.close();
 
-            return type.cast(resultSet.getObject(field));
+            return type.cast(object);
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
