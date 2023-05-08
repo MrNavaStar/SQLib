@@ -1,6 +1,7 @@
 package mrnavastar.sqlib;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import mrnavastar.sqlib.sql.SQLConnection;
 import net.minecraft.nbt.NbtElement;
@@ -109,7 +110,7 @@ public class DataContainer {
     }
 
     public JsonElement getJson(String field) {
-        return SQLib.GSON.toJsonTree(sqlConnection.readField(table, id, field, String.class));
+        return SQLib.jsonParser.parse(sqlConnection.readField(table, id, field, String.class));
     }
 
     public NbtElement getNbt(String field) {
