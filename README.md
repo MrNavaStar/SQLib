@@ -10,9 +10,19 @@ This library is not a full-fledged sql wrapper, and does not provide full access
 The main focus of this library is to provide an easy and simple way to store data in your mods.
 If you are looking for a more advanced database I recommend taking a look at something like [Nitrite](https://github.com/nitrite/nitrite-java).
 
+# Supported Datatypes
+The datatypes can be accessed with the `SQLDataType` class.
+| Standard | Minecraft   | 
+|----------|-------------|
+| String   | BlockPos    |
+| Int      | ChunkPos    |
+| Double   | NbtElement  |
+| Long     | Json        |
+| Bool     | MutableText |
+| UUID     |             |
+
 # Setup
 In your build.gradle include:
-
 ``` gradle
 repositories {
     maven { url "https://api.modrinth.com/maven" }
@@ -22,18 +32,6 @@ dependencies {
   modImplementation("maven.modrinth:sqlib:2.1.1")
 }
 ```
-
-# Supported Datatypes
-The datatypes can be accessed with the `SQLDataType` class.
-| Standard | Minecraft   |
-|----------|-------------|
-| String   | BlockPos    |
-| Int      | ChunkPos    |
-| Double   | NbtElement  |
-| Long     | Json        |
-| Bool     | MutableText |
-| UUID     |             |
-
 # General Usage
 ```java
 MySQLDatabase data = new MySQLDatabase("modId", "mydata", "192.168.1.69", "3306", "cooluser", "radman");
