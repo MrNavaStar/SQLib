@@ -1,7 +1,6 @@
 package mrnavastar.sqlib;
 
 import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import mrnavastar.sqlib.sql.SQLConnection;
 import net.minecraft.nbt.NbtElement;

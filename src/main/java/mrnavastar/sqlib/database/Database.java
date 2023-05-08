@@ -3,6 +3,7 @@ package mrnavastar.sqlib.database;
 import mrnavastar.sqlib.Table;
 import mrnavastar.sqlib.sql.SQLConnection;
 
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
@@ -25,14 +26,10 @@ public abstract class Database {
         return new Properties();
     }
 
-    public String getSetupCommands() {
-        return "";
-    };
-
     public abstract String getTableCreationQuery(String tableName, String columns);
 
     public void open() {
-        if (sqlConnection == null) sqlConnection = new SQLConnection(getConnectionUrl(), getConnectionProperties(), getSetupCommands());
+        if (sqlConnection == null) sqlConnection = new SQLConnection(getConnectionUrl(), getConnectionProperties());
     }
 
     public void close() {
@@ -60,5 +57,9 @@ public abstract class Database {
 
     public ArrayList<Table> getTables() {
         return (ArrayList<Table>) tables.values();
+    }
+
+    public PreparedStatement executeCommand(String sql, boolean autoClose, Object... params) {
+        return sqlConnection.executeCommand(sql, autoClose, params);
     }
 }

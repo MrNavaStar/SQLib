@@ -11,14 +11,9 @@ public class SQLConnection {
 
     private Connection connection;
 
-    public SQLConnection(String connectionUrl, Properties properties, String setupCommands) {
+    public SQLConnection(String connectionUrl, Properties properties) {
         try {
             connection = DriverManager.getConnection(connectionUrl, properties);
-
-            Statement stmt = connection.createStatement();
-            stmt.setQueryTimeout(30);
-            stmt.execute(setupCommands);
-            stmt.close();
         } catch (SQLException e) {
             SQLib.log(Level.ERROR, "Failed to connect to database!");
             e.printStackTrace();
@@ -34,26 +29,31 @@ public class SQLConnection {
         }
     }
 
-    public void beginTransaction(boolean exclusive) {
+    public PreparedStatement executeCommand(String sql, boolean autoClose, Object... params) {
         try {
-            Statement stmt = connection.createStatement();
+            PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setQueryTimeout(30);
-            stmt.execute((exclusive) ? "BEGIN;" : "BEGIN EXCLUSIVE;");
-            stmt.close();
+
+            int i = 1;
+            for (Object param : params) {
+                stmt.setObject(i, param);
+                i++;
+            }
+
+            stmt.execute();
+            if (autoClose) stmt.close();
+            return stmt;
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
+    public void beginTransaction(boolean exclusive) {
+        executeCommand((exclusive) ? "BEGIN;" : "BEGIN EXCLUSIVE;", true);
+    }
+
     public void endTransaction() {
-        try {
-            Statement stmt = connection.createStatement();
-            stmt.setQueryTimeout(30);
-            stmt.execute("COMMIT;");
-            stmt.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        executeCommand("COMMIT;", true);
     }
 
     public void createTable(Table table) {
@@ -61,51 +61,22 @@ public class SQLConnection {
         StringBuilder columnString = new StringBuilder();
         columns.forEach((name, dataType) -> columnString.append("%s %s,".formatted(name, dataType)));
 
-        try {
-            String sql = table.getDatabase().getTableCreationQuery(table.getNoConflictName(), columnString.toString());
-            PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setQueryTimeout(30);
-            stmt.executeUpdate();
-            stmt.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        executeCommand(table.getDatabase().getTableCreationQuery(table.getNoConflictName(), columnString.toString()), true);
     }
 
     public void createRow(Table table, String id) {
-        try {
-            String sql = "REPLACE INTO %s (ID) VALUES(?)".formatted(table.getNoConflictName());
-            PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setQueryTimeout(30);
-            stmt.setString(1, id);
-            stmt.executeUpdate();
-            stmt.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        executeCommand("REPLACE INTO %s (ID) VALUES(?)".formatted(table.getNoConflictName()), true, id);
     }
 
     public void deleteRow(Table table, String id) {
-        try {
-            String sql = "DELETE FROM %s WHERE ID = ?".formatted(table.getNoConflictName());
-            PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setQueryTimeout(30);
-            stmt.setString(1, id);
-            stmt.executeUpdate();
-            stmt.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        executeCommand("DELETE FROM %s WHERE ID = ?".formatted(table.getNoConflictName()), true, id);
     }
 
     public List<String> listPrimaryKeys(Table table) {
         try {
-            String sql = "SELECT ID FROM %s".formatted(table.getNoConflictName());
-            PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setQueryTimeout(30);
+            PreparedStatement stmt = executeCommand("SELECT ID FROM %s".formatted(table.getNoConflictName()), false);
             List<String> ids = new ArrayList<>();
-            ResultSet resultSet = stmt.executeQuery();
-            
+            ResultSet resultSet = stmt.getResultSet();
             while (resultSet.next()) ids.add(resultSet.getString(1));
             stmt.close();
             return ids;
@@ -117,10 +88,7 @@ public class SQLConnection {
 
     public <T> T readField(Table table, Object primaryKey, String field, Class<T> type) {
         try {
-            String sql = "SELECT %s FROM %s WHERE ID = ?".formatted(field, table.getNoConflictName());
-            PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setQueryTimeout(30);
-            stmt.setObject(1, primaryKey);
+            PreparedStatement stmt = executeCommand("SELECT %s FROM %s WHERE ID = ?".formatted(field, table.getNoConflictName()), false, primaryKey);
             ResultSet resultSet = stmt.executeQuery();
             resultSet.next();
             Object object = resultSet.getObject(field);
@@ -134,16 +102,6 @@ public class SQLConnection {
     }
 
     public void writeField(Table table, Object primaryKey, String field, Object value) {
-        try {
-            String sql = "UPDATE %s SET %s = ? WHERE ID = ?".formatted(table.getNoConflictName(), field);
-            PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setQueryTimeout(30);
-            stmt.setObject(1, value);
-            stmt.setObject(2, primaryKey);
-            stmt.executeUpdate();
-            stmt.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        executeCommand("UPDATE %s SET %s = ? WHERE ID = ?".formatted(table.getNoConflictName(), field), true, value, primaryKey);
     }
 }
