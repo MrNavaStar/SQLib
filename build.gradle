@@ -11,9 +11,13 @@ dependencies {
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-    // SQL DRIVERS
+    // SQL Drivers
     include(implementation("org.xerial:sqlite-jdbc:${project.sqlite_version}"))
     include(implementation("mysql:mysql-connector-java:${project.mysql_version}"))
+
+    // Extra
+    compileOnly 'org.projectlombok:lombok:1.18.26'
+	annotationProcessor 'org.projectlombok:lombok:1.18.26'
 }
 
 processResources {

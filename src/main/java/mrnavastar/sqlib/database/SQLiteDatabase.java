@@ -1,5 +1,8 @@
 package mrnavastar.sqlib.database;
 
+import lombok.Getter;
+
+@Getter
 public class SQLiteDatabase extends Database {
 
     private final String directory;
@@ -35,10 +38,6 @@ public class SQLiteDatabase extends Database {
     public void setMode(Mode mode) {
         this.mode = mode;
         executeCommand("PRAGMA journal_mode = %s;".formatted(mode), true);
-    }
-
-    public Mode getMode() {
-        return mode;
     }
 
     @Override

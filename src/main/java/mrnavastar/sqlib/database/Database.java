@@ -1,5 +1,6 @@
 package mrnavastar.sqlib.database;
 
+import lombok.Getter;
 import mrnavastar.sqlib.Table;
 import mrnavastar.sqlib.sql.SQLConnection;
 
@@ -10,8 +11,10 @@ import java.util.Properties;
 
 public abstract class Database {
 
+    @Getter
     protected final String name;
-    private final String modId;
+    @Getter
+    protected final String modId;
     private final HashMap<String, Table> tables = new HashMap<>();
     protected SQLConnection sqlConnection;
 
