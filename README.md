@@ -38,6 +38,8 @@ The datatypes can be accessed with the `SQLDataType` class.
 ```java
 MySQLDatabase data = new MySQLDatabase("modId", "mydata", "192.168.1.69", "3306", "cooluser", "radman");
 // OR
+PostgreSQLDatabase data = new PostgreSQLDatabase("modId", "mydata", "192.168.1.69", "3306", "cooluser", "radman");
+// OR
 SQLiteDatabase data = new SQLiteDatabase("modId", "mydata", "some/dir");
 
 Table table = data.createTable("userdata")
@@ -57,7 +59,7 @@ System.out.println(playerdata.getNbt("nbt"));
 
 data.close();
 ```
-# Transaction support
+# Transaction Support
 This approach will bach sql commands into one command for faster read/writes of large amounts of data. You can begin and end a transaction at anytime.
 ```java
 Table table = data.createTable("userdata")
@@ -73,4 +75,24 @@ playerData.put("home", new BlockPos(304, 62, 37);
 table.endTransaction();
 
 playerData.put("nbt", new NbtCompound());
+```
+# Custom SQL Commands
+If you need to do more complex things than the api allows for, you can run custom SQL commands.
+```java
+MySQLDatabase database = new MySQLDatabase("modId", "mydata", "192.168.1.69", "3306", "cooluser", "radman");
+Table table = data.createTable("userdata")
+        .addColumn("username", SQLDataType.STRING)
+        .addColumn("home", SQLDataType.BLOCKPOS)
+        .addColumn("nbt", SQLDataType.NBT)
+        .finish();
+
+PreparedStatment stmt = database.executeCommand("SELECT ID FROM userdata WHERE username = ?", false, "bobross");
+ResultSet result = stmt.getResultSet();
+
+// Handle result
+
+stmt.close();
+
+//If you just want to run a command and not handle the result do the following. It will autoclose for you.
+database.executeCommand("DELETE FROM userdata WHERE ID = ?", true, "bobross");
 ```
