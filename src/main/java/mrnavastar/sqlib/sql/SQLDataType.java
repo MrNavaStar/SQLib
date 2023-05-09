@@ -1,7 +1,7 @@
 package mrnavastar.sqlib.sql;
 
 public enum SQLDataType {
-    STRING("VARCHAR", 65535),
+    STRING("LONGTEXT"),
     INT("INT", 255),
     DOUBLE("FLOAT", 53),
     LONG("BIGINT", 255),
@@ -11,9 +11,9 @@ public enum SQLDataType {
     //Minecraft Data types
     BLOCKPOS("BIGINT", 255),
     CHUNKPOS("BIGINT", 255),
-    JSON("VARCHAR", 65535),
-    NBT("VARCHAR", 65535),
-    MUTABLE_TEXT("VARCHAR", 65535);
+    JSON("LONGTEXT"),
+    NBT("LONGTEXT"),
+    MUTABLE_TEXT("LONGTEXT");
 
     private final String sqlDataType;
     private int size = 0;
