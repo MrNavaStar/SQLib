@@ -19,7 +19,7 @@ jobs:
           path: "src/main/resources/fabric.mod.json"
           replaceWith: |
             {
-              "version": ${GITHUB_REF#refs/*/}
+              "version": "${GITHUB_REF#refs/*/}"
             }
       
       - name: Setup Gradle
