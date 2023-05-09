@@ -3,7 +3,6 @@ plugins {
 }
 
 def targetJavaVersion = 17
-version = project.mod_version
 group = project.maven_group
 
 dependencies {
