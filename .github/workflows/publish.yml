@@ -18,7 +18,7 @@ jobs:
         with:
           file: src/main/resources/fabric.mod.json
           field: version
-          value: ${{GITHUB_REF#refs/*/}}
+          value: ${{ github.ref_name }}
       
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
