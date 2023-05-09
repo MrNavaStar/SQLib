@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "sqlib",
-  "version": "${version}",
+  "version": "debug-build",
   "name": "SQLib",
   "description": "A simple SQL wrapper with a focus on Minecraft use cases",
   "authors": ["MrNavaStar"],

@@ -20,14 +20,14 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok:1.18.26'
 }
 
-processResources {
+/*processResources {
     inputs.property "version", version
     filteringCharset "UTF-8"
 
     filesMatching("fabric.mod.json") {
         expand "version": version
     }
-}
+}*/
 
 
 tasks.withType(JavaCompile).configureEach {
