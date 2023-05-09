@@ -61,7 +61,7 @@ public class SQLConnection {
         StringBuilder columnString = new StringBuilder();
         columns.forEach((name, dataType) -> columnString.append("%s %s,".formatted(name, dataType)));
 
-        executeCommand(table.getDatabase().getTableCreationQuery(table.getNoConflictName(), columnString.toString()), true);
+        executeCommand(table.getDatabase().getTableCreationQuery(table.getNoConflictName(), columnString.substring(0, columnString.length() - 1)), true);
     }
 
     public void createRow(Table table, String id) {

@@ -13,6 +13,6 @@ public class MySQLDatabase extends AuthenticatedDatabase {
 
     @Override
     public String getTableCreationQuery(String tableName, String columns) {
-        return "CREATE TABLE IF NOT EXISTS %s (ID TEXT, %s PRIMARY KEY (ID(256)));".formatted(tableName, columns);
+        return "CREATE TABLE IF NOT EXISTS %s (ID TEXT, %s, PRIMARY KEY (ID(256)));".formatted(tableName, columns);
     }
 }

@@ -32,7 +32,7 @@ public class SQLiteDatabase extends Database {
 
     @Override
     public String getTableCreationQuery(String tableName, String columns) {
-        return "CREATE TABLE IF NOT EXISTS %s (%s ID MEDIUMTEXT PRIMARY KEY);".formatted(tableName, columns);
+        return "CREATE TABLE IF NOT EXISTS %s (%s, ID MEDIUMTEXT PRIMARY KEY);".formatted(tableName, columns);
     }
 
     public void setMode(Mode mode) {

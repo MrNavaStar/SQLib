@@ -36,8 +36,6 @@ dependencies {
 ```java
 MySQLDatabase data = new MySQLDatabase("modId", "mydata", "192.168.1.69", "3306", "cooluser", "radman");
 // OR
-PostgreSQLDatabase data = new PostgreSQLDatabase("modId", "mydata", "192.168.1.69", "3306", "cooluser", "radman");
-// OR
 SQLiteDatabase data = new SQLiteDatabase("modId", "mydata", "some/dir");
 
 Table table = data.createTable("userdata")
