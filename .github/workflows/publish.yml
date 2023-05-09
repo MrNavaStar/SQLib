@@ -14,13 +14,11 @@ jobs:
           java-version: 17
       
       - name: Set Version
-        uses: RadovanPelka/github-action-json@main
+        uses: jossef/action-set-json-field@v2.1
         with:
-          path: "src/main/resources/fabric.mod.json"
-          replaceWith: |
-            {
-              "version": "${GITHUB_REF#refs/*/}"
-            }
+          file: src/main/resources/fabric.mod.json
+          field: version
+          value: ${{GITHUB_REF#refs/*/}}
       
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
