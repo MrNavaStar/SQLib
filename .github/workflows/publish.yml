@@ -12,7 +12,16 @@ jobs:
         with:
           distribution: temurin
           java-version: 17
-
+      
+      - name: Set Version
+        uses: RadovanPelka/github-action-json@main
+        with:
+          path: "src/main/resources/fabric.mod.json"
+          replaceWith: |
+            {
+              "version": ${GITHUB_REF#refs/*/}
+            }
+      
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
 
