@@ -19,16 +19,6 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok:1.18.26'
 }
 
-/*processResources {
-    inputs.property "version", version
-    filteringCharset "UTF-8"
-
-    filesMatching("fabric.mod.json") {
-        expand "version": version
-    }
-}*/
-
-
 tasks.withType(JavaCompile).configureEach {
     it.options.encoding = "UTF-8"
     if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {

@@ -1,5 +1,6 @@
 package mrnavastar.sqlib;
 
+import lombok.Getter;
 import mrnavastar.sqlib.sql.SQLConnection;
 import mrnavastar.sqlib.database.Database;
 import mrnavastar.sqlib.sql.SQLDataType;
@@ -8,8 +9,11 @@ import java.util.*;
 
 public class Table {
 
+    @Getter
     private final String name;
+    @Getter
     private final String modId;
+    @Getter
     private final Database database;
     private final SQLConnection sqlConnection;
 
@@ -37,16 +41,8 @@ public class Table {
         return this;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public String getNoConflictName() {
         return modId + "_" + name;
-    }
-
-    public Database getDatabase() {
-        return database;
     }
 
     public HashMap<String, SQLDataType> getColumns() {
