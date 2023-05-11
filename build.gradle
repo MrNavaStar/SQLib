@@ -1,5 +1,6 @@
 plugins {
     id 'fabric-loom' version '1.2.7'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
 def targetJavaVersion = 17
@@ -11,12 +12,19 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
     // SQL Drivers
-    include(implementation("org.xerial:sqlite-jdbc:${project.sqlite_version}"))
-    include(implementation("mysql:mysql-connector-java:${project.mysql_version}"))
+    implementation("org.xerial:sqlite-jdbc:${project.sqlite_version}")
+    implementation("mysql:mysql-connector-java:${project.mysql_version}")
 
     // Extra
     compileOnly 'org.projectlombok:lombok:1.18.26'
 	annotationProcessor 'org.projectlombok:lombok:1.18.26'
+}
+
+shadowJar {
+    dependencies {
+        include(dependency("org.xerial:sqlite-jdbc:.*"))
+        include(dependency("mysql:mysql-connector-java:.*"))
+    }
 }
 
 tasks.withType(JavaCompile).configureEach {
@@ -39,3 +47,5 @@ jar {
         rename { "${it}_${project.archivesBaseName}" }
     }
 }
+
+jar.finalizedBy('shadowJar')
