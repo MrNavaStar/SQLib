@@ -30,7 +30,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: sqlib-jar
-          path: ${{ github.workspace }}/build/libs/*.jar
+          path: ${{ github.workspace }}/build/libs/sqlib-all.jar
 
   publish:
     needs: build
@@ -54,7 +54,7 @@ jobs:
         with:
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
 
-          files: ${{ github.workspace }}/*.jar
+          files: ${{ github.workspace }}/sqlib-${{ github.ref_name }}.jar
 
           game-versions: |
             1.16.5
