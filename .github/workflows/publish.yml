@@ -29,8 +29,8 @@ jobs:
       - name: Upload Jar
         uses: actions/upload-artifact@v3
         with:
-          name: sqlib-jar
-          path: ${{ github.workspace }}/build/libs/sqlib-all.jar
+          name: sqlib-${{ github.ref_name }}
+          path: ${{ github.workspace }}/build/libs/sqlib-${{ github.ref_name }}.jar
 
   publish:
     needs: build
@@ -41,7 +41,7 @@ jobs:
       - name: Download Jar
         uses: actions/download-artifact@v3
         with:
-          name: sqlib-jar
+          name: sqlib-${{ github.ref_name }}
           path: ${{ github.workspace }}
 
       - name: Delete Jar
@@ -50,24 +50,13 @@ jobs:
           name: sqlib-jar
 
       - name: Publish Release
-        uses: Kir-Antipov/mc-publish@v3.2
+        uses: Kir-Antipov/mc-publish@v3.3
         with:
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
-
           files: ${{ github.workspace }}/sqlib-${{ github.ref_name }}.jar
 
           game-versions: |
-            1.16.5
-            1.17
-            1.17.1
-            1.18
-            1.18.1
-            1.18.2
-            1.19
-            1.19.1
-            1.19.2
-            1.19.3
-            1.19.4
+            >=1.16.5
           loaders: |
             fabric
             quilt
