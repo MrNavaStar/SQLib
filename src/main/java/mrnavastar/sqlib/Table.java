@@ -37,7 +37,7 @@ public class Table {
     public Table finish() {
         sqlConnection.createTable(this);
         database.addTable(this);
-        sqlConnection.listPrimaryKeys(this).forEach(this::createDataContainer);
+        sqlConnection.listPrimaryKeys(this).forEach(key -> dataContainers.put(key, new DataContainer(key, this, sqlConnection)));
         return this;
     }
 
