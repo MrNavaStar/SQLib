@@ -17,7 +17,8 @@
         "modrinth": "IM84wwxs"
     },
     "mc-publish": {
-      "modrinth": "IM84wwxs"
+      "modrinth": "IM84wwxs",
+      "loaders": ["fabric", "quilt"]
     }
   }
 }

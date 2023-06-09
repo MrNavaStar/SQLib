@@ -44,20 +44,14 @@ jobs:
           name: sqlib-${{ github.ref_name }}
           path: ${{ github.workspace }}
 
-      - name: Delete Jar
-        uses: geekyeggo/delete-artifact@v2
-        with:
-          name: sqlib-${{ github.ref_name }}
-
       - name: Publish Release
         uses: Kir-Antipov/mc-publish@v3.3
         with:
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
-          files: ${{ github.workspace }}/sqlib-${{ github.ref_name }}.jar
-
-          game-versions: |
-            >=1.16.5
-          loaders: |
-            fabric
-            quilt
+          files-primary: ${{ github.workspace }}/sqlib-${{ github.ref_name }}.jar
           java: 17
+
+      - name: Delete Jar
+        uses: geekyeggo/delete-artifact@v2
+        with:
+          name: sqlib-${{ github.ref_name }}
