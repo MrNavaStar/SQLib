@@ -30,7 +30,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: sqlib-${{ github.ref_name }}
-          path: ${{ github.workspace }}/build/libs/sqlib-${{ github.ref_name }}.jar
+          path: ${{ github.workspace }}/build/libs/sqlib-all.jar
 
   publish:
     needs: build
@@ -47,7 +47,7 @@ jobs:
       - name: Delete Jar
         uses: geekyeggo/delete-artifact@v2
         with:
-          name: sqlib-jar
+          name: sqlib-${{ github.ref_name }}
 
       - name: Publish Release
         uses: Kir-Antipov/mc-publish@v3.3
