@@ -15,6 +15,9 @@
   "custom": {
     "modmanager": {
         "modrinth": "IM84wwxs"
+    },
+    "mc-publish": {
+      "modrinth": "IM84wwxs"
     }
   }
 }
