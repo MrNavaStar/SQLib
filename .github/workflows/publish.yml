@@ -48,7 +48,7 @@ jobs:
         uses: Kir-Antipov/mc-publish@v3.3
         with:
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
-          files-primary: ${{ github.workspace }}/sqlib-${{ github.ref_name }}.jar
+          files: ${{ github.workspace }}/sqlib-${{ github.ref_name }}.jar
           java: 17
 
       - name: Delete Jar
