@@ -25,33 +25,13 @@ jobs:
 
       - name: Execute Gradle build
         run: ./gradlew build
-
-      - name: Upload Jar
-        uses: actions/upload-artifact@v3
-        with:
-          name: sqlib-${{ github.ref_name }}
-          path: ${{ github.workspace }}/build/libs/sqlib-all.jar
-
-  publish:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Download Jar
-        uses: actions/download-artifact@v3
-        with:
-          name: sqlib-${{ github.ref_name }}
-          path: ${{ github.workspace }}
-
+        
+      - name: Rename File
+        run: mv ${{ github.workspace }}/build/libs/sqlib-all.jar ${{ github.workspace }}/sqlib-${{ github.ref_name }}.jar
+        
       - name: Publish Release
         uses: Kir-Antipov/mc-publish@v3.3
         with:
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
           files: ${{ github.workspace }}/sqlib-${{ github.ref_name }}.jar
           java: 17
-
-      - name: Delete Jar
-        uses: geekyeggo/delete-artifact@v2
-        with:
-          name: sqlib-${{ github.ref_name }}
