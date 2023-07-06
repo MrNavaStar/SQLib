@@ -59,7 +59,7 @@ public abstract class Database {
     }
 
     public ArrayList<Table> getTables() {
-        return (ArrayList<Table>) tables.values();
+        return new ArrayList<>(tables.values());
     }
 
     public PreparedStatement executeCommand(String sql, boolean autoClose, Object... params) {
