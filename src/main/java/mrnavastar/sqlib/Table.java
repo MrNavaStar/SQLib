@@ -17,6 +17,7 @@ public class Table {
     private final Database database;
     private final SQLConnection sqlConnection;
 
+    @Getter
     private final HashMap<String, SQLDataType> columns = new HashMap<>();
     private final HashMap<String, DataContainer> dataContainers = new HashMap<>();
 
@@ -43,10 +44,6 @@ public class Table {
 
     public String getNoConflictName() {
         return modId + "_" + name;
-    }
-
-    public HashMap<String, SQLDataType> getColumns() {
-        return columns;
     }
 
     public void beginTransaction() {
