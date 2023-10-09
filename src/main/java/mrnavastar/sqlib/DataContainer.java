@@ -8,6 +8,7 @@ import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.StringNbtReader;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 
@@ -81,6 +82,10 @@ public class DataContainer {
         sqlConnection.writeField(table, id, field, value.toString());
     }
 
+    public void put(String field, Identifier value) {
+        sqlConnection.writeField(table, id, field, value.toString());
+    }
+
     public String getString(String field) {
         return sqlConnection.readField(table, id, field, String.class);
     }
@@ -128,5 +133,9 @@ public class DataContainer {
 
     public UUID getUUID(String field) {
         return UUID.fromString(sqlConnection.readField(table, id, field, String.class));
+    }
+
+    public Identifier getIdentifier(String field) {
+        return new Identifier(sqlConnection.readField(table, id, field, String.class));
     }
 }
