@@ -24,7 +24,7 @@ The datatypes can be accessed with the `SQLDataType` class.
 | Double   | NbtElement  |
 | Long     | Json        |
 | Bool     | MutableText |
-| UUID     |             |
+| UUID     | Identifier  |
 
 # Setup
 In your build.gradle include:
@@ -34,7 +34,7 @@ repositories {
 }
 
 dependencies {
-  modImplementation("maven.modrinth:sqlib:2.1.5")
+  modImplementation("maven.modrinth:sqlib:2.1.7")
 }
 ```
 # General Usage
