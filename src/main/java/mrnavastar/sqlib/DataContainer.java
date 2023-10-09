@@ -107,20 +107,28 @@ public class DataContainer {
     }
 
     public BlockPos getBlockPos(String field) {
-        return BlockPos.fromLong(sqlConnection.readField(table, id, field, Long.class));
+        Long pos = sqlConnection.readField(table, id, field, Long.class);
+        if (pos == null) return null;
+        return BlockPos.fromLong(pos);
     }
 
     public ChunkPos getChunkPos(String field) {
-        return new ChunkPos(sqlConnection.readField(table, id, field, Long.class));
+        Long pos = sqlConnection.readField(table, id, field, Long.class);
+        if (pos == null) return null;
+        return new ChunkPos(pos);
     }
 
     public JsonElement getJson(String field) {
-        return JsonParser.parseString(sqlConnection.readField(table, id, field, String.class));
+        String json = sqlConnection.readField(table, id, field, String.class);
+        if (json == null) return null;
+        return JsonParser.parseString(json);
     }
 
     public NbtElement getNbt(String field) {
         try {
-            return StringNbtReader.parse(sqlConnection.readField(table, id, field, String.class));
+            String nbt = sqlConnection.readField(table, id, field, String.class);
+            if (nbt == null) return null;
+            return StringNbtReader.parse(nbt);
         } catch (CommandSyntaxException e) {
             e.printStackTrace();
             return null;
@@ -128,14 +136,20 @@ public class DataContainer {
     }
 
     public MutableText getMutableText(String field) {
-        return Text.Serializer.fromJson(SQLib.GSON.fromJson(sqlConnection.readField(table, id, field, String.class), JsonElement.class));
+        String text = sqlConnection.readField(table, id, field, String.class);
+        if (text == null) return null;
+        return Text.Serializer.fromJson(SQLib.GSON.fromJson(text, JsonElement.class));
     }
 
     public UUID getUUID(String field) {
-        return UUID.fromString(sqlConnection.readField(table, id, field, String.class));
+        String uuid = sqlConnection.readField(table, id, field, String.class);
+        if (uuid == null) return null;
+        return UUID.fromString(uuid);
     }
 
     public Identifier getIdentifier(String field) {
-        return new Identifier(sqlConnection.readField(table, id, field, String.class));
+        String identifier = sqlConnection.readField(table, id, field, String.class);
+        if (identifier == null) return null;
+        return new Identifier(identifier);
     }
 }
