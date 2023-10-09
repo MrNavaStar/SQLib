@@ -1,6 +1,5 @@
 package mrnavastar.sqlib;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -75,7 +74,7 @@ public class DataContainer {
     }
 
     public void put(String field, MutableText value) {
-        sqlConnection.writeField(table, id, field, new Gson().toJson(value));
+        sqlConnection.writeField(table, id, field, MutableText.Serializer.toJson(value));
     }
 
     public void put(String field, UUID value) {
@@ -124,7 +123,7 @@ public class DataContainer {
     }
 
     public MutableText getMutableText(String field) {
-        return new Gson().fromJson(sqlConnection.readField(table, id, field, String.class), MutableText.class);
+        return Text.Serializer.fromJson(SQLib.GSON.fromJson(sqlConnection.readField(table, id, field, String.class), JsonElement.class));
     }
 
     public UUID getUUID(String field) {
