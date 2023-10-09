@@ -73,9 +73,9 @@ public class DataContainer {
         sqlConnection.writeField(table, id, field, value.asString());
     }
 
-    public void put(String field, MutableText value) {
+    /*public void put(String field, MutableText value) {
         sqlConnection.writeField(table, id, field, MutableText.Serializer.toJson(value));
-    }
+    }*/
 
     public void put(String field, UUID value) {
         sqlConnection.writeField(table, id, field, value.toString());
@@ -122,9 +122,9 @@ public class DataContainer {
         }
     }
 
-    public MutableText getMutableText(String field) {
+    /*public MutableText getMutableText(String field) {
         return Text.Serializer.fromJson(sqlConnection.readField(table, id, field, String.class));
-    }
+    }*/
 
     public UUID getUUID(String field) {
         return UUID.fromString(sqlConnection.readField(table, id, field, String.class));
