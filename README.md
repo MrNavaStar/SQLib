@@ -24,7 +24,7 @@ The datatypes can be accessed with the `SQLDataType` class.
 | Double   | NbtElement  |
 | Long     | Json        |
 | Bool     | MutableText |
-| UUID     |             |
+| UUID     | Identifier  |
 
 # Setup
 In your build.gradle include:
