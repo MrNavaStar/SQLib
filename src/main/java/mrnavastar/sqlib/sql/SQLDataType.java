@@ -13,7 +13,8 @@ public enum SQLDataType {
     CHUNKPOS("BIGINT", 255),
     JSON("LONGTEXT"),
     NBT("LONGTEXT"),
-    MUTABLE_TEXT("LONGTEXT");
+    MUTABLE_TEXT("LONGTEXT"),
+    IDENTIFIER("LONGTEXT");
 
     private final String sqlDataType;
     private int size = 0;
