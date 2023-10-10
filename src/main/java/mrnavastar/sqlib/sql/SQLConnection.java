@@ -31,7 +31,7 @@ public class SQLConnection {
 
     public PreparedStatement executeCommand(String sql, boolean autoClose, Object... params) {
         try {
-            PreparedStatement stmt = connection.prepareStatement(sql);
+            PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             stmt.setQueryTimeout(30);
 
             int i = 1;
@@ -56,16 +56,32 @@ public class SQLConnection {
         executeCommand("COMMIT;", true);
     }
 
-    public void createTable(Table table) {
+    public void createTable(Table table, boolean autoIncrementId) {
         HashMap<String, SQLDataType> columns = table.getColumns();
         StringBuilder columnString = new StringBuilder();
         columns.forEach((name, dataType) -> columnString.append("%s %s,".formatted(name, dataType)));
 
-        executeCommand(table.getDatabase().getTableCreationQuery(table.getNoConflictName(), columnString.substring(0, columnString.length() - 1)), true);
+        executeCommand(table.getDatabase().getTableCreationQuery(table.getNoConflictName(), columnString.substring(0, columnString.length() - 1), autoIncrementId), true);
     }
 
-    public void createRow(Table table, String id) {
+    public int createRow(Table table, String id, boolean autoIncrementId) {
+        if (autoIncrementId) {
+            try {
+                executeCommand("REPLACE INTO %s DEFAULT VALUES".formatted(table.getNoConflictName()), true);
+                PreparedStatement stmt = executeCommand("SELECT MAX(ID) FROM %s LIMIT 1".formatted(table.getNoConflictName()), false);
+                ResultSet resultSet = stmt.getResultSet();
+                resultSet.next();
+                int autoId = resultSet.getInt(1);
+                stmt.close();
+                return autoId;
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return -1;
+            }
+        }
+
         executeCommand("REPLACE INTO %s (ID) VALUES(?)".formatted(table.getNoConflictName()), true, id);
+        return -1;
     }
 
     public void deleteRow(Table table, String id) {
@@ -89,7 +105,7 @@ public class SQLConnection {
     public <T> T readField(Table table, Object primaryKey, String field, Class<T> type) {
         try {
             PreparedStatement stmt = executeCommand("SELECT %s FROM %s WHERE ID = ?".formatted(field, table.getNoConflictName()), false, primaryKey);
-            ResultSet resultSet = stmt.executeQuery();
+            ResultSet resultSet = stmt.getResultSet();
             resultSet.next();
             Object object = resultSet.getObject(field);
             stmt.close();

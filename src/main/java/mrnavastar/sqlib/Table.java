@@ -22,6 +22,7 @@ public class Table {
     private final HashMap<String, DataContainer> dataContainers = new HashMap<>();
 
     private boolean isInTransaction = false;
+    protected boolean autoIncrement = false;
 
     public Table(String modId, String name, Database database, SQLConnection sqlConnection) {
         this.name = name;
@@ -30,13 +31,18 @@ public class Table {
         this.sqlConnection = sqlConnection;
     }
 
+    public Table setAutoIncrement() {
+        autoIncrement = true;
+        return this;
+    }
+
     public Table addColumn(String name, SQLDataType dataType) {
         columns.put(name, dataType);
         return this;
     }
 
     public Table finish() {
-        sqlConnection.createTable(this);
+        sqlConnection.createTable(this, autoIncrement);
         database.addTable(this);
         sqlConnection.listPrimaryKeys(this).forEach(key -> dataContainers.put(key, new DataContainer(key, this, sqlConnection)));
         return this;
@@ -79,13 +85,16 @@ public class Table {
     }
 
     public DataContainer createDataContainer(String id) {
-        DataContainer dataContainer = get(id);
-        if (dataContainer != null) this.drop(dataContainer);
+        if (!autoIncrement) {
+            DataContainer dataContainer = get(id);
+            if (dataContainer != null) this.drop(dataContainer);
+        }
 
-        dataContainer = new DataContainer(id, this, sqlConnection);
-        sqlConnection.createRow(this, id);
+        int autoId = sqlConnection.createRow(this, id, autoIncrement);
+        if (autoIncrement) id = String.valueOf(autoId);
+
+        DataContainer dataContainer = new DataContainer(id, this, sqlConnection);
         dataContainers.put(id, dataContainer);
-
         return dataContainer;
     }
 
@@ -95,6 +104,11 @@ public class Table {
 
     public DataContainer createDataContainer(int id) {
        return createDataContainer(String.valueOf(id));
+    }
+
+    public DataContainer createDataContainer() {
+        if (!autoIncrement) return null;
+        return createDataContainer("");
     }
 
     public void drop(DataContainer dataContainer) {

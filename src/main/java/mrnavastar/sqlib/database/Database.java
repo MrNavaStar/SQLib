@@ -29,7 +29,7 @@ public abstract class Database {
         return new Properties();
     }
 
-    public abstract String getTableCreationQuery(String tableName, String columns);
+    public abstract String getTableCreationQuery(String tableName, String columns, boolean autoIncrementId);
 
     public void open() {
         if (sqlConnection == null) sqlConnection = new SQLConnection(getConnectionUrl(), getConnectionProperties());
