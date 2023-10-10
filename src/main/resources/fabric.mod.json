@@ -12,6 +12,9 @@
   "depends": {
     "minecraft": ">=1.16.5"
   },
+  "entrypoints": {
+    "main": ["mrnavastar.sqlib.SQLib"]
+  },
   "custom": {
     "modmanager": {
         "modrinth": "IM84wwxs"

@@ -1,6 +1,7 @@
 package mrnavastar.sqlib.database;
 
 import lombok.Getter;
+import mrnavastar.sqlib.SQLib;
 import mrnavastar.sqlib.Table;
 import mrnavastar.sqlib.sql.SQLConnection;
 
@@ -32,7 +33,10 @@ public abstract class Database {
     public abstract String getTableCreationQuery(String tableName, String columns, boolean autoIncrementId);
 
     public void open() {
-        if (sqlConnection == null) sqlConnection = new SQLConnection(getConnectionUrl(), getConnectionProperties());
+        if (sqlConnection == null) {
+            sqlConnection = new SQLConnection(getConnectionUrl(), getConnectionProperties());
+            SQLib.registerDatabase(this);
+        }
     }
 
     public void close() {
