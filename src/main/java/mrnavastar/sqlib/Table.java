@@ -5,6 +5,7 @@ import mrnavastar.sqlib.sql.SQLConnection;
 import mrnavastar.sqlib.database.Database;
 import mrnavastar.sqlib.sql.SQLDataType;
 
+import java.io.IOException;
 import java.util.*;
 
 public class Table {
@@ -106,7 +107,11 @@ public class Table {
        return createDataContainer(String.valueOf(id));
     }
 
-    public DataContainer createDataContainer() {
+    /**
+    * Creates a new row in the database and creates a handy wrapper class
+    * @return DataContainer or null if the table is not configured for autoIncrementing.
+    */
+    public DataContainer createDataContainerAutoID() {
         if (!autoIncrement) return null;
         return createDataContainer("");
     }
