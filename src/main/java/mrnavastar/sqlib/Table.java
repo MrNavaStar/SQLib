@@ -157,7 +157,7 @@ public class Table {
         return contains(String.valueOf(id));
     }
 
-    public Collection<DataContainer> getDataContainers() {
-        return dataContainers.values();
+    public ArrayList<DataContainer> getDataContainers() {
+        return (ArrayList<DataContainer>) dataContainers.values().stream().toList();
     }
 }
