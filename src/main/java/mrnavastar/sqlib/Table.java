@@ -107,6 +107,20 @@ public class Table {
        return createDataContainer(String.valueOf(id));
     }
 
+    public DataContainer getOrCreateDataContainer(String id) {
+        DataContainer dataContainer = get(id);
+        if (dataContainer == null) dataContainer = createDataContainer(id);
+        return dataContainer;
+    }
+
+    public DataContainer getOrCreateDataContainer(UUID id) {
+        return getOrCreateDataContainer(id.toString());
+    }
+
+    public DataContainer getOrCreateDataContainer(int id) {
+        return getOrCreateDataContainer(String.valueOf(id));
+    }
+
     /**
     * Creates a new row in the database and creates a handy wrapper class
     * @return DataContainer or null if the table is not configured for autoIncrementing.
