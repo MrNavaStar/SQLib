@@ -35,7 +35,7 @@ public abstract class Database {
     public void open() {
         if (sqlConnection == null) {
             sqlConnection = new SQLConnection(getConnectionUrl(), getConnectionProperties());
-            SQLib.registerDatabase(this);
+            SQLib.registerDatabase(modId, name, this);
         }
     }
 
