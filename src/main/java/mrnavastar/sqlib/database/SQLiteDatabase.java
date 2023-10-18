@@ -2,6 +2,9 @@ package mrnavastar.sqlib.database;
 
 import lombok.Getter;
 
+import java.io.File;
+import java.nio.file.Path;
+
 @Getter
 public class SQLiteDatabase extends Database {
 
@@ -27,7 +30,7 @@ public class SQLiteDatabase extends Database {
 
     @Override
     public String getConnectionUrl() {
-        return "jdbc:sqlite:" + directory + "/" + name + ".db";
+        return "jdbc:sqlite:" + new File(directory + "/" + name + ".db");
     }
 
     @Override

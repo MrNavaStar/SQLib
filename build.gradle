@@ -13,8 +13,10 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     // SQL Drivers
-    implementation("org.xerial:sqlite-jdbc:${project.sqlite_version}")
-    implementation("mysql:mysql-connector-java:${project.mysql_version}")
+    implementation "org.xerial:sqlite-jdbc:${project.sqlite_version}"
+    implementation "mysql:mysql-connector-java:${project.mysql_version}"
+    //Config
+    implementation "com.electronwill.night-config:toml:3.6.0"
 
     // Extra
     compileOnly 'org.projectlombok:lombok:1.18.28'
@@ -25,6 +27,7 @@ shadowJar {
     dependencies {
         include(dependency("org.xerial:sqlite-jdbc:.*"))
         include(dependency("mysql:mysql-connector-java:.*"))
+        include(dependency("com.electronwill.night-config:toml:.*"))
     }
 }
 

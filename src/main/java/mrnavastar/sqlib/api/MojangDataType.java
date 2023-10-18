@@ -1,6 +1,6 @@
 package mrnavastar.sqlib.api;
 
-public interface CustomDataType {
+public interface MojangDataType {
 
     String SQLib$encode();
 }

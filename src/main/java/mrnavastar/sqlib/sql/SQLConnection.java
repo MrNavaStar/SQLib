@@ -16,7 +16,8 @@ public class SQLConnection {
             connection = DriverManager.getConnection(connectionUrl, properties);
         } catch (SQLException e) {
             SQLib.log(Level.ERROR, "Failed to connect to database!");
-            e.printStackTrace();
+            SQLib.log(Level.ERROR, e.getLocalizedMessage());
+            System.exit(1);
         }
     }
 

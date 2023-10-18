@@ -3,7 +3,7 @@ package mrnavastar.sqlib;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import mrnavastar.sqlib.api.CustomDataType;
+import mrnavastar.sqlib.api.MojangDataType;
 import mrnavastar.sqlib.sql.SQLConnection;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.StringNbtReader;
@@ -87,7 +87,7 @@ public class DataContainer {
         sqlConnection.writeField(table, id, field, value.toString());
     }
 
-    public void put(String field, CustomDataType value) {
+    public void put(String field, MojangDataType value) {
         sqlConnection.writeField(table, id, field, value.SQLib$encode());
     }
 

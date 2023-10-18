@@ -1,12 +1,12 @@
 package mrnavastar.sqlib.mixin;
 
-import mrnavastar.sqlib.api.CustomDataType;
+import mrnavastar.sqlib.api.MojangDataType;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(Identifier.class)
-public abstract class IdentifierMixin implements CustomDataType {
+public abstract class IdentifierMixin implements MojangDataType {
 
     @Shadow public abstract String toString();
 
