@@ -1,0 +1,17 @@
+# Config File for SQLib
+
+# Settings that apply regardless of database used
+[database]
+    name = "default"
+    # Allowed Values: sqlite, mysql
+    type = "sqlite"
+
+[sqlite]
+    # Can be any path that exists on this system
+    directory = "./sqlib"
+
+[mysql]
+    address = "127.0.0.1"
+    port = 3306
+    username = "user"
+    password = "pass"

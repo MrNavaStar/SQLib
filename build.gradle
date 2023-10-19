@@ -6,6 +6,10 @@ plugins {
 def targetJavaVersion = 17
 group = project.maven_group
 
+repositories {
+    maven { url "https://api.modrinth.com/maven" }
+}
+
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
@@ -17,10 +21,12 @@ dependencies {
     implementation "mysql:mysql-connector-java:${project.mysql_version}"
     //Config
     implementation "com.electronwill.night-config:toml:3.6.0"
+    implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-toml:${project.jackson_version}"
 
     // Extra
     compileOnly 'org.projectlombok:lombok:1.18.28'
 	annotationProcessor 'org.projectlombok:lombok:1.18.28'
+    modImplementation("maven.modrinth:easy-eula:1.0.0")
 }
 
 shadowJar {

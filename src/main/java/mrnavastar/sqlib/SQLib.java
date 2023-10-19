@@ -1,13 +1,8 @@
 package mrnavastar.sqlib;
 
-import com.electronwill.nightconfig.core.CommentedConfig;
-import com.electronwill.nightconfig.core.Config;
-import com.electronwill.nightconfig.core.conversion.InvalidValueException;
-import com.electronwill.nightconfig.core.conversion.ObjectConverter;
-import com.electronwill.nightconfig.core.file.CommentedFileConfig;
+import com.fasterxml.jackson.dataformat.toml.TomlMapper;
 import com.google.gson.Gson;
 import lombok.Getter;
-import mrnavastar.sqlib.config.ConfigUtil;
 import mrnavastar.sqlib.config.SQLibConfig;
 import mrnavastar.sqlib.database.Database;
 import mrnavastar.sqlib.database.MySQLDatabase;
@@ -19,7 +14,11 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class SQLib implements ModInitializer {
 
@@ -33,39 +32,26 @@ public class SQLib implements ModInitializer {
     @Override
     public void onInitialize() {
         ServerLifecycleEvents.SERVER_STOPPING.register(server -> databaseRegistry.forEach((key, database) -> database.close()));
+        new File(FabricLoader.getInstance().getGameDir() + "/sqlib").mkdirs();
 
-        CommentedFileConfig configFile = CommentedFileConfig.of(FabricLoader.getInstance().getConfigDir() + "/sqlib.toml");
-        if (configFile.getFile().exists()) {
-            configFile.load();
-            try {
-                config = new ObjectConverter().toObject(configFile, SQLibConfig::new);
-            } catch (InvalidValueException e) {
-                log(Level.ERROR, "Invalid config - Stopping");
-                log(Level.ERROR, e.getMessage().replace(" for field java.lang.String mrnavastar.sqlib.config.SQLibConfig.type: it", "").replace("@com.electronwill.nightconfig.core.conversion.", ""));
-                System.exit(1);
+        try {
+            File configFile = new File(FabricLoader.getInstance().getConfigDir() + "/sqlib.toml");
+            if (!configFile.exists()) {
+                Files.copy(Objects.requireNonNull(SQLib.class.getResourceAsStream("/sqlib.toml")), configFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
             }
-        }
-        else {
-            config.sqlite.directory = System.getProperty("user.dir") + "/sqlib";
-            new File(config.sqlite.directory).mkdirs();
 
-            configFile.addAll(new ObjectConverter().toConfig(config, Config::inMemory));
-            configFile.setComment("database.mysql", "testing testing");
-            /*try {
-                ConfigUtil.parseComments(config, configFile);
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }*/
-            configFile.save();
-        }
-        configFile.close();
-
-        if (!config.database.enabled) {
-            log(Level.WARN, "Internal database is disabled! This could potentially disable or break mods that use this feature!");
-            return;
+            TomlMapper mapper = new TomlMapper();
+            config = mapper.readValue(configFile, SQLibConfig.class);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         if (config.database.type.equalsIgnoreCase("SQLITE")) {
+            if (!config.validateSQLite()) {
+                log(Level.ERROR, "Invalid config - Stopping");
+                System.exit(1);
+            }
+
             if (!new File(config.sqlite.directory).exists()) {
                 log(Level.ERROR, "Invalid config - Stopping");
                 log(Level.ERROR, "[SQLite] Path: " + config.sqlite.directory + " was not found!");
@@ -75,6 +61,11 @@ public class SQLib implements ModInitializer {
 
         }
         else if (config.database.type.equalsIgnoreCase("MYSQL")) {
+            if (!config.validateMySQL()) {
+                log(Level.ERROR, "Invalid config - Stopping");
+                System.exit(1);
+            }
+
             database = new MySQLDatabase(MOD_ID, config.database.name, config.mysql.address, String.valueOf(config.mysql.port), config.mysql.username, config.mysql.password);
         }
     }
@@ -85,9 +76,5 @@ public class SQLib implements ModInitializer {
 
     public static void log(Level level, String message) {
         LogManager.getLogger().log(level, "[" + MOD_ID + "] " + message);
-    }
-
-    public boolean isDatabaseEnabled() {
-        return config.database.enabled;
     }
 }
