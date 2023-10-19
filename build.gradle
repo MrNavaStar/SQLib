@@ -32,7 +32,7 @@ shadowJar {
     dependencies {
         include(dependency("org.xerial:sqlite-jdbc:.*"))
         include(dependency("mysql:mysql-connector-java:.*"))
-        include(dependency("com.electronwill.night-config:toml:.*"))
+        include(dependency("com.fasterxml.jackson.dataformat:jackson-dataformat-toml:.*"))
     }
 }
 
