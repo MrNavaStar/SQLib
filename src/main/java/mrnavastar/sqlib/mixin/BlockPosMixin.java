@@ -14,8 +14,4 @@ public abstract class BlockPosMixin implements MojangDataType {
     public String SQLib$encode() {
         return String.valueOf(asLong());
     }
-
-    private static void test() {
-
-    }
 }
