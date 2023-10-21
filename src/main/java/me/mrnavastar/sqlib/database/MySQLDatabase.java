@@ -1,4 +1,4 @@
-package mrnavastar.sqlib.database;
+package me.mrnavastar.sqlib.database;
 
 public class MySQLDatabase extends AuthenticatedDatabase {
 

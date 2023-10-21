@@ -1,9 +1,8 @@
-package mrnavastar.sqlib.database;
+package me.mrnavastar.sqlib.database;
 
 import lombok.Getter;
 
 import java.io.File;
-import java.nio.file.Path;
 
 @Getter
 public class SQLiteDatabase extends Database {

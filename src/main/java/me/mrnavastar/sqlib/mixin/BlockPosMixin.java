@@ -1,6 +1,6 @@
-package mrnavastar.sqlib.mixin;
+package me.mrnavastar.sqlib.mixin;
 
-import mrnavastar.sqlib.api.MojangDataType;
+import me.mrnavastar.sqlib.api.MojangDataType;
 import net.minecraft.util.math.BlockPos;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

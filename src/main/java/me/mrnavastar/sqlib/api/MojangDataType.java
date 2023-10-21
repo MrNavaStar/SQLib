@@ -1,4 +1,4 @@
-package mrnavastar.sqlib.api;
+package me.mrnavastar.sqlib.api;
 
 public interface MojangDataType {
 

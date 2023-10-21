@@ -1,10 +1,10 @@
-package mrnavastar.sqlib;
+package me.mrnavastar.sqlib;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import mrnavastar.sqlib.api.MojangDataType;
-import mrnavastar.sqlib.sql.SQLConnection;
+import me.mrnavastar.sqlib.api.MojangDataType;
+import me.mrnavastar.sqlib.sql.SQLConnection;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.StringNbtReader;
 import net.minecraft.text.MutableText;
@@ -156,5 +156,9 @@ public class DataContainer {
         String identifier = sqlConnection.readField(table, id, field, String.class);
         if (identifier == null) return null;
         return new Identifier(identifier);
+    }
+
+    public void clear(String field) {
+        sqlConnection.writeField(table, id, field, null);
     }
 }

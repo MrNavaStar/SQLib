@@ -1,11 +1,10 @@
-package mrnavastar.sqlib;
+package me.mrnavastar.sqlib;
 
 import lombok.Getter;
-import mrnavastar.sqlib.sql.SQLConnection;
-import mrnavastar.sqlib.database.Database;
-import mrnavastar.sqlib.sql.SQLDataType;
+import me.mrnavastar.sqlib.database.Database;
+import me.mrnavastar.sqlib.sql.SQLConnection;
+import me.mrnavastar.sqlib.sql.SQLDataType;
 
-import java.io.IOException;
 import java.util.*;
 
 public class Table {

@@ -1,4 +1,4 @@
-package mrnavastar.sqlib.config;
+package me.mrnavastar.sqlib.config;
 
 public class SQLibConfig {
 

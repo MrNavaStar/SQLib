@@ -1,7 +1,7 @@
-package mrnavastar.sqlib.sql;
+package me.mrnavastar.sqlib.sql;
 
-import mrnavastar.sqlib.SQLib;
-import mrnavastar.sqlib.Table;
+import me.mrnavastar.sqlib.SQLib;
+import me.mrnavastar.sqlib.Table;
 import org.apache.logging.log4j.Level;
 
 import java.sql.*;

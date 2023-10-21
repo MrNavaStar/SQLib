@@ -10,15 +10,15 @@
   "icon": "assets/sqlib/icon.png",
   "environment": "*",
   "entrypoints": {
-    "main": ["mrnavastar.sqlib.SQLib"]
+    "main": ["me.mrnavastar.sqlib.SQLib"]
   },
   "depends": {
     "minecraft": ">=1.16.5"
   },
   "custom": {
     "loom:injected_interfaces": {
-      "net/minecraft/class_2338": ["mrnavastar/sqlib/api/MojangDataType"],
-      "net/minecraft/class_2960": ["mrnavastar/sqlib/api/MojangDataType"]
+      "net/minecraft/class_2338": ["me/mrnavastar/sqlib/api/MojangDataType"],
+      "net/minecraft/class_2960": ["me/mrnavastar/sqlib/api/MojangDataType"]
     },
     "modmanager": {
       "modrinth": "IM84wwxs"

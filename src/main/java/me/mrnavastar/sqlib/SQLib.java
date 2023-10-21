@@ -1,12 +1,12 @@
-package mrnavastar.sqlib;
+package me.mrnavastar.sqlib;
 
 import com.fasterxml.jackson.dataformat.toml.TomlMapper;
 import com.google.gson.Gson;
 import lombok.Getter;
-import mrnavastar.sqlib.config.SQLibConfig;
-import mrnavastar.sqlib.database.Database;
-import mrnavastar.sqlib.database.MySQLDatabase;
-import mrnavastar.sqlib.database.SQLiteDatabase;
+import me.mrnavastar.sqlib.config.SQLibConfig;
+import me.mrnavastar.sqlib.database.Database;
+import me.mrnavastar.sqlib.database.SQLiteDatabase;
+import me.mrnavastar.sqlib.database.MySQLDatabase;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.loader.api.FabricLoader;

@@ -1,4 +1,4 @@
-package mrnavastar.sqlib.sql;
+package me.mrnavastar.sqlib.sql;
 
 public enum SQLDataType {
     STRING("LONGTEXT"),

@@ -1,9 +1,9 @@
-package mrnavastar.sqlib.database;
+package me.mrnavastar.sqlib.database;
 
 import lombok.Getter;
-import mrnavastar.sqlib.SQLib;
-import mrnavastar.sqlib.Table;
-import mrnavastar.sqlib.sql.SQLConnection;
+import me.mrnavastar.sqlib.SQLib;
+import me.mrnavastar.sqlib.Table;
+import me.mrnavastar.sqlib.sql.SQLConnection;
 
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
