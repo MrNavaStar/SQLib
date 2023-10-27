@@ -3,6 +3,8 @@ package me.mrnavastar.sqlib;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import me.mrnavastar.sqlib.api.MojangDataType;
 import me.mrnavastar.sqlib.sql.SQLConnection;
 import net.minecraft.nbt.NbtElement;
@@ -15,17 +17,12 @@ import net.minecraft.util.math.ChunkPos;
 
 import java.util.UUID;
 
+@AllArgsConstructor
 public class DataContainer {
 
-    private final Table table;
-    private final SQLConnection sqlConnection;
-    private final String id;
-
-    public DataContainer(String id, Table table, SQLConnection sqlConnection) {
-        this.id = id;
-        this.table = table;
-        this.sqlConnection = sqlConnection;
-    }
+    @NonNull private final String id;
+    @NonNull private final Table table;
+    @NonNull private final SQLConnection sqlConnection;
 
     public String getIdAsString() {
         return id;
@@ -39,97 +36,97 @@ public class DataContainer {
         return Integer.parseInt(id);
     }
 
-    public void put(String field, String value) {
+    public void put(@NonNull String field, String value) {
         sqlConnection.writeField(table, id, field, value);
     }
 
-    public void put(String field, int value) {
+    public void put(@NonNull String field, int value) {
         sqlConnection.writeField(table, id, field, value);
     }
 
-    public void put(String field, double value) {
+    public void put(@NonNull String field, double value) {
         sqlConnection.writeField(table, id, field, value);
     }
 
-    public void put(String field, long value) {
+    public void put(@NonNull String field, long value) {
         sqlConnection.writeField(table, id, field, value);
     }
 
-    public void put(String field, boolean value) {
+    public void put(@NonNull String field, boolean value) {
         sqlConnection.writeField(table, id, field, value ? 1 : 0); // Convert bool to int, SQLite compat
     }
 
-    public void put(String field, BlockPos value) {
+    public void put(@NonNull String field, @NonNull BlockPos value) {
         sqlConnection.writeField(table, id, field, value.asLong());
     }
 
-    public void put(String field, ChunkPos value) {
+    public void put(@NonNull String field, @NonNull ChunkPos value) {
         sqlConnection.writeField(table, id, field, value.toLong());
     }
 
-    public void put(String field, JsonElement value) {
+    public void put(@NonNull String field, @NonNull JsonElement value) {
         sqlConnection.writeField(table, id, field, value.toString());
     }
 
-    public void put(String field, NbtElement value) {
+    public void put(@NonNull String field, @NonNull NbtElement value) {
         sqlConnection.writeField(table, id, field, value.asString());
     }
 
-    public void put(String field, MutableText value) {
+    public void put(@NonNull String field, @NonNull MutableText value) {
         sqlConnection.writeField(table, id, field, MutableText.Serializer.toJson(value));
     }
 
-    public void put(String field, UUID value) {
+    public void put(@NonNull String field, @NonNull UUID value) {
         sqlConnection.writeField(table, id, field, value.toString());
     }
 
-    public void put(String field, Identifier value) {
+    public void put(@NonNull String field, @NonNull Identifier value) {
         sqlConnection.writeField(table, id, field, value.toString());
     }
 
-    public void put(String field, MojangDataType value) {
+    public void put(@NonNull String field, @NonNull MojangDataType value) {
         sqlConnection.writeField(table, id, field, value.SQLib$encode());
     }
 
-    public String getString(String field) {
+    public String getString(@NonNull String field) {
         return sqlConnection.readField(table, id, field, String.class);
     }
 
-    public int getInt(String field) {
+    public int getInt(@NonNull String field) {
         return sqlConnection.readField(table, id, field, Integer.class);
     }
 
-    public double getDouble(String field) {
+    public double getDouble(@NonNull String field) {
         return sqlConnection.readField(table, id, field, Double.class);
     }
 
-    public double getLong(String field) {
+    public double getLong(@NonNull String field) {
         return sqlConnection.readField(table, id, field, Long.class);
     }
 
-    public boolean getBool(String field) {
+    public boolean getBool(@NonNull String field) {
         return sqlConnection.readField(table, id, field, Integer.class) > 0; //Int to bool, SQLite compat
     }
 
-    public BlockPos getBlockPos(String field) {
+    public BlockPos getBlockPos(@NonNull String field) {
         Long pos = sqlConnection.readField(table, id, field, Long.class);
         if (pos == null) return null;
         return BlockPos.fromLong(pos);
     }
 
-    public ChunkPos getChunkPos(String field) {
+    public ChunkPos getChunkPos(@NonNull String field) {
         Long pos = sqlConnection.readField(table, id, field, Long.class);
         if (pos == null) return null;
         return new ChunkPos(pos);
     }
 
-    public JsonElement getJson(String field) {
+    public JsonElement getJson(@NonNull String field) {
         String json = sqlConnection.readField(table, id, field, String.class);
         if (json == null) return null;
         return JsonParser.parseString(json);
     }
 
-    public NbtElement getNbt(String field) {
+    public NbtElement getNbt(@NonNull String field) {
         try {
             String nbt = sqlConnection.readField(table, id, field, String.class);
             if (nbt == null) return null;
@@ -140,25 +137,25 @@ public class DataContainer {
         }
     }
 
-    public MutableText getMutableText(String field) {
+    public MutableText getMutableText(@NonNull String field) {
         String text = sqlConnection.readField(table, id, field, String.class);
         if (text == null) return null;
         return Text.Serializer.fromJson(SQLib.GSON.fromJson(text, JsonElement.class));
     }
 
-    public UUID getUUID(String field) {
+    public UUID getUUID(@NonNull String field) {
         String uuid = sqlConnection.readField(table, id, field, String.class);
         if (uuid == null) return null;
         return UUID.fromString(uuid);
     }
 
-    public Identifier getIdentifier(String field) {
+    public Identifier getIdentifier(@NonNull String field) {
         String identifier = sqlConnection.readField(table, id, field, String.class);
         if (identifier == null) return null;
         return new Identifier(identifier);
     }
 
-    public void clear(String field) {
+    public void clear(@NonNull String field) {
         sqlConnection.writeField(table, id, field, null);
     }
 }

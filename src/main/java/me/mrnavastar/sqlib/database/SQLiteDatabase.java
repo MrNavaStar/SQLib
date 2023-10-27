@@ -1,6 +1,7 @@
 package me.mrnavastar.sqlib.database;
 
 import lombok.Getter;
+import lombok.NonNull;
 
 import java.io.File;
 
@@ -20,7 +21,7 @@ public class SQLiteDatabase extends Database {
         OFF
     }
 
-    public SQLiteDatabase(String modId, String name, String directory) {
+    public SQLiteDatabase(@NonNull String modId, @NonNull String name, @NonNull String directory) {
         super(modId, name);
         this.directory = directory;
         open();
@@ -38,7 +39,7 @@ public class SQLiteDatabase extends Database {
         return "CREATE TABLE IF NOT EXISTS %s (%s, ID MEDIUMTEXT PRIMARY KEY);".formatted(tableName, columns);
     }
 
-    public void setMode(Mode mode) {
+    public void setMode(@NonNull Mode mode) {
         this.mode = mode;
         executeCommand("PRAGMA journal_mode = %s;".formatted(mode), true);
     }

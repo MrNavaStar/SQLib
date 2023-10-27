@@ -1,6 +1,8 @@
 package me.mrnavastar.sqlib.database;
 
 import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import me.mrnavastar.sqlib.SQLib;
 import me.mrnavastar.sqlib.Table;
 import me.mrnavastar.sqlib.sql.SQLConnection;
@@ -10,19 +12,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
 
+@RequiredArgsConstructor
 public abstract class Database {
 
     @Getter
+    @NonNull
     protected final String name;
     @Getter
+    @NonNull
     protected final String modId;
     private final HashMap<String, Table> tables = new HashMap<>();
     protected SQLConnection sqlConnection;
-
-    public Database(String modId, String name) {
-        this.modId = modId;
-        this.name = name;
-    }
 
     public abstract String getConnectionUrl();
 

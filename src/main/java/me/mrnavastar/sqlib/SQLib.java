@@ -5,8 +5,8 @@ import com.google.gson.Gson;
 import lombok.Getter;
 import me.mrnavastar.sqlib.config.SQLibConfig;
 import me.mrnavastar.sqlib.database.Database;
-import me.mrnavastar.sqlib.database.SQLiteDatabase;
 import me.mrnavastar.sqlib.database.MySQLDatabase;
+import me.mrnavastar.sqlib.database.SQLiteDatabase;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.loader.api.FabricLoader;
@@ -58,7 +58,6 @@ public class SQLib implements ModInitializer {
                 System.exit(1);
             }
             database = new SQLiteDatabase(MOD_ID, config.database.name, config.sqlite.directory);
-
         }
         else if (config.database.type.equalsIgnoreCase("MYSQL")) {
             if (!config.validateMySQL()) {
@@ -70,7 +69,7 @@ public class SQLib implements ModInitializer {
         }
     }
 
-    public static void registerDatabase(String modId, String name,  Database database) {
+    public static void registerDatabase(String modId, String name, Database database) {
         if (!databaseRegistry.containsKey(modId + name)) databaseRegistry.put(modId + name, database);
     }
 

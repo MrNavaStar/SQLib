@@ -1,19 +1,27 @@
 package me.mrnavastar.sqlib;
 
 import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import me.mrnavastar.sqlib.database.Database;
 import me.mrnavastar.sqlib.sql.SQLConnection;
 import me.mrnavastar.sqlib.sql.SQLDataType;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
 
+@RequiredArgsConstructor
 public class Table {
 
     @Getter
+    @NonNull
     private final String name;
     @Getter
+    @NonNull
     private final String modId;
     @Getter
+    @NonNull
     private final Database database;
     private final SQLConnection sqlConnection;
 
@@ -24,19 +32,12 @@ public class Table {
     private boolean isInTransaction = false;
     protected boolean autoIncrement = false;
 
-    public Table(String modId, String name, Database database, SQLConnection sqlConnection) {
-        this.name = name;
-        this.modId = modId;
-        this.database = database;
-        this.sqlConnection = sqlConnection;
-    }
-
     public Table setAutoIncrement() {
         autoIncrement = true;
         return this;
     }
 
-    public Table addColumn(String name, SQLDataType dataType) {
+    public Table addColumn(@NonNull String name, @NonNull SQLDataType dataType) {
         columns.put(name, dataType);
         return this;
     }
@@ -84,7 +85,7 @@ public class Table {
         return ints;
     }
 
-    public DataContainer createDataContainer(String id) {
+    public DataContainer createDataContainer(@NonNull String id) {
         if (!autoIncrement) {
             DataContainer dataContainer = get(id);
             if (dataContainer != null) this.drop(dataContainer);
@@ -98,7 +99,7 @@ public class Table {
         return dataContainer;
     }
 
-    public DataContainer createDataContainer(UUID id) {
+    public DataContainer createDataContainer(@NonNull UUID id) {
        return createDataContainer(id.toString());
     }
 
@@ -106,13 +107,13 @@ public class Table {
        return createDataContainer(String.valueOf(id));
     }
 
-    public DataContainer getOrCreateDataContainer(String id) {
+    public DataContainer getOrCreateDataContainer(@NonNull String id) {
         DataContainer dataContainer = get(id);
         if (dataContainer == null) dataContainer = createDataContainer(id);
         return dataContainer;
     }
 
-    public DataContainer getOrCreateDataContainer(UUID id) {
+    public DataContainer getOrCreateDataContainer(@NonNull UUID id) {
         return getOrCreateDataContainer(id.toString());
     }
 
@@ -129,16 +130,16 @@ public class Table {
         return createDataContainer("");
     }
 
-    public void drop(DataContainer dataContainer) {
+    public void drop(@NonNull DataContainer dataContainer) {
         DataContainer container = dataContainers.remove(dataContainer.getIdAsString());
         if (container != null) sqlConnection.deleteRow(this, dataContainer.getIdAsString());
     }
 
-    public void drop(String id) {
+    public void drop(@NonNull String id) {
         drop(get(id));
     }
 
-    public void drop(UUID id) {
+    public void drop(@NonNull UUID id) {
         drop(id.toString());
     }
 
@@ -146,11 +147,11 @@ public class Table {
         drop(String.valueOf(id));
     }
 
-    public DataContainer get(String id) {
+    public DataContainer get(@NonNull String id) {
         return dataContainers.get(id);
     }
 
-    public DataContainer get(UUID id) {
+    public DataContainer get(@NonNull UUID id) {
         return get(id.toString());
     }
 
@@ -158,11 +159,11 @@ public class Table {
         return get(String.valueOf(id));
     }
 
-    public boolean contains(String id) {
+    public boolean contains(@NonNull String id) {
         return dataContainers.containsKey(id);
     }
 
-    public boolean contains(UUID id) {
+    public boolean contains(@NonNull UUID id) {
         return contains(id.toString());
     }
 
