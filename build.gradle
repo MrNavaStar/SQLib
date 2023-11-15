@@ -57,6 +57,9 @@ java {
         toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
     }
     archivesBaseName = project.archives_base_name
+
+    javadoc.options.addStringOption('Xdoclint:none', '-quiet')
+    withJavadocJar()
 }
 
 jar {

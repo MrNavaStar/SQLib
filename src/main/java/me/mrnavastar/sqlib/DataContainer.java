@@ -16,6 +16,9 @@ import net.minecraft.util.math.ChunkPos;
 
 import java.util.UUID;
 
+/**
+ * This class represents a row in the {@link Table} in the {@link me.mrnavastar.sqlib.database.Database}
+ */
 @AllArgsConstructor
 public class DataContainer {
 

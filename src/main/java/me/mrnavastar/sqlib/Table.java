@@ -12,6 +12,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * This class acts as a wrapper for a table in a {@link Database}
+ */
 @RequiredArgsConstructor
 public class Table {
 
@@ -33,16 +36,28 @@ public class Table {
     private boolean isInTransaction = false;
     protected boolean autoIncrement = false;
 
+    /**
+     * Make this table use auto incremented ids. See {@link Table#createDataContainerAutoID()}
+     */
     public Table setAutoIncrement() {
         autoIncrement = true;
         return this;
     }
 
+    /**
+     * Adds a column to the table definition
+     * @param name The name of the column
+     * @param dataType The {@link SQLDataType} of this column
+     */
     public Table addColumn(@NonNull String name, @NonNull SQLDataType dataType) {
         columns.put(name, dataType);
         return this;
     }
 
+    /**
+     * Call this function when you are done configuring your table.
+     * @return The finished table
+     */
     public Table finish() {
         sqlConnection.createTable(this, autoIncrement);
         database.addTable(this);
@@ -54,6 +69,9 @@ public class Table {
         return modId + "_" + name;
     }
 
+    /**
+     * Create a transactional lock on this database. No data will be written until you call {@link Table#endTransaction()}
+     */
     public void beginTransaction() {
         if (!isInTransaction) {
             database.beginTransaction();
@@ -61,31 +79,49 @@ public class Table {
         }
     }
 
+    /**
+     * Close the transactional lock on this database and write the data.
+     */
     public void endTransaction() {
         database.endTransaction();
         isInTransaction = false;
     }
 
+    /**
+     * Checks if this {@link Table} is in a transaction
+     */
     public boolean isInTransaction() {
         return isInTransaction;
     }
 
+    /**
+     * @return A list of all the {@link DataContainer} ids in this table.
+     */
     public List<String> getIds() {
         return dataContainers.keySet().stream().toList();
     }
 
+    /**
+     * @return A list of all the {@link DataContainer} ids in this table.
+     */
     public ArrayList<UUID> getIdsAsUUIDs() {
         ArrayList<UUID> uuids = new ArrayList<>();
         dataContainers.keySet().forEach(id -> uuids.add(UUID.fromString(id)));
         return uuids;
     }
 
+    /**
+     * @return A list of all the {@link DataContainer} ids in this table.
+     */
     public ArrayList<Integer> getIdsAsInts() {
         ArrayList<Integer> ints = new ArrayList<>();
         dataContainers.keySet().forEach(id -> ints.add(Integer.parseInt(id)));
         return ints;
     }
 
+    /**
+     * Creates a new {@link DataContainer}
+     */
     public DataContainer createDataContainer(@NonNull String id) {
         if (!autoIncrement) {
             DataContainer dataContainer = get(id);
@@ -100,24 +136,39 @@ public class Table {
         return dataContainer;
     }
 
+    /**
+     * Creates a new {@link DataContainer}
+     */
     public DataContainer createDataContainer(@NonNull UUID id) {
        return createDataContainer(id.toString());
     }
 
+    /**
+     * Creates a new {@link DataContainer}
+     */
     public DataContainer createDataContainer(int id) {
        return createDataContainer(String.valueOf(id));
     }
 
+    /**
+     * Tries to get a {@link DataContainer} or creates a new {@link DataContainer} if it is missing
+     */
     public DataContainer getOrCreateDataContainer(@NonNull String id) {
         DataContainer dataContainer = get(id);
         if (dataContainer == null) dataContainer = createDataContainer(id);
         return dataContainer;
     }
 
+    /**
+     * Tries to get a {@link DataContainer} or creates a new {@link DataContainer} if it is missing
+     */
     public DataContainer getOrCreateDataContainer(@NonNull UUID id) {
         return getOrCreateDataContainer(id.toString());
     }
 
+    /**
+     * Tries to get a {@link DataContainer} or creates a new {@link DataContainer} if it is missing
+     */
     public DataContainer getOrCreateDataContainer(int id) {
         return getOrCreateDataContainer(String.valueOf(id));
     }
@@ -131,47 +182,90 @@ public class Table {
         return createDataContainer("");
     }
 
+    /**
+     * Delete the {@link DataContainer} from the database
+     * @param dataContainer The {@link DataContainer} to delete
+     */
     public void drop(@NonNull DataContainer dataContainer) {
         DataContainer container = dataContainers.remove(dataContainer.getIdAsString());
         if (container != null) sqlConnection.deleteRow(this, dataContainer.getIdAsString());
     }
 
+    /**
+     * Delete the {@link DataContainer} from the database
+     * @param id The id of the {@link DataContainer} to delete
+     */
     public void drop(@NonNull String id) {
         drop(get(id));
     }
 
+    /**
+     * Delete the {@link DataContainer} from the database
+     * @param id The id of the {@link DataContainer} to delete
+     */
     public void drop(@NonNull UUID id) {
         drop(id.toString());
     }
 
+    /**
+     * Delete the {@link DataContainer} from the database
+     * @param id The id of the {@link DataContainer} to delete
+     */
     public void drop(int id) {
         drop(String.valueOf(id));
     }
 
+    /**
+     * Tries to get a {@link DataContainer}
+     * @return The {@link DataContainer} or null if it is missing
+     */
     public DataContainer get(@NonNull String id) {
         return dataContainers.get(id);
     }
 
+    /**
+     * Tries to get a {@link DataContainer}
+     * @return The {@link DataContainer} or null if it is missing
+     */
     public DataContainer get(@NonNull UUID id) {
         return get(id.toString());
     }
 
+    /**
+     * Tries to get a {@link DataContainer}
+     * @return The {@link DataContainer} or null if it is missing
+     */
     public DataContainer get(int id) {
         return get(String.valueOf(id));
     }
 
+    /**
+     * Checks if the table contains a {@link DataContainer}
+     * @param id The id of the {@link DataContainer} to look for
+     */
     public boolean contains(@NonNull String id) {
         return dataContainers.containsKey(id);
     }
 
+    /**
+     * Checks if the table contains a {@link DataContainer}
+     * @param id The id of the {@link DataContainer} to look for
+     */
     public boolean contains(@NonNull UUID id) {
         return contains(id.toString());
     }
 
+    /**
+     * Checks if the table contains a {@link DataContainer}
+     * @param id The id of the {@link DataContainer} to look for
+     */
     public boolean contains(int id) {
         return contains(String.valueOf(id));
     }
 
+    /**
+     * @return A list of all the {@link DataContainer}'s in this table
+     */
     public ArrayList<DataContainer> getDataContainers() {
         return (ArrayList<DataContainer>) dataContainers.values().stream().toList();
     }

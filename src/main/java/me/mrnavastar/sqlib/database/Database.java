@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
 
+/**
+ * This class can be extended to allow for new database implementations
+ */
 @RequiredArgsConstructor
 public abstract class Database {
 
