@@ -46,6 +46,9 @@ dependencies {
 This example uses the built-in database managed by sqlib. for 99% of mods, using the built-in database is good, however 
 further down are examples for custom database management.
 ```java
+// Do not call SQLib.getDatabase() in a early mod initializer. 
+// Doing so will likely crash your mod if your mod.
+// Calling in or after the regular mod initializer is ok.
 Database database = SQLib.getDatabase();
 
 Table table = database.createTable("userdata")

@@ -7,9 +7,9 @@ import me.mrnavastar.sqlib.config.SQLibConfig;
 import me.mrnavastar.sqlib.database.Database;
 import me.mrnavastar.sqlib.database.MySQLDatabase;
 import me.mrnavastar.sqlib.database.SQLiteDatabase;
-import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 
@@ -20,7 +20,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.Objects;
 
-public class SQLib implements ModInitializer {
+public class SQLib implements PreLaunchEntrypoint {
 
     public static final String MOD_ID = "SQLib";
     public static final Gson GSON = new Gson();
@@ -30,7 +30,7 @@ public class SQLib implements ModInitializer {
     private static SQLibConfig config = new SQLibConfig();
 
     @Override
-    public void onInitialize() {
+    public void onPreLaunch() {
         ServerLifecycleEvents.SERVER_STOPPING.register(server -> databaseRegistry.forEach((key, database) -> database.close()));
         new File(FabricLoader.getInstance().getGameDir() + "/sqlib").mkdirs();
 
