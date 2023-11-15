@@ -60,6 +60,7 @@ java {
 
     javadoc.options.addStringOption('Xdoclint:none', '-quiet')
     withJavadocJar()
+    withSourcesJar()
 }
 
 jar {
