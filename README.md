@@ -15,6 +15,11 @@ This library is not a full-fledged sql wrapper, and does not provide full access
 The main focus of this library is to provide an easy and simple way to store data in your mods.
 If you are looking for a more advanced database I recommend taking a look at something like [Nitrite](https://github.com/nitrite/nitrite-java).
 
+# Config
+
+The mod generates a config on first time start that allows you to configure the database used by all mods relying on sqlib. 
+The default database is a sqlite database running in the sqlib directory.
+
 # Supported Datatypes
 The datatypes can be accessed with the `SQLDataType` class.
 | Standard | Minecraft   | 
@@ -34,16 +39,16 @@ repositories {
 }
 
 dependencies {
-  modImplementation("maven.modrinth:sqlib:2.1.7")
+  modImplementation("maven.modrinth:sqlib:2.2.0")
 }
 ```
-# General Usage
+# Developer Usage
+This example uses the built-in database managed by sqlib. for 99% of mods, using the built-in database is good, however 
+further down are examples for custom database management.
 ```java
-MySQLDatabase data = new MySQLDatabase("modId", "mydata", "192.168.1.69", "3306", "cooluser", "radman");
-// OR
-SQLiteDatabase data = new SQLiteDatabase("modId", "mydata", "some/dir");
+Database database = SQLib.getDatabase();
 
-Table table = data.createTable("userdata")
+Table table = database.createTable("userdata")
         .addColumn("username", SQLDataType.STRING)
         .addColumn("home", SQLDataType.BLOCKPOS)
         .addColumn("nbt", SQLDataType.NBT)
@@ -60,6 +65,27 @@ System.out.println(playerdata.getNbt("nbt"));
 
 data.close();
 ```
+
+# Custom Database Management
+```java
+MySQLDatabase database = new MySQLDatabase("modId", "mydata", "192.168.1.69", "3306", "cooluser", "radman");
+// OR
+SQLiteDatabase database = new SQLiteDatabase("modId", "mydata", "some/dir");
+```
+
+# Auto Incrementing Tables
+You can make a table that auto increments its id with the following:
+```java
+Table table = SQLib.getDatabase().createTable("towns")
+        .setAutoIncrement()
+        .addColumn("city", SQLDataType.STRING)
+        .addColumn("portal", SQLDataType.BLOCKPOS)
+        .finish();
+
+DataContainer data = table.createDataContainerAutoID();
+int id = data.getIdAsInt();
+```
+
 # Transaction Support
 This approach will bach sql commands into one command for faster read/writes of large amounts of data. You can begin and end a transaction at anytime.
 ```java

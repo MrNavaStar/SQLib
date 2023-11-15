@@ -5,7 +5,6 @@ import com.google.gson.JsonParser;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
-import me.mrnavastar.sqlib.api.MojangDataType;
 import me.mrnavastar.sqlib.sql.SQLConnection;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.StringNbtReader;
@@ -84,10 +83,6 @@ public class DataContainer {
         sqlConnection.writeField(table, id, field, value.toString());
     }
 
-    public void put(@NonNull String field, @NonNull MojangDataType value) {
-        sqlConnection.writeField(table, id, field, value.SQLib$encode());
-    }
-
     public String getString(@NonNull String field) {
         return sqlConnection.readField(table, id, field, String.class);
     }
@@ -100,7 +95,7 @@ public class DataContainer {
         return sqlConnection.readField(table, id, field, Double.class);
     }
 
-    public double getLong(@NonNull String field) {
+    public long getLong(@NonNull String field) {
         return sqlConnection.readField(table, id, field, Long.class);
     }
 
