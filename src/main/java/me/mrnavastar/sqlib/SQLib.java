@@ -7,6 +7,7 @@ import me.mrnavastar.sqlib.config.SQLibConfig;
 import me.mrnavastar.sqlib.database.Database;
 import me.mrnavastar.sqlib.database.MySQLDatabase;
 import me.mrnavastar.sqlib.database.SQLiteDatabase;
+import me.mrnavastar.sqlib.sql.SQLDataType;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint;
@@ -57,6 +58,7 @@ public class SQLib implements PreLaunchEntrypoint {
                 log(Level.ERROR, "[SQLite] Path: " + config.sqlite.directory + " was not found!");
                 System.exit(1);
             }
+
             database = new SQLiteDatabase(MOD_ID, config.database.name, config.sqlite.directory);
         }
         else if (config.database.type.equalsIgnoreCase("MYSQL")) {
@@ -67,6 +69,12 @@ public class SQLib implements PreLaunchEntrypoint {
 
             database = new MySQLDatabase(MOD_ID, config.database.name, config.mysql.address, String.valueOf(config.mysql.port), config.mysql.username, config.mysql.password);
         }
+
+        Table table = database.createTable("pog").addColumn("pain", SQLDataType.LONG).finish();
+        DataContainer container = table.getOrCreateDataContainer(1);
+        long l = 999999999L;
+        container.put("pain", l);
+        System.out.println(container.getLong("pain"));
     }
 
     public static void registerDatabase(String modId, String name, Database database) {

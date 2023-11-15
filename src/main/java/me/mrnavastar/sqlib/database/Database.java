@@ -20,10 +20,10 @@ public abstract class Database {
 
     @Getter
     @NonNull
-    protected final String name;
+    protected final String modId;
     @Getter
     @NonNull
-    protected final String modId;
+    protected final String name;
     private final HashMap<String, Table> tables = new HashMap<>();
     protected SQLConnection sqlConnection;
 

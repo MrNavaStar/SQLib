@@ -18,10 +18,10 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     // SQL Drivers
-    shadow "org.xerial:sqlite-jdbc:${project.sqlite_version}"
-    shadow "mysql:mysql-connector-java:${project.mysql_version}"
+    shadow implementation("org.xerial:sqlite-jdbc:${project.sqlite_version}")
+    shadow implementation("mysql:mysql-connector-java:${project.mysql_version}")
     //Config
-    shadow "com.fasterxml.jackson.dataformat:jackson-dataformat-toml:${project.jackson_version}"
+    shadow implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-toml:${project.jackson_version}")
 
     // Extra
     compileOnly "org.projectlombok:lombok:1.18.28"
