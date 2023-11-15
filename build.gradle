@@ -17,10 +17,10 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     // SQL Drivers
-    implementation "org.xerial:sqlite-jdbc:${project.sqlite_version}"
-    implementation "mysql:mysql-connector-java:${project.mysql_version}"
+    shadow "org.xerial:sqlite-jdbc:${project.sqlite_version}"
+    shadow "mysql:mysql-connector-java:${project.mysql_version}"
     //Config
-    implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-toml:${project.jackson_version}"
+    shadow "com.fasterxml.jackson.dataformat:jackson-dataformat-toml:${project.jackson_version}"
 
     // Extra
     compileOnly "org.projectlombok:lombok:1.18.28"
@@ -29,12 +29,11 @@ dependencies {
 }
 
 shadowJar {
-    dependencies {
-        include(dependency("org.xerial:sqlite-jdbc:.*"))
-        include(dependency("mysql:mysql-connector-java:.*"))
-        include(dependency("com.fasterxml.jackson.dataformat:jackson-dataformat-toml:.*"))
-    }
+    configurations = [project.configurations.shadow]
+    minimize()
 }
+
+jar.finalizedBy(shadowJar)
 
 tasks.withType(JavaCompile).configureEach {
     it.options.encoding = "UTF-8"
@@ -56,5 +55,3 @@ jar {
         rename { "${it}_${project.archivesBaseName}" }
     }
 }
-
-jar.finalizedBy('shadowJar')
