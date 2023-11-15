@@ -30,6 +30,15 @@ dependencies {
 
 shadowJar {
     configurations = [project.configurations.shadow]
+
+    exclude 'LICENSE'
+    exclude 'README'
+    exclude 'INFO_BIN'
+    exclude 'INFO_SRC'
+    minimize {
+        exclude(dependency('org.xerial:sqlite-jdbc:.*'))
+        exclude(dependency('mysql:mysql-connector-java:.*'))
+    }
     minimize()
 }
 
