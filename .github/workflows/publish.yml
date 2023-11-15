@@ -29,8 +29,8 @@ jobs:
       - name: Rename File
         run: |
           mv ${{ github.workspace }}/build/libs/sqlib-all.jar ${{ github.workspace }}/sqlib-${{ github.ref_name }}.jar; 
-          mv ${{ github.workspace }}/build/libs/sqlib-javadoc.jar ${{ github.workspace }}/sqlib-javadoc-${{ github.ref_name }}.jar;
-          mv ${{ github.workspace }}/build/libs/sqlib-sources.jar ${{ github.workspace }}/sqlib-sources-${{ github.ref_name }}.jar;
+          mv ${{ github.workspace }}/build/libs/sqlib-javadoc.jar ${{ github.workspace }}/sqlib-${{ github.ref_name }}-javadoc.jar;
+          mv ${{ github.workspace }}/build/libs/sqlib-sources.jar ${{ github.workspace }}/sqlib-{{ github.ref_name }}-sources.jar;
 
       - name: Publish Release
         uses: Kir-Antipov/mc-publish@v3.3
@@ -38,8 +38,8 @@ jobs:
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
           files: |
             ${{ github.workspace }}/sqlib-${{ github.ref_name }}.jar
-            ${{ github.workspace }}/sqlib-javadoc${{ github.ref_name }}.jar
-            ${{ github.workspace }}/sqlib-sources{{ github.ref_name }}.jar
+            ${{ github.workspace }}/sqlib-${{ github.ref_name }}-javadoc.jar
+            ${{ github.workspace }}/sqlib-{{ github.ref_name }}-sources.jar
           java: 17
           game-versions: |
             >=1.16.5
