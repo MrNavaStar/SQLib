@@ -62,8 +62,8 @@ public class Table {
         return isInTransaction;
     }
 
-    public ArrayList<String> getIds() {
-        return (ArrayList<String>) dataContainers.keySet().stream().toList();
+    public List<String> getIds() {
+        return dataContainers.keySet().stream().toList();
     }
 
     public ArrayList<UUID> getIdsAsUUIDs() {
