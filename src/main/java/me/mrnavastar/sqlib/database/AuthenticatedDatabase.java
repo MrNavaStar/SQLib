@@ -12,8 +12,8 @@ public abstract class AuthenticatedDatabase extends Database {
     protected final String username;
     protected final String password;
 
-    public AuthenticatedDatabase(String modId, String name, String address, String port, String username, String password) {
-        super(modId, name);
+    public AuthenticatedDatabase(String name, String address, String port, String username, String password) {
+        super(name);
         this.address = address;
         this.port = port;
         this.username = username;

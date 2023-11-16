@@ -20,9 +20,6 @@ public abstract class Database {
 
     @Getter
     @NonNull
-    protected final String modId;
-    @Getter
-    @NonNull
     protected final String name;
     private final HashMap<String, Table> tables = new HashMap<>();
     protected SQLConnection sqlConnection;
@@ -38,7 +35,7 @@ public abstract class Database {
     public void open() {
         if (sqlConnection == null) {
             sqlConnection = new SQLConnection(getConnectionUrl(), getConnectionProperties());
-            SQLib.registerDatabase(modId, name, this);
+            SQLib.registerDatabase(this);
         }
     }
 
@@ -53,7 +50,7 @@ public abstract class Database {
         sqlConnection.endTransaction();
     }
 
-    public Table createTable(String name) {
+    public Table createTable(String modId, String name) {
         return new Table(modId, name, this, sqlConnection);
     }
 
@@ -61,7 +58,7 @@ public abstract class Database {
         tables.put(table.getName(), table);
     }
 
-    public Table getTable(String name) {
+    public Table getTable(String modId, String name) {
         return tables.get(modId + "_" + name);
     }
 

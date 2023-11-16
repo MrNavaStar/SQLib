@@ -2,8 +2,8 @@ package me.mrnavastar.sqlib.database;
 
 public class MySQLDatabase extends AuthenticatedDatabase {
 
-    public MySQLDatabase(String modId, String name, String address, String port, String username, String password) {
-        super(modId, name, address, port, username, password);
+    public MySQLDatabase(String name, String address, String port, String username, String password) {
+        super(name, address, port, username, password);
     }
 
     @Override

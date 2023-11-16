@@ -18,7 +18,7 @@ jobs:
         with:
           file: src/main/resources/fabric.mod.json
           field: version
-          value: ${{ github.ref_name }}
+          value: ${{ github.event.release.tag_name }}
       
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
@@ -28,18 +28,18 @@ jobs:
         
       - name: Rename File
         run: |
-          mv ${{ github.workspace }}/build/libs/sqlib-all.jar ${{ github.workspace }}/sqlib-${{ github.ref_name }}.jar; 
-          mv ${{ github.workspace }}/build/libs/sqlib-javadoc.jar ${{ github.workspace }}/sqlib-${{ github.ref_name }}-javadoc.jar;
-          mv ${{ github.workspace }}/build/libs/sqlib-sources.jar ${{ github.workspace }}/sqlib-{{ github.ref_name }}-sources.jar;
+          mv ${{ github.workspace }}/build/libs/sqlib-all.jar ${{ github.workspace }}/sqlib-${{ github.event.release.tag_name }}.jar; 
+          mv ${{ github.workspace }}/build/libs/sqlib-javadoc.jar ${{ github.workspace }}/sqlib-${{ github.event.release.tag_name }}-javadoc.jar;
+          mv ${{ github.workspace }}/build/libs/sqlib-sources.jar ${{ github.workspace }}/sqlib-${{ github.event.release.tag_name }}-sources.jar;
 
       - name: Publish Release
         uses: Kir-Antipov/mc-publish@v3.3
         with:
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
           files: |
-            ${{ github.workspace }}/sqlib-${{ github.ref_name }}.jar
-            ${{ github.workspace }}/sqlib-${{ github.ref_name }}-javadoc.jar
-            ${{ github.workspace }}/sqlib-{{ github.ref_name }}-sources.jar
+            ${{ github.workspace }}/sqlib-${{ github.event.release.tag_name }}.jar
+            ${{ github.workspace }}/sqlib-${{ github.event.release.tag_name }}-javadoc.jar
+            ${{ github.workspace }}/sqlib-${{ github.event.release.tag_name }}-sources.jar
           java: 17
           game-versions: |
             >=1.16.5

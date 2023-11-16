@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -25,14 +26,14 @@ public class SQLib implements PreLaunchEntrypoint {
 
     public static final String MOD_ID = "SQLib";
     public static final Gson GSON = new Gson();
-    private static final HashMap<String, Database> databaseRegistry = new HashMap<>();
+    private static final ArrayList<Database> databases = new ArrayList<>();
     @Getter
     private static Database database;
     private static SQLibConfig config = new SQLibConfig();
 
     @Override
     public void onPreLaunch() {
-        ServerLifecycleEvents.SERVER_STOPPING.register(server -> databaseRegistry.forEach((key, database) -> database.close()));
+        ServerLifecycleEvents.SERVER_STOPPING.register(server -> databases.forEach(Database::close));
         new File(FabricLoader.getInstance().getGameDir() + "/sqlib").mkdirs();
 
         try {
@@ -59,7 +60,7 @@ public class SQLib implements PreLaunchEntrypoint {
                 System.exit(1);
             }
 
-            database = new SQLiteDatabase(MOD_ID, config.database.name, config.sqlite.directory);
+            database = new SQLiteDatabase(config.database.name, config.sqlite.directory);
         }
         else if (config.database.type.equalsIgnoreCase("MYSQL")) {
             if (!config.validateMySQL()) {
@@ -67,18 +68,18 @@ public class SQLib implements PreLaunchEntrypoint {
                 System.exit(1);
             }
 
-            database = new MySQLDatabase(MOD_ID, config.database.name, config.mysql.address, String.valueOf(config.mysql.port), config.mysql.username, config.mysql.password);
+            database = new MySQLDatabase(config.database.name, config.mysql.address, String.valueOf(config.mysql.port), config.mysql.username, config.mysql.password);
         }
 
-        Table table = database.createTable("pog").addColumn("pain", SQLDataType.LONG).finish();
+        Table table = SQLib.getDatabase().createTable(MOD_ID, "pog").addColumn("pain", SQLDataType.LONG).finish();
         DataContainer container = table.getOrCreateDataContainer(1);
         long l = 999999999L;
         container.put("pain", l);
         System.out.println(container.getLong("pain"));
     }
 
-    public static void registerDatabase(String modId, String name, Database database) {
-        if (!databaseRegistry.containsKey(modId + name)) databaseRegistry.put(modId + name, database);
+    public static void registerDatabase(Database database) {
+        if (!databases.contains(database)) databases.add(database);
     }
 
     public static void log(Level level, String message) {

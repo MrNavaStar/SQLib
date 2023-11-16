@@ -20,10 +20,10 @@ public class Table {
 
     @Getter
     @NonNull
-    private final String name;
+    private final String modId;
     @Getter
     @NonNull
-    private final String modId;
+    private final String name;
     @Getter
     @NonNull
     private final Database database;

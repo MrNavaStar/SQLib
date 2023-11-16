@@ -21,8 +21,8 @@ public class SQLiteDatabase extends Database {
         OFF
     }
 
-    public SQLiteDatabase(@NonNull String modId, @NonNull String name, @NonNull String directory) {
-        super(modId, name);
+    public SQLiteDatabase(@NonNull String name, @NonNull String directory) {
+        super(name);
         this.directory = directory;
         open();
         executeCommand("PRAGMA journal_mode = %s;".formatted(mode), true);
