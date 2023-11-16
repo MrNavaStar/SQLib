@@ -266,7 +266,7 @@ public class Table {
     /**
      * @return A list of all the {@link DataContainer}'s in this table
      */
-    public ArrayList<DataContainer> getDataContainers() {
-        return (ArrayList<DataContainer>) dataContainers.values().stream().toList();
+    public List<DataContainer> getDataContainers() {
+        return dataContainers.values().stream().toList();
     }
 }
