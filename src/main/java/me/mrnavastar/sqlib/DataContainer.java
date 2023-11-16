@@ -99,7 +99,8 @@ public class DataContainer {
     }
 
     public long getLong(@NonNull String field) {
-        return sqlConnection.readField(table, id, field, Long.class);
+        // Has to be done this way because the sql driver converts small long values to ints and makes me cry
+        return Long.parseLong(sqlConnection.readField(table, id, field, Number.class).toString());
     }
 
     public boolean getBool(@NonNull String field) {

@@ -11,6 +11,7 @@ import me.mrnavastar.sqlib.sql.SQLDataType;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint;
+import net.minecraft.util.math.BlockPos;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 
@@ -70,12 +71,6 @@ public class SQLib implements PreLaunchEntrypoint {
 
             database = new MySQLDatabase(config.database.name, config.mysql.address, String.valueOf(config.mysql.port), config.mysql.username, config.mysql.password);
         }
-
-        Table table = SQLib.getDatabase().createTable(MOD_ID, "pog").addColumn("pain", SQLDataType.LONG).finish();
-        DataContainer container = table.getOrCreateDataContainer(1);
-        long l = 999999999L;
-        container.put("pain", l);
-        System.out.println(container.getLong("pain"));
     }
 
     public static void registerDatabase(Database database) {
