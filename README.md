@@ -51,7 +51,7 @@ further down are examples for custom database management.
 // Calling in or after the regular mod initializer is ok.
 Database database = SQLib.getDatabase();
 
-Table table = database.createTable("userdata")
+Table table = database.createTable("myModId", "userdata")
         .addColumn("username", SQLDataType.STRING)
         .addColumn("home", SQLDataType.BLOCKPOS)
         .addColumn("nbt", SQLDataType.NBT)
