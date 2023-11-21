@@ -79,7 +79,7 @@ SQLiteDatabase database = new SQLiteDatabase("modId", "mydata", "some/dir");
 # Auto Incrementing Tables
 You can make a table that auto increments its id with the following:
 ```java
-Table table = SQLib.getDatabase().createTable("towns")
+Table table = SQLib.getDatabase().createTable("modId", "towns")
         .setAutoIncrement()
         .addColumn("city", SQLDataType.STRING)
         .addColumn("portal", SQLDataType.BLOCKPOS)
@@ -92,7 +92,7 @@ int id = data.getIdAsInt();
 # Transaction Support
 This approach will bach sql commands into one command for faster read/writes of large amounts of data. You can begin and end a transaction at anytime.
 ```java
-Table table = data.createTable("userdata")
+Table table = data.createTable("modId", "userdata")
         .addColumn("username", SQLDataType.STRING)
         .addColumn("home", SQLDataType.BLOCKPOS)
         .addColumn("nbt", SQLDataType.NBT)
@@ -110,7 +110,7 @@ playerData.put("nbt", new NbtCompound());
 If you need to do more complex things than the api allows for, you can run custom SQL commands.
 ```java
 MySQLDatabase database = new MySQLDatabase("modId", "mydata", "192.168.1.69", "3306", "cooluser", "radman");
-Table table = data.createTable("userdata")
+Table table = data.createTable("modId", "userdata")
         .addColumn("username", SQLDataType.STRING)
         .addColumn("home", SQLDataType.BLOCKPOS)
         .addColumn("nbt", SQLDataType.NBT)
