@@ -1,7 +1,6 @@
 plugins {
     id 'fabric-loom' version '1.4.4'
     id 'com.github.johnrengelman.shadow' version '8.1.1'
-    id 'io.freefair.lombok' version '8.4'
 }
 
 def targetJavaVersion = 17
@@ -18,10 +17,10 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     // SQL Drivers
-    shadow implementation("org.xerial:sqlite-jdbc:${project.sqlite_version}")
-    shadow implementation("mysql:mysql-connector-java:${project.mysql_version}")
+    implementation "org.xerial:sqlite-jdbc:${project.sqlite_version}"
+    implementation "mysql:mysql-connector-java:${project.mysql_version}"
     //Config
-    shadow implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-toml:${project.jackson_version}")
+    implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-toml:${project.jackson_version}"
 
     // Extra
     compileOnly "org.projectlombok:lombok:1.18.28"
@@ -30,20 +29,21 @@ dependencies {
 }
 
 shadowJar {
-    configurations = [project.configurations.shadow]
+    archiveBaseName.set('sqlib')
 
-    exclude 'LICENSE'
-    exclude 'README'
-    exclude 'INFO_BIN'
-    exclude 'INFO_SRC'
-    minimize {
-        exclude(dependency('org.xerial:sqlite-jdbc:.*'))
-        exclude(dependency('mysql:mysql-connector-java:.*'))
+    dependencies {
+        include(dependency("org.xerial:sqlite-jdbc:.*"))
+        include(dependency("mysql:mysql-connector-java:.*"))
+        include(dependency("com.fasterxml.jackson.dataformat:jackson-dataformat-toml:.*"))
     }
-    minimize()
 }
 
-jar.finalizedBy(shadowJar)
+remapJar {
+    dependsOn(shadowJar)
+    mustRunAfter(shadowJar)
+
+    inputFile = file(shadowJar.archivePath)
+}
 
 tasks.withType(JavaCompile).configureEach {
     it.options.encoding = "UTF-8"
@@ -58,17 +58,6 @@ java {
         toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
     }
     archivesBaseName = project.archives_base_name
-
-    javadoc.options.addStringOption('Xdoclint:none', '-quiet')
-    withJavadocJar()
-    withSourcesJar()
-}
-
-sourcesJar {
-    exclude {
-        sourceSets.main.allSource.contains it.file
-    }
-    from delombok
 }
 
 jar {
@@ -76,3 +65,5 @@ jar {
         rename { "${it}_${project.archivesBaseName}" }
     }
 }
+
+jar.finalizedBy('shadowJar')
