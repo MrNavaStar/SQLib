@@ -1,6 +1,7 @@
 plugins {
     id 'fabric-loom' version '1.4.4'
     id 'com.github.johnrengelman.shadow' version '8.1.1'
+    id 'io.freefair.lombok' version '8.4'
 }
 
 def targetJavaVersion = 17
@@ -38,6 +39,8 @@ shadowJar {
     }
 }
 
+jar.finalizedBy('shadowJar')
+
 remapJar {
     dependsOn(shadowJar)
     mustRunAfter(shadowJar)
@@ -58,6 +61,17 @@ java {
         toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
     }
     archivesBaseName = project.archives_base_name
+
+    javadoc.options.addStringOption('Xdoclint:none', '-quiet')
+    withJavadocJar()
+    withSourcesJar()
+}
+
+sourcesJar {
+    exclude {
+        sourceSets.main.allSource.contains it.file
+    }
+    from delombok
 }
 
 jar {
@@ -65,5 +79,3 @@ jar {
         rename { "${it}_${project.archivesBaseName}" }
     }
 }
-
-jar.finalizedBy('shadowJar')
