@@ -55,7 +55,7 @@ public abstract class Database {
     }
 
     public void addTable(Table table) {
-        tables.put(table.getName(), table);
+        tables.put(table.getNoConflictName(), table);
     }
 
     public Table getTable(String modId, String name) {

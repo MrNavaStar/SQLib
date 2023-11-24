@@ -29,16 +29,6 @@ dependencies {
     modImplementation "maven.modrinth:easy-eula:1.0.0"
 }
 
-/*shadowJar {
-    archiveBaseName.set('sqlib')
-
-    dependencies {
-        include(dependency("org.xerial:sqlite-jdbc:.*"))
-        include(dependency("mysql:mysql-connector-java:.*"))
-        include(dependency("com.fasterxml.jackson.dataformat:jackson-dataformat-toml:.*"))
-    }
-}*/
-
 shadowJar {
     archiveBaseName.set('sqlib')
     configurations = [project.configurations.shadow]
