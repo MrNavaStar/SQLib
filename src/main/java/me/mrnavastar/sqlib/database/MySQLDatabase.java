@@ -8,12 +8,17 @@ public class MySQLDatabase extends AuthenticatedDatabase {
 
     @Override
     public String getConnectionUrl() {
-        return "jdbc:mysql://" + address + ":" + port + "/" + name;
+        return "jdbc:mariadb://" + address + ":" + port + "/" + name;
     }
 
     @Override
     public String getTableCreationQuery(String tableName, String columns, boolean autoIncrementId) {
         if (autoIncrementId) return "CREATE TABLE IF NOT EXISTS %s (ID int, %s, PRIMARY KEY (ID) AUTO_INCREMENT);".formatted(tableName, columns);
         return "CREATE TABLE IF NOT EXISTS %s (ID TEXT, %s, PRIMARY KEY (ID(256)));".formatted(tableName, columns);
+    }
+
+    @Override
+    public String getTransactionString() {
+        return "BEGIN;";
     }
 }

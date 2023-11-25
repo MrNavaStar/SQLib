@@ -28,9 +28,4 @@ public abstract class AuthenticatedDatabase extends Database {
         properties.put("password", password);
         return properties;
     }
-
-    @Override
-    public void beginTransaction() {
-        sqlConnection.beginTransaction(false);
-    }
 }

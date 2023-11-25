@@ -44,7 +44,11 @@ public abstract class Database {
         sqlConnection = null;
     }
 
-    public abstract void beginTransaction();
+    public abstract String getTransactionString();
+
+    public void beginTransaction() {
+        sqlConnection.beginTransaction(getTransactionString());
+    };
 
     public void endTransaction() {
         sqlConnection.endTransaction();

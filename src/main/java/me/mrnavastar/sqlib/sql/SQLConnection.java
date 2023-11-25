@@ -49,8 +49,8 @@ public class SQLConnection {
         }
     }
 
-    public void beginTransaction(boolean exclusive) {
-        executeCommand((exclusive) ? "BEGIN;" : "BEGIN EXCLUSIVE;", true);
+    public void beginTransaction(String transactionString) {
+        executeCommand(transactionString, true);
     }
 
     public void endTransaction() {

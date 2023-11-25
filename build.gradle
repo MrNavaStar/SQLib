@@ -18,10 +18,10 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     // SQL Drivers
-    shadow implementation("org.xerial:sqlite-jdbc:${project.sqlite_version}")
-    shadow implementation("mysql:mysql-connector-java:${project.mysql_version}")
-    //Config
-    shadow implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-toml:${project.jackson_version}")
+    implementation("org.xerial:sqlite-jdbc:${project.sqlite_version}")
+    implementation("org.mariadb.jdbc:mariadb-java-client:${project.mariadb_version}")
+    // Config
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-toml:${project.jackson_version}")
 
     // Extra
     compileOnly "org.projectlombok:lombok:1.18.28"
@@ -31,13 +31,17 @@ dependencies {
 
 shadowJar {
     archiveBaseName.set('sqlib')
-    configurations = [project.configurations.shadow]
 
-    minimize {
-        exclude(dependency("org.xerial:sqlite-jdbc:.*"))
-        exclude(dependency("mysql:mysql-connector-java:.*"))
+    dependencies {
+        mergeServiceFiles()
+        include(dependency("org.xerial:sqlite-jdbc:.*"))
+        include(dependency("org.mariadb.jdbc:mariadb-java-client:.*"))
+        // Jackson Pain
+        include(dependency("com.fasterxml.jackson.core:jackson-annotations:.*"))
+        include(dependency("com.fasterxml.jackson.core:jackson-core:.*"))
+        include(dependency("com.fasterxml.jackson.core:jackson-databind:.*"))
+        include(dependency("com.fasterxml.jackson.dataformat:jackson-dataformat-toml:.*"))
     }
-    minimize()
 }
 
 jar.finalizedBy('shadowJar')

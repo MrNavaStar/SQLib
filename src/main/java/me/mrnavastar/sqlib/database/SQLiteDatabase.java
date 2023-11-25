@@ -39,13 +39,13 @@ public class SQLiteDatabase extends Database {
         return "CREATE TABLE IF NOT EXISTS %s (%s, ID MEDIUMTEXT PRIMARY KEY);".formatted(tableName, columns);
     }
 
+    @Override
+    public String getTransactionString() {
+        return "BEGIN EXCLUSIVE;";
+    }
+
     public void setMode(@NonNull Mode mode) {
         this.mode = mode;
         executeCommand("PRAGMA journal_mode = %s;".formatted(mode), true);
-    }
-
-    @Override
-    public void beginTransaction() {
-        sqlConnection.beginTransaction(true);
     }
 }

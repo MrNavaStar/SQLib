@@ -43,3 +43,5 @@ jobs:
           java: 17
           game-versions: |
             >=1.16.5
+          dependencies: |
+            fabric-api
