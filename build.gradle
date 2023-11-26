@@ -20,6 +20,7 @@ dependencies {
     // SQL Drivers
     implementation("org.xerial:sqlite-jdbc:${project.sqlite_version}")
     implementation("org.mariadb.jdbc:mariadb-java-client:${project.mariadb_version}")
+    implementation("org.apache.commons:commons-dbcp2:${project.dbcp2_version}")
     // Config
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-toml:${project.jackson_version}")
 
@@ -36,6 +37,7 @@ shadowJar {
         mergeServiceFiles()
         include(dependency("org.xerial:sqlite-jdbc:.*"))
         include(dependency("org.mariadb.jdbc:mariadb-java-client:.*"))
+        include(dependency("org.apache.commons:commons-dbcp2:.*"))
         // Jackson Pain
         include(dependency("com.fasterxml.jackson.core:jackson-annotations:.*"))
         include(dependency("com.fasterxml.jackson.core:jackson-core:.*"))

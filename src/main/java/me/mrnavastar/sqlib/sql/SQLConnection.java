@@ -2,18 +2,29 @@ package me.mrnavastar.sqlib.sql;
 
 import me.mrnavastar.sqlib.SQLib;
 import me.mrnavastar.sqlib.Table;
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.logging.log4j.Level;
 
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Properties;
 
 public class SQLConnection {
 
     private Connection connection;
+    private final BasicDataSource dataSource = new BasicDataSource();
 
     public SQLConnection(String connectionUrl, Properties properties) {
+        dataSource.setUrl(connectionUrl);
+        dataSource.setConnectionProperties(properties.toString());
+        dataSource.setMinIdle(5);
+        dataSource.setMaxIdle(10);
+        dataSource.setMaxOpenPreparedStatements(100);
+
         try {
-            connection = DriverManager.getConnection(connectionUrl, properties);
+            connection = dataSource.getConnection();
         } catch (SQLException e) {
             SQLib.log(Level.ERROR, "Failed to connect to database!");
             SQLib.log(Level.ERROR, e.getLocalizedMessage());
@@ -24,6 +35,7 @@ public class SQLConnection {
     public void close() {
         try {
             connection.close();
+            dataSource.close();
         } catch (SQLException e) {
             SQLib.log(Level.ERROR, "Gonna be honest, not sure how you got this one.");
             e.printStackTrace();
