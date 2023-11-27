@@ -1,8 +1,9 @@
 package me.mrnavastar.sqlib.sql;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import me.mrnavastar.sqlib.SQLib;
 import me.mrnavastar.sqlib.Table;
-import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.logging.log4j.Level;
 
 import java.sql.*;
@@ -14,17 +15,21 @@ import java.util.Properties;
 public class SQLConnection {
 
     private Connection connection;
-    private final BasicDataSource dataSource = new BasicDataSource();
+    private final HikariDataSource ds;
 
     public SQLConnection(String connectionUrl, Properties properties) {
-        dataSource.setUrl(connectionUrl);
-        dataSource.setConnectionProperties(properties.toString());
-        dataSource.setMinIdle(5);
-        dataSource.setMaxIdle(10);
-        dataSource.setMaxOpenPreparedStatements(100);
+        HikariConfig config = new HikariConfig();
+        config.setJdbcUrl(connectionUrl);
+        config.setUsername(properties.getProperty("user"));
+        config.setPassword(properties.getProperty("password"));
+        config.addDataSourceProperty("cachePrepStmts", "true");
+        config.addDataSourceProperty("useServerPrepStmts", "true");
+        config.addDataSourceProperty("prepStmtCacheSize", "250");
+        config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+        ds = new HikariDataSource(config);
 
         try {
-            connection = dataSource.getConnection();
+            connection = ds.getConnection();
         } catch (SQLException e) {
             SQLib.log(Level.ERROR, "Failed to connect to database!");
             SQLib.log(Level.ERROR, e.getLocalizedMessage());
@@ -35,7 +40,7 @@ public class SQLConnection {
     public void close() {
         try {
             connection.close();
-            dataSource.close();
+            ds.close();
         } catch (SQLException e) {
             SQLib.log(Level.ERROR, "Gonna be honest, not sure how you got this one.");
             e.printStackTrace();
