@@ -120,8 +120,10 @@ PreparedStatment stmt = database.executeCommand("SELECT ID FROM userdata WHERE u
 ResultSet result = stmt.getResultSet();
 
 // Handle result
-
+        
+// Very important!! Your database connection may crash later if you never close it & give it back to the connection pool!
 stmt.close();
+stmt.getConnection().close();
 
 //If you just want to run a command and not handle the result do the following. It will autoclose for you.
 database.executeCommand("DELETE FROM userdata WHERE ID = ?", true, "bobross");

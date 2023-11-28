@@ -14,7 +14,6 @@ import java.util.Properties;
 
 public class SQLConnection {
 
-    private Connection connection;
     private final HikariDataSource ds;
 
     public SQLConnection(String connectionUrl, Properties properties) {
@@ -22,6 +21,7 @@ public class SQLConnection {
         config.setJdbcUrl(connectionUrl);
         config.setUsername(properties.getProperty("user"));
         config.setPassword(properties.getProperty("password"));
+        config.setMaximumPoolSize(8);
         config.addDataSourceProperty("cachePrepStmts", "true");
         config.addDataSourceProperty("useServerPrepStmts", "true");
         config.addDataSourceProperty("prepStmtCacheSize", "250");
@@ -29,7 +29,7 @@ public class SQLConnection {
         ds = new HikariDataSource(config);
 
         try {
-            connection = ds.getConnection();
+            ds.getConnection().close();
         } catch (SQLException e) {
             SQLib.log(Level.ERROR, "Failed to connect to database!");
             SQLib.log(Level.ERROR, e.getLocalizedMessage());
@@ -38,17 +38,12 @@ public class SQLConnection {
     }
 
     public void close() {
-        try {
-            connection.close();
-            ds.close();
-        } catch (SQLException e) {
-            SQLib.log(Level.ERROR, "Gonna be honest, not sure how you got this one.");
-            e.printStackTrace();
-        }
+        ds.close();
     }
 
     public PreparedStatement executeCommand(String sql, boolean autoClose, Object... params) {
         try {
+            Connection connection = ds.getConnection();
             PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             stmt.setQueryTimeout(30);
 
@@ -59,11 +54,16 @@ public class SQLConnection {
             }
 
             stmt.execute();
-            if (autoClose) stmt.close();
+            if (autoClose) {
+                stmt.close();
+                connection.close();
+            }
             return stmt;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            SQLib.log(Level.ERROR, "Failed to connect to database!");
+            SQLib.log(Level.ERROR, e.getLocalizedMessage());
         }
+        return null;
     }
 
     public void beginTransaction(String transactionString) {
@@ -91,6 +91,7 @@ public class SQLConnection {
                 resultSet.next();
                 int autoId = resultSet.getInt(1);
                 stmt.close();
+                stmt.getConnection().close();
                 return autoId;
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -113,6 +114,7 @@ public class SQLConnection {
             ResultSet resultSet = stmt.getResultSet();
             while (resultSet.next()) ids.add(resultSet.getString(1));
             stmt.close();
+            stmt.getConnection().close();
             return ids;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -127,7 +129,7 @@ public class SQLConnection {
             resultSet.next();
             Object object = resultSet.getObject(field);
             stmt.close();
-
+            stmt.getConnection().close();
             return type.cast(object);
         } catch (SQLException e) {
             e.printStackTrace();
