@@ -33,6 +33,7 @@ public class Table {
     private final HashMap<String, SQLDataType> columns = new HashMap<>();
     private final HashMap<String, DataContainer> dataContainers = new HashMap<>();
 
+    @Getter
     private boolean isInTransaction = false;
     protected boolean autoIncrement = false;
 
@@ -88,13 +89,6 @@ public class Table {
     }
 
     /**
-     * Checks if this {@link Table} is in a transaction
-     */
-    public boolean isInTransaction() {
-        return isInTransaction;
-    }
-
-    /**
      * @return A list of all the {@link DataContainer} ids in this table.
      */
     public List<String> getIds() {
@@ -104,19 +98,15 @@ public class Table {
     /**
      * @return A list of all the {@link DataContainer} ids in this table.
      */
-    public ArrayList<UUID> getIdsAsUUIDs() {
-        ArrayList<UUID> uuids = new ArrayList<>();
-        dataContainers.keySet().forEach(id -> uuids.add(UUID.fromString(id)));
-        return uuids;
+    public List<UUID> getIdsAsUUIDs() {
+        return dataContainers.keySet().stream().map(UUID::fromString).toList();
     }
 
     /**
      * @return A list of all the {@link DataContainer} ids in this table.
      */
-    public ArrayList<Integer> getIdsAsInts() {
-        ArrayList<Integer> ints = new ArrayList<>();
-        dataContainers.keySet().forEach(id -> ints.add(Integer.parseInt(id)));
-        return ints;
+    public List<Integer> getIdsAsInts() {
+        return dataContainers.keySet().stream().map(Integer::parseInt).toList();
     }
 
     /**
@@ -155,8 +145,7 @@ public class Table {
      */
     public DataContainer getOrCreateDataContainer(@NonNull String id) {
         DataContainer dataContainer = get(id);
-        if (dataContainer == null) dataContainer = createDataContainer(id);
-        return dataContainer;
+        return dataContainer == null ? createDataContainer(id) : dataContainer;
     }
 
     /**
