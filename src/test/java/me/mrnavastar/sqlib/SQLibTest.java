@@ -20,6 +20,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class SQLibTest {
 
+    private static final Database database = new SQLiteDatabase("test", ".");
+
     private final String testString = "Test String";
     private final int testInt = 37;
     private final double testDouble = Math.PI;
@@ -35,7 +37,6 @@ public class SQLibTest {
 
     @Test
     public void testAllTransactions() {
-        Database database = database = new SQLiteDatabase("test", ".");
         Table table = database.createTable("test", "table1")
                 .addColumn("string", SQLDataType.STRING)
                 .addColumn("int", SQLDataType.INT)
@@ -99,12 +100,10 @@ public class SQLibTest {
         dataContainer.clear("identifier");
 
         table.endTransaction();
-        database.close();
     }
 
     @Test
     public void testTableFunctions() {
-        Database database = new SQLiteDatabase("test", ".");
         Table table = database.createTable("test", "table2")
                 .addColumn("test", SQLDataType.STRING)
                 .finish();
@@ -134,11 +133,11 @@ public class SQLibTest {
         assertFalse(table.contains(dataContainer3.getIdAsString()));
 
         assertEquals(0, table.getDataContainers().size());
-        database.close();
     }
 
     @AfterAll
     public static void cleanup() {
+        database.close();
         new File("test.db").delete();
     }
 }
