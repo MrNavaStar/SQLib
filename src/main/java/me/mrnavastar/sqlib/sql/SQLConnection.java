@@ -22,6 +22,7 @@ public class SQLConnection {
         config.setUsername(properties.getProperty("user"));
         config.setPassword(properties.getProperty("password"));
         config.setMaximumPoolSize(8);
+        config.setMaxLifetime(1800000); // 30 min
         config.addDataSourceProperty("cachePrepStmts", "true");
         config.addDataSourceProperty("useServerPrepStmts", "true");
         config.addDataSourceProperty("prepStmtCacheSize", "250");
@@ -29,7 +30,19 @@ public class SQLConnection {
         ds = new HikariDataSource(config);
 
         try {
-            ds.getConnection().close();
+            String shouldConfigTimeout = properties.getProperty("config_timout");
+            if (shouldConfigTimeout == null) {
+                ds.getConnection().close();
+                return;
+            }
+
+            // Try and set the connection's max lifetime to be half of the databases wait_timeout
+            PreparedStatement stmt = executeCommand("SHOW VARIABLES LIKE 'wait_timeout';", false);
+            ResultSet resultSet = stmt.getResultSet();
+            if (resultSet.next()) config.setMaxLifetime(resultSet.getInt("value") / 2);
+
+            stmt.close();
+            stmt.getConnection().close();
         } catch (SQLException e) {
             SQLib.log(Level.ERROR, "Failed to connect to database!");
             SQLib.log(Level.ERROR, e.getLocalizedMessage());

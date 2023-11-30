@@ -26,6 +26,7 @@ public abstract class AuthenticatedDatabase extends Database {
         Properties properties = new Properties();
         properties.put("user", username);
         properties.put("password", password);
+        properties.put("config_timeout", "true");
         return properties;
     }
 }
