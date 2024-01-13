@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.5.4'
+    id 'fabric-loom' version '1.5.5'
     id 'com.github.johnrengelman.shadow' version '8.1.1'
     id 'io.freefair.lombok' version '8.4'
 }
