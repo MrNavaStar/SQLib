@@ -21,7 +21,7 @@ The mod generates a config on first time start that allows you to configure the 
 The default database is a sqlite database running in the sqlib directory.
 
 # Supported Datatypes
-The datatypes can be accessed with the `SQLDataType` class.
+The datatypes can be accessed with the `SQLDataType` class. I tend to add support for new types as I run into them in my projects. If you would like one added, pleade make an issue!
 | Standard | Minecraft   | 
 |----------|-------------|
 | String   | BlockPos    |
