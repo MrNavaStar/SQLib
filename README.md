@@ -39,7 +39,7 @@ repositories {
 }
 
 dependencies {
-  modImplementation("maven.modrinth:sqlib:2.2.8")
+  modImplementation("maven.modrinth:sqlib:2.2.9")
 }
 ```
 # Developer Usage
@@ -58,15 +58,13 @@ Table table = database.createTable("myModId", "userdata")
         .finish();
         
 DataContainer playerData = table.createDataContainer(UUID.randomUUID());
-playerData.put("username", "CoolGuy123");
-playerData.put("home", new BlockPos(304, 62, 37);
-playerData.put("nbt", new NbtCompound());
+playerData.put("username", "CoolGuy123")
+          .put("home", new BlockPos(304, 62, 37)
+          .put("nbt", new NbtCompound());
 
 System.out.println(playerdata.getString("username"));
 System.out.println(playerdata.getBlockPos("home"));
 System.out.println(playerdata.getNbt("nbt"));
-
-data.close();
 ```
 
 # Custom Database Management
