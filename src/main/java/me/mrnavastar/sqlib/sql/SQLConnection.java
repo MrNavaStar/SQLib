@@ -135,19 +135,14 @@ public class SQLConnection {
         return new ArrayList<>();
     }
 
-    public <T> T readField(Table table, Object primaryKey, String field, Class<T> type) {
-        try {
-            PreparedStatement stmt = executeCommand("SELECT %s FROM %s WHERE ID = ?".formatted(field, table.getNoConflictName()), false, primaryKey);
-            ResultSet resultSet = stmt.getResultSet();
-            resultSet.next();
-            Object object = resultSet.getObject(field);
-            stmt.close();
-            stmt.getConnection().close();
-            return type.cast(object);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
+    public <T> T readField(Table table, Object primaryKey, String field, Class<T> type) throws SQLException {
+        PreparedStatement stmt = executeCommand("SELECT %s FROM %s WHERE ID = ?".formatted(field, table.getNoConflictName()), false, primaryKey);
+        ResultSet resultSet = stmt.getResultSet();
+        resultSet.next();
+        Object object = resultSet.getObject(field);
+        stmt.close();
+        stmt.getConnection().close();
+        return type.cast(object);
     }
 
     public void writeField(Table table, Object primaryKey, String field, Object value) {

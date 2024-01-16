@@ -5,6 +5,7 @@ import com.google.gson.JsonParser;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
+import lombok.SneakyThrows;
 import me.mrnavastar.sqlib.sql.SQLConnection;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.StringNbtReader;
@@ -38,93 +39,114 @@ public class DataContainer {
         return Integer.parseInt(id);
     }
 
-    public void put(@NonNull String field, String value) {
+    public DataContainer put(@NonNull String field, String value) {
         sqlConnection.writeField(table, id, field, value);
+        return this;
     }
 
-    public void put(@NonNull String field, int value) {
+    public DataContainer put(@NonNull String field, int value) {
         sqlConnection.writeField(table, id, field, value);
+        return this;
     }
 
-    public void put(@NonNull String field, double value) {
+    public DataContainer put(@NonNull String field, double value) {
         sqlConnection.writeField(table, id, field, value);
+        return this;
     }
 
-    public void put(@NonNull String field, long value) {
+    public DataContainer put(@NonNull String field, long value) {
         sqlConnection.writeField(table, id, field, value);
+        return this;
     }
 
-    public void put(@NonNull String field, boolean value) {
+    public DataContainer put(@NonNull String field, boolean value) {
         sqlConnection.writeField(table, id, field, value ? 1 : 0); // Convert bool to int, SQLite compat
+        return this;
     }
 
-    public void put(@NonNull String field, @NonNull BlockPos value) {
+    public DataContainer put(@NonNull String field, @NonNull BlockPos value) {
         sqlConnection.writeField(table, id, field, value.asLong());
+        return this;
     }
 
-    public void put(@NonNull String field, @NonNull ChunkPos value) {
+    public DataContainer put(@NonNull String field, @NonNull ChunkPos value) {
         sqlConnection.writeField(table, id, field, value.toLong());
+        return this;
     }
 
-    public void put(@NonNull String field, @NonNull JsonElement value) {
+    public DataContainer put(@NonNull String field, @NonNull JsonElement value) {
         sqlConnection.writeField(table, id, field, value.toString());
+        return this;
     }
 
-    public void put(@NonNull String field, @NonNull NbtElement value) {
+    public DataContainer put(@NonNull String field, @NonNull NbtElement value) {
         sqlConnection.writeField(table, id, field, value.asString());
+        return this;
     }
 
-    public void put(@NonNull String field, @NonNull MutableText value) {
+    public DataContainer put(@NonNull String field, @NonNull MutableText value) {
         sqlConnection.writeField(table, id, field, Text.Serialization.toJsonString(value));
+        return this;
     }
 
-    public void put(@NonNull String field, @NonNull UUID value) {
+    public DataContainer put(@NonNull String field, @NonNull UUID value) {
         sqlConnection.writeField(table, id, field, value.toString());
+        return this;
     }
 
-    public void put(@NonNull String field, @NonNull Identifier value) {
+    public DataContainer put(@NonNull String field, @NonNull Identifier value) {
         sqlConnection.writeField(table, id, field, value.toString());
+        return this;
     }
 
+    @SneakyThrows
     public String getString(@NonNull String field) {
         return sqlConnection.readField(table, id, field, String.class);
     }
 
+    @SneakyThrows
     public int getInt(@NonNull String field) {
         return sqlConnection.readField(table, id, field, Integer.class);
     }
 
+    @SneakyThrows
     public double getDouble(@NonNull String field) {
         return sqlConnection.readField(table, id, field, Double.class);
     }
 
+    @SneakyThrows
     public long getLong(@NonNull String field) {
         // Has to be done this way because the sql driver converts small long values to ints and makes me cry
         return Long.parseLong(sqlConnection.readField(table, id, field, Number.class).toString());
     }
 
+    @SneakyThrows
     public boolean getBool(@NonNull String field) {
         return sqlConnection.readField(table, id, field, Integer.class) > 0; //Int to bool, SQLite compat
     }
 
+    @SneakyThrows
     public BlockPos getBlockPos(@NonNull String field) {
         Long pos = sqlConnection.readField(table, id, field, Long.class);
         if (pos == null) return null;
         return BlockPos.fromLong(pos);
     }
 
+    @SneakyThrows
     public ChunkPos getChunkPos(@NonNull String field) {
         Long pos = sqlConnection.readField(table, id, field, Long.class);
         if (pos == null) return null;
         return new ChunkPos(pos);
     }
 
+    @SneakyThrows
     public JsonElement getJson(@NonNull String field) {
         String json = sqlConnection.readField(table, id, field, String.class);
         if (json == null) return null;
         return JsonParser.parseString(json);
     }
 
+    @SneakyThrows
     public NbtElement getNbt(@NonNull String field) {
         try {
             String nbt = sqlConnection.readField(table, id, field, String.class);
@@ -136,18 +158,21 @@ public class DataContainer {
         }
     }
 
+    @SneakyThrows
     public MutableText getMutableText(@NonNull String field) {
         String text = sqlConnection.readField(table, id, field, String.class);
         if (text == null) return null;
         return Text.Serialization.fromJsonTree(SQLib.GSON.fromJson(text, JsonElement.class));
     }
 
+    @SneakyThrows
     public UUID getUUID(@NonNull String field) {
         String uuid = sqlConnection.readField(table, id, field, String.class);
         if (uuid == null) return null;
         return UUID.fromString(uuid);
     }
 
+    @SneakyThrows
     public Identifier getIdentifier(@NonNull String field) {
         String identifier = sqlConnection.readField(table, id, field, String.class);
         if (identifier == null) return null;
