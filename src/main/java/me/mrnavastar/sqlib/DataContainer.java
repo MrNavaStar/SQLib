@@ -75,7 +75,8 @@ public class DataContainer {
     }
 
     public void put(@NonNull String field, @NonNull MutableText value) {
-        sqlConnection.writeField(table, id, field, MutableText.Serializer.toJson(value));
+
+        sqlConnection.writeField(table, id, field, Text.Serialization.toJsonTree(value));
     }
 
     public void put(@NonNull String field, @NonNull UUID value) {
@@ -139,7 +140,7 @@ public class DataContainer {
     public MutableText getMutableText(@NonNull String field) {
         String text = sqlConnection.readField(table, id, field, String.class);
         if (text == null) return null;
-        return Text.Serializer.fromJson(SQLib.GSON.fromJson(text, JsonElement.class));
+        return Text.Serialization.fromJsonTree(SQLib.GSON.fromJson(text, JsonElement.class));
     }
 
     public UUID getUUID(@NonNull String field) {
