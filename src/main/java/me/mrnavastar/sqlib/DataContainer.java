@@ -75,8 +75,7 @@ public class DataContainer {
     }
 
     public void put(@NonNull String field, @NonNull MutableText value) {
-
-        sqlConnection.writeField(table, id, field, Text.Serialization.toJsonTree(value));
+        sqlConnection.writeField(table, id, field, Text.Serialization.toJsonString(value));
     }
 
     public void put(@NonNull String field, @NonNull UUID value) {
