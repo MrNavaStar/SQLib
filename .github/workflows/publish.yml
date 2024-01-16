@@ -40,7 +40,7 @@ jobs:
           mv ${{ github.workspace }}/build/libs/sqlib-sources.jar ${{ github.workspace }}/sqlib-${{ github.event.release.tag_name }}-sources.jar;
 
       - name: Publish Release
-        uses: Kir-Antipov/mc-publish@v3.2
+        uses: Kir-Antipov/mc-publish@v3.3.0
         with:
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
           files: |
