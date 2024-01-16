@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 import me.mrnavastar.sqlib.sql.SQLConnection;
+import me.mrnavastar.sqlib.util.TextParser;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.StringNbtReader;
 import net.minecraft.text.MutableText;
@@ -26,6 +27,7 @@ public class DataContainer {
     @NonNull private final String id;
     @NonNull private final Table table;
     @NonNull private final SQLConnection sqlConnection;
+    private static final Text.Serializer textSerializer = new Text.Serializer();
 
     public String getIdAsString() {
         return id;
@@ -85,7 +87,7 @@ public class DataContainer {
     }
 
     public DataContainer put(@NonNull String field, @NonNull MutableText value) {
-        sqlConnection.writeField(table, id, field, Text.Serialization.toJsonString(value));
+        sqlConnection.writeField(table, id, field, TextParser.textToString(value));
         return this;
     }
 
@@ -162,7 +164,7 @@ public class DataContainer {
     public MutableText getMutableText(@NonNull String field) {
         String text = sqlConnection.readField(table, id, field, String.class);
         if (text == null) return null;
-        return Text.Serialization.fromJsonTree(SQLib.GSON.fromJson(text, JsonElement.class));
+        return (MutableText) TextParser.stringToText(text);
     }
 
     @SneakyThrows

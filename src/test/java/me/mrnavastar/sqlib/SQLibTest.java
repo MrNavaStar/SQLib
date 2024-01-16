@@ -65,7 +65,7 @@ public class SQLibTest {
         dataContainer.put("chunkpos", testChunkpos);
         dataContainer.put("json", testJson);
         dataContainer.put("nbt", testNbt);
-        //dataContainer.put("text", testText);
+        dataContainer.put("text", testText);
         dataContainer.put("identifier", testIdentifier);
 
         table.endTransaction();
@@ -83,7 +83,7 @@ public class SQLibTest {
         assertEquals(testChunkpos, dataContainer.getChunkPos("chunkpos"));
         assertEquals(testJson, dataContainer.getJson("json"));
         assertEquals(testNbt, dataContainer.getNbt("nbt"));
-        //assertEquals(testText, dataContainer.getMutableText("text"));
+        assertEquals(testText, dataContainer.getMutableText("text"));
         assertEquals(testIdentifier, dataContainer.getIdentifier("identifier"));
 
         dataContainer.clear("string");
