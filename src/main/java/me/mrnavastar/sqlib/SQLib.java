@@ -9,11 +9,7 @@ import me.mrnavastar.sqlib.database.MySQLDatabase;
 import me.mrnavastar.sqlib.database.SQLiteDatabase;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.SemanticVersion;
-import net.fabricmc.loader.api.Version;
-import net.fabricmc.loader.api.VersionParsingException;
 import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint;
-import net.fabricmc.loader.impl.util.version.VersionParser;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 
@@ -28,7 +24,7 @@ public class SQLib implements PreLaunchEntrypoint {
 
     public static final String MOD_ID = "SQLib";
     public static final Gson GSON = new Gson();
-    public static Version minecraftVersion;
+
     private static final ArrayList<Database> databases = new ArrayList<>();
     @Getter
     private static Database database;
@@ -36,13 +32,6 @@ public class SQLib implements PreLaunchEntrypoint {
 
     @Override
     public void onPreLaunch() {
-        ServerLifecycleEvents.SERVER_STARTING.register(server -> {
-            try {
-                minecraftVersion = Version.parse(server.getVersion());
-            } catch (VersionParsingException e) {
-                throw new RuntimeException(e);
-            }
-        });
         ServerLifecycleEvents.SERVER_STOPPING.register(server -> databases.forEach(Database::close));
         new File(FabricLoader.getInstance().getGameDir() + "/sqlib").mkdirs();
 
