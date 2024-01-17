@@ -8,13 +8,17 @@ public enum SQLDataType {
     BOOL("INT", 1),
     UUID("CHAR", 36),
 
-    //Minecraft Data types
+    // Minecraft Data types
     BLOCKPOS("BIGINT", 255),
     CHUNKPOS("BIGINT", 255),
     JSON("LONGTEXT"),
     NBT("LONGTEXT"),
     MUTABLE_TEXT("LONGTEXT"),
-    IDENTIFIER("LONGTEXT");
+    IDENTIFIER("LONGTEXT"),
+
+    // Adventure Api types
+    KEY("LONGTEXT"),
+    COMPONENT("LONGTEXT");
 
     private final String sqlDataType;
     private int size = 0;

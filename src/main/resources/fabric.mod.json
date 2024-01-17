@@ -10,7 +10,7 @@
   "icon": "assets/sqlib/icon.png",
   "environment": "*",
   "entrypoints": {
-    "preLaunch": ["me.mrnavastar.sqlib.SQLib"]
+    "preLaunch": ["me.mrnavastar.sqlib.Fabric"]
   },
   "depends": {
     "minecraft": ">=1.16.5"

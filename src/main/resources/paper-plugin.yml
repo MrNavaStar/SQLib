@@ -1,0 +1,4 @@
+name: SQLib
+version: 'debug-build'
+main: me.mrnavastar.sqlib.Paper
+api-version: '1.16'

@@ -7,36 +7,34 @@ import me.mrnavastar.sqlib.config.SQLibConfig;
 import me.mrnavastar.sqlib.database.Database;
 import me.mrnavastar.sqlib.database.MySQLDatabase;
 import me.mrnavastar.sqlib.database.SQLiteDatabase;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
-public class SQLib implements PreLaunchEntrypoint {
+public class SQLib {
 
     public static final String MOD_ID = "SQLib";
     public static final Gson GSON = new Gson();
 
-    private static final ArrayList<Database> databases = new ArrayList<>();
+    protected static final ArrayList<Database> databases = new ArrayList<>();
     @Getter
-    private static Database database;
-    private static SQLibConfig config = new SQLibConfig();
+    protected static Database database;
+    protected static SQLibConfig config = new SQLibConfig();
 
-    @Override
-    public void onPreLaunch() {
-        ServerLifecycleEvents.SERVER_STOPPING.register(server -> databases.forEach(Database::close));
-        new File(FabricLoader.getInstance().getGameDir() + "/sqlib").mkdirs();
+    public static void init(Path gameDir, Path configDir) {
+        new File(gameDir + "/sqlib").mkdirs();
 
         try {
-            File configFile = new File(FabricLoader.getInstance().getConfigDir() + "/sqlib.toml");
+            File configFile = new File(configDir + "/sqlib.toml");
             if (!configFile.exists()) {
                 Files.copy(Objects.requireNonNull(SQLib.class.getResourceAsStream("/sqlib.toml")), configFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
             }
@@ -73,6 +71,10 @@ public class SQLib implements PreLaunchEntrypoint {
 
     public static void registerDatabase(Database database) {
         if (!databases.contains(database)) databases.add(database);
+    }
+
+    public static List<Database> getAllDatabases() {
+        return Collections.unmodifiableList(databases);
     }
 
     public static void log(Level level, String message) {

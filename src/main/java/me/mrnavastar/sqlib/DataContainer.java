@@ -2,12 +2,14 @@ package me.mrnavastar.sqlib;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 import me.mrnavastar.sqlib.sql.SQLConnection;
 import me.mrnavastar.sqlib.util.TextParser;
+import net.kyori.adventure.key.Key;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.json.JSONComponentSerializer;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.StringNbtReader;
 import net.minecraft.text.MutableText;
@@ -101,6 +103,15 @@ public class DataContainer {
         return this;
     }
 
+    public DataContainer put(@NonNull String field, @NonNull Key value) {
+        sqlConnection.writeField(table, id, field, value.asString());
+        return this;
+    }
+
+    public DataContainer put(@NonNull String field, @NonNull Component value) {
+        return put(field, JSONComponentSerializer.json().serialize(value));
+    }
+
     @SneakyThrows
     public String getString(@NonNull String field) {
         return sqlConnection.readField(table, id, field, String.class);
@@ -150,14 +161,9 @@ public class DataContainer {
 
     @SneakyThrows
     public NbtElement getNbt(@NonNull String field) {
-        try {
-            String nbt = sqlConnection.readField(table, id, field, String.class);
-            if (nbt == null) return null;
-            return StringNbtReader.parse(nbt);
-        } catch (CommandSyntaxException e) {
-            e.printStackTrace();
-            return null;
-        }
+        String nbt = sqlConnection.readField(table, id, field, String.class);
+        if (nbt == null) return null;
+        return StringNbtReader.parse(nbt);
     }
 
     @SneakyThrows
@@ -179,6 +185,20 @@ public class DataContainer {
         String identifier = sqlConnection.readField(table, id, field, String.class);
         if (identifier == null) return null;
         return new Identifier(identifier);
+    }
+
+    @SneakyThrows
+    public Key getKey(@NonNull String field) {
+        String key = sqlConnection.readField(table, id, field, String.class);
+        if (key == null) return null;
+        return Key.key(key);
+    }
+
+    @SneakyThrows
+    public Component getComponent(@NonNull String field) {
+        String component = sqlConnection.readField(table, id, field, String.class);
+        if (component == null) return null;
+        return JSONComponentSerializer.json().deserialize(component);
     }
 
     public void clear(@NonNull String field) {

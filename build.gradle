@@ -9,16 +9,27 @@ group = project.maven_group
 
 repositories {
     maven { url "https://api.modrinth.com/maven" }
+    maven { url "https://repo.papermc.io/repository/maven-public/" }
+    maven {
+        name = "sonatype-oss-snapshots1"
+        url = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+        mavenContent { snapshotsOnly() }
+    }
 }
 
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 
+    // Fabric
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+    // Paper
+    compileOnly "io.papermc.paper:paper-api:${project.paper_version}"
+    modImplementation "net.kyori:adventure-platform-fabric:${project.adventure_version}"
 
     // SQL Drivers
     shadow implementation("org.xerial:sqlite-jdbc:${project.sqlite_version}")

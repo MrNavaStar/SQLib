@@ -96,7 +96,7 @@ public class SQLibTest {
         dataContainer.clear("chunkpos");
         dataContainer.clear("json");
         dataContainer.clear("nbt");
-        //dataContainer.clear("text");
+        dataContainer.clear("text");
         dataContainer.clear("identifier");
 
         table.endTransaction();
