@@ -8,7 +8,7 @@
 
 [sqlite]
     # Can be any path that exists on this system
-    directory = "./sqlib"
+    directory = "${sqlite_path}"
 
 [mysql]
     address = "127.0.0.1"

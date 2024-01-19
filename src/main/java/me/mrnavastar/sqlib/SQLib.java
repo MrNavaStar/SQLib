@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -30,13 +31,17 @@ public class SQLib {
     protected static Database database;
     protected static SQLibConfig config = new SQLibConfig();
 
-    public static void init(Path gameDir, Path configDir) {
-        new File(gameDir + "/sqlib").mkdirs();
+    public static void init(Path sqliteDataDir, Path configDir) {
+        sqliteDataDir.toFile().mkdirs();
 
         try {
             File configFile = new File(configDir + "/sqlib.toml");
             if (!configFile.exists()) {
-                Files.copy(Objects.requireNonNull(SQLib.class.getResourceAsStream("/sqlib.toml")), configFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                String data = new String(Objects.requireNonNull(SQLib.class.getResourceAsStream("/sqlib.toml")).readAllBytes()).replace("${sqlite_path}", sqliteDataDir.toString());
+
+                try (FileWriter writer = new FileWriter(configFile)) {
+                    writer.write(data);
+                }
             }
 
             TomlMapper mapper = new TomlMapper();

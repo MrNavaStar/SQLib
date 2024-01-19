@@ -9,7 +9,7 @@ public class Paper extends JavaPlugin {
 
     @Override
     public void onLoad() {
-        SQLib.init(getDataFolder().toPath(), Path.of("./config"));
+        SQLib.init(getDataFolder().toPath(), getDataFolder().toPath());
     }
 
     @Override

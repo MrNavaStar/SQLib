@@ -7,7 +7,6 @@ import me.mrnavastar.sqlib.database.Database;
 import me.mrnavastar.sqlib.sql.SQLConnection;
 import me.mrnavastar.sqlib.sql.SQLDataType;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;

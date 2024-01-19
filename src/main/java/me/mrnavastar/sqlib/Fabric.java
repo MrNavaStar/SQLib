@@ -8,11 +8,13 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint;
 
+import java.nio.file.Path;
+
 public class Fabric extends SQLib implements PreLaunchEntrypoint, DedicatedServerModInitializer, ClientModInitializer {
 
     @Override
     public void onPreLaunch() {
-        init(FabricLoader.getInstance().getGameDir(), FabricLoader.getInstance().getConfigDir());
+        init(Path.of(FabricLoader.getInstance().getGameDir() + "/sqlib"), FabricLoader.getInstance().getConfigDir());
     }
 
     @Override
