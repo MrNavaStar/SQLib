@@ -39,7 +39,7 @@ repositories {
 }
 
 dependencies {
-  modImplementation("maven.modrinth:sqlib:2.2.9")
+  modImplementation("maven.modrinth:sqlib:2.2.10")
 }
 ```
 # Developer Usage
