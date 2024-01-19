@@ -52,7 +52,6 @@ jobs:
         with:
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
           modrinth-featured: true
-          modrinth-unfeature-mode: true
           files: |
             ${{ github.workspace }}/sqlib-${{ github.event.release.tag_name }}.jar
             ${{ github.workspace }}/sqlib-${{ github.event.release.tag_name }}-javadoc.jar
