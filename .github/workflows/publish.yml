@@ -13,12 +13,20 @@ jobs:
           distribution: temurin
           java-version: 17
       
-      - name: Set Version
+      - name: Set Fabric Version
         uses: jossef/action-set-json-field@v2.1
         with:
           file: src/main/resources/fabric.mod.json
           field: version
           value: ${{ github.event.release.tag_name }}
+
+      - name: Set Paper Version
+        uses: fjogeleit/yaml-update-action@main
+        with:
+          valueFile: 'src/main/resources/plugin.yml'
+          propertyPath: 'version'
+          value: ${{ github.event.release.tag_name }}
+          commitChange: false
       
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
@@ -43,6 +51,8 @@ jobs:
         uses: Kir-Antipov/mc-publish@v3.3.0
         with:
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+          modrinth-featured: true
+          modrinth-unfeature-mode: true
           files: |
             ${{ github.workspace }}/sqlib-${{ github.event.release.tag_name }}.jar
             ${{ github.workspace }}/sqlib-${{ github.event.release.tag_name }}-javadoc.jar
