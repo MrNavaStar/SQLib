@@ -2,4 +2,3 @@ name: SQLib
 version: 'debug-build'
 main: me.mrnavastar.sqlib.Paper
 author: MrNavaStar
-api-version: '1.20'

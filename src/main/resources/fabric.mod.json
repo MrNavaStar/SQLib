@@ -21,7 +21,7 @@
     },
     "mc-publish": {
       "modrinth": "IM84wwxs",
-      "loaders": ["fabric", "quilt"]
+      "loaders": ["fabric", "quilt", "paper", "folia", "purper", "spigot", "bukkit"]
     }
   }
 }
