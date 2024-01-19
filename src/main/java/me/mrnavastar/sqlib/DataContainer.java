@@ -26,7 +26,6 @@ public class DataContainer {
     @NonNull private final String id;
     @NonNull private final Table table;
     @NonNull private final SQLConnection sqlConnection;
-    private static final Text.Serializer textSerializer = new Text.Serializer();
 
     public String getIdAsString() {
         return id;
