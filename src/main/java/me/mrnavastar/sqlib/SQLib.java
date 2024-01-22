@@ -23,10 +23,10 @@ import java.util.Objects;
 
 public class SQLib {
 
-    public static final String MOD_ID = "SQLib";
+    public static final String MOD_ID = "sqlib";
     public static final Gson GSON = new Gson();
 
-    protected static final ArrayList<Database> databases = new ArrayList<>();
+    private static final ArrayList<Database> databases = new ArrayList<>();
     @Getter
     protected static Database database;
     protected static SQLibConfig config = new SQLibConfig();
@@ -72,6 +72,8 @@ public class SQLib {
 
             database = new MySQLDatabase(config.database.name, config.mysql.address, String.valueOf(config.mysql.port), config.mysql.username, config.mysql.password);
         }
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> databases.forEach(Database::close)));
     }
 
     public static void registerDatabase(Database database) {
