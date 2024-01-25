@@ -11,16 +11,18 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class SQLibTest {
 
-    private static final Database database = new SQLiteDatabase("test", ".");
+    private static Database database;
 
     private final String testString = "Test String";
     private final int testInt = 37;
@@ -34,6 +36,13 @@ public class SQLibTest {
     private final NbtCompound testNbt = new NbtCompound();
     private final MutableText testText = (MutableText) Text.of("Test Text");
     private final Identifier testIdentifier = new Identifier("test", "identifier");
+
+
+    @BeforeAll
+    public static void init() {
+        SQLib.init(Path.of("."), Path.of("."));
+        database = SQLib.getDatabase();
+    }
 
     @Test
     public void testAllTransactions() {
