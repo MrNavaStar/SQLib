@@ -6,9 +6,11 @@ import lombok.RequiredArgsConstructor;
 import me.mrnavastar.sqlib.database.Database;
 import me.mrnavastar.sqlib.sql.SQLConnection;
 import me.mrnavastar.sqlib.sql.SQLDataType;
+import net.minecraft.world.ChunkSerializer;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -225,6 +227,10 @@ public class Table {
      */
     public DataContainer get(int id) {
         return get(String.valueOf(id));
+    }
+
+    public void get() {
+
     }
 
     /**
