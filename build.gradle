@@ -52,6 +52,8 @@ shadowJar {
     archiveBaseName.set('sqlib')
     configurations = [project.configurations.shadow]
 
+    relocate 'com.fasterxml', 'me.mrnavastar.fasterxml'
+
     dependencies {
         mergeServiceFiles()
         exclude(dependency('org.slf4j:.*:.*'))
