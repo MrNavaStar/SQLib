@@ -25,13 +25,14 @@ public class Table {
 
     @Getter
     private boolean isInTransaction = false;
-    protected boolean autoIncrement = false;
+    private final boolean autoIncrement;
 
     public Table(@NonNull String modId, @NonNull String name, @NonNull Database database, @NonNull SQLConnection connection, boolean autoIncrement) {
         this.modId = modId;
         this.name = name;
         this.database = database;
         this.connection = connection;
+        this.autoIncrement = autoIncrement;
 
         connection.createTable(this, autoIncrement);
         database.addTable(this);
