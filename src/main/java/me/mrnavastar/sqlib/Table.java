@@ -2,69 +2,40 @@ package me.mrnavastar.sqlib;
 
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import me.mrnavastar.sqlib.database.Database;
 import me.mrnavastar.sqlib.sql.SQLConnection;
-import me.mrnavastar.sqlib.sql.SQLDataType;
-import net.minecraft.world.ChunkSerializer;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 /**
  * This class acts as a wrapper for a table in a {@link Database}
  */
-@RequiredArgsConstructor
 public class Table {
 
     @Getter
-    @NonNull
     private final String modId;
     @Getter
-    @NonNull
     private final String name;
     @Getter
-    @NonNull
     private final Database database;
-    private final SQLConnection sqlConnection;
-
-    @Getter
-    private final HashMap<String, SQLDataType> columns = new HashMap<>();
+    private final SQLConnection connection;
     private final HashMap<String, DataContainer> dataContainers = new HashMap<>();
 
     @Getter
     private boolean isInTransaction = false;
     protected boolean autoIncrement = false;
 
-    /**
-     * Make this table use auto incremented ids. See {@link Table#createDataContainerAutoID()}
-     */
-    public Table setAutoIncrement() {
-        autoIncrement = true;
-        return this;
-    }
+    public Table(@NonNull String modId, @NonNull String name, @NonNull Database database, @NonNull SQLConnection connection, boolean autoIncrement) {
+        this.modId = modId;
+        this.name = name;
+        this.database = database;
+        this.connection = connection;
 
-    /**
-     * Adds a column to the table definition
-     * @param name The name of the column
-     * @param dataType The {@link SQLDataType} of this column
-     */
-    public Table addColumn(@NonNull String name, @NonNull SQLDataType dataType) {
-        columns.put(name, dataType);
-        return this;
-    }
-
-    /**
-     * Call this function when you are done configuring your table.
-     * @return The finished table
-     */
-    public Table finish() {
-        sqlConnection.createTable(this, autoIncrement);
+        connection.createTable(this, autoIncrement);
         database.addTable(this);
-        sqlConnection.listPrimaryKeys(this).forEach(key -> dataContainers.put(key, new DataContainer(key, this, sqlConnection)));
-        return this;
+        connection.listPrimaryKeys(this).forEach(key -> dataContainers.put(key, new DataContainer(key, this, connection)));
     }
 
     public String getNoConflictName() {
@@ -119,10 +90,10 @@ public class Table {
             if (dataContainer != null) this.drop(dataContainer);
         }
 
-        int autoId = sqlConnection.createRow(this, id, autoIncrement);
+        int autoId = connection.createRow(this, id, autoIncrement);
         if (autoIncrement) id = String.valueOf(autoId);
 
-        DataContainer dataContainer = new DataContainer(id, this, sqlConnection);
+        DataContainer dataContainer = new DataContainer(id, this, connection);
         dataContainers.put(id, dataContainer);
         return dataContainer;
     }
@@ -178,7 +149,7 @@ public class Table {
      */
     public void drop(@NonNull DataContainer dataContainer) {
         DataContainer container = dataContainers.remove(dataContainer.getIdAsString());
-        if (container != null) sqlConnection.deleteRow(this, dataContainer.getIdAsString());
+        if (container != null) connection.deleteRow(this, dataContainer.getIdAsString());
     }
 
     /**
@@ -227,10 +198,6 @@ public class Table {
      */
     public DataContainer get(int id) {
         return get(String.valueOf(id));
-    }
-
-    public void get() {
-
     }
 
     /**

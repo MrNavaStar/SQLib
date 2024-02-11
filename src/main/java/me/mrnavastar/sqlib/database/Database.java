@@ -5,12 +5,13 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import me.mrnavastar.sqlib.SQLib;
 import me.mrnavastar.sqlib.Table;
+import me.mrnavastar.sqlib.TableBuilder;
 import me.mrnavastar.sqlib.sql.SQLConnection;
 
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * This class can be extended to allow for new database implementations
@@ -21,8 +22,8 @@ public abstract class Database {
     @Getter
     @NonNull
     protected final String name;
-    private final HashMap<String, Table> tables = new HashMap<>();
-    protected SQLConnection sqlConnection;
+    private final ConcurrentHashMap<String, Table> tables = new ConcurrentHashMap<>();
+    protected SQLConnection connection;
 
     public abstract String getConnectionUrl();
 
@@ -33,29 +34,29 @@ public abstract class Database {
     public abstract String getTableCreationQuery(String tableName, String columns, boolean autoIncrementId);
 
     public void open() {
-        if (sqlConnection == null) {
-            sqlConnection = new SQLConnection(getConnectionUrl(), getConnectionProperties());
+        if (connection == null) {
+            connection = new SQLConnection(getConnectionUrl(), getConnectionProperties());
             SQLib.registerDatabase(this);
         }
     }
 
     public void close() {
-        if (sqlConnection != null) sqlConnection.close();
-        sqlConnection = null;
+        if (connection != null) connection.close();
+        connection = null;
     }
 
     public abstract String getTransactionString();
 
     public void beginTransaction() {
-        sqlConnection.beginTransaction(getTransactionString());
+        connection.beginTransaction(getTransactionString());
     };
 
     public void endTransaction() {
-        sqlConnection.endTransaction();
+        connection.endTransaction();
     }
 
-    public Table createTable(String modId, String name) {
-        return new Table(modId, name, this, sqlConnection);
+    public TableBuilder createTable(String modId, String name) {
+        return new TableBuilder(modId, name, this, connection);
     }
 
     public void addTable(Table table) {
@@ -71,6 +72,6 @@ public abstract class Database {
     }
 
     public PreparedStatement executeCommand(String sql, boolean autoClose, Object... params) {
-        return sqlConnection.executeCommand(sql, autoClose, params);
+        return connection.executeCommand(sql, autoClose, params);
     }
 }
