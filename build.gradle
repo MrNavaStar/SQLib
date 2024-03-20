@@ -43,8 +43,8 @@ dependencies {
     shadow implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-toml:${project.jackson_version}")
 
     // Extra
-    compileOnly "org.projectlombok:lombok:1.18.30"
-	annotationProcessor "org.projectlombok:lombok:1.18.30"
+    compileOnly "org.projectlombok:lombok:1.18.32"
+	annotationProcessor "org.projectlombok:lombok:1.18.32"
     modImplementation "maven.modrinth:easy-eula:1.0.0"
 }
 
