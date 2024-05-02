@@ -14,7 +14,7 @@ jobs:
           java-version: 17
       
       - name: Set Fabric Version
-        uses: jossef/action-set-json-field@v2.1
+        uses: jossef/action-set-json-field@v2.2
         with:
           file: src/main/resources/fabric.mod.json
           field: version
