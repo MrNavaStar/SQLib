@@ -15,27 +15,6 @@ public class TextParser {
     private static Method deserialize = null;
 
     static {
-        // DEV - 1.20.5 & up
-        try {
-            Class<?> clazz = Class.forName("net.minecraft.text.Text$Serialization");
-            serialize = clazz.getDeclaredMethod("toJsonString", Text.class, RegistryWrapper.WrapperLookup.class);
-            deserialize = clazz.getDeclaredMethod("fromJsonTree", JsonElement.class, RegistryWrapper.WrapperLookup.class);
-        } catch (NoSuchMethodException | ClassNotFoundException ignore) {}
-
-        // DEV - 1.20.3 & 1.20.4
-        try {
-            Class<?> clazz = Class.forName("net.minecraft.text.Text$Serialization");
-            serialize = clazz.getDeclaredMethod("toJsonString", Text.class, RegistryWrapper.WrapperLookup.class);
-            deserialize = clazz.getDeclaredMethod("fromJsonTree", JsonElement.class, RegistryWrapper.WrapperLookup.class);
-        } catch (NoSuchMethodException | ClassNotFoundException ignore) {}
-
-        // DEV - 1.20.2 & down
-        try {
-            Class<?> clazz = Class.forName("net.minecraft.text.Text$Serializer");
-            serialize = clazz.getMethod("toJson", Text.class);
-            deserialize = clazz.getMethod("fromJson", JsonElement.class);
-        } catch (NoSuchMethodException | ClassNotFoundException ignore) {}
-
         // 1.20.5 & up
         try {
             Class<?> clazz = Class.forName("net/minecraft/class_2561$class_2562");
@@ -55,6 +34,27 @@ public class TextParser {
             Class<?> clazz = Class.forName("net/minecraft/class_2561$class_8822");
             serialize = clazz.getMethod("method_10867", Text.class);
             deserialize = clazz.getMethod("method_10872", JsonElement.class);
+        } catch (NoSuchMethodException | ClassNotFoundException ignore) {}
+
+        // DEV - 1.20.5 & up
+        try {
+            Class<?> clazz = Class.forName("net.minecraft.text.Text$Serialization");
+            serialize = clazz.getDeclaredMethod("toJsonString", Text.class, RegistryWrapper.WrapperLookup.class);
+            deserialize = clazz.getDeclaredMethod("fromJsonTree", JsonElement.class, RegistryWrapper.WrapperLookup.class);
+        } catch (NoSuchMethodException | ClassNotFoundException ignore) {}
+
+        // DEV - 1.20.3 & 1.20.4
+        try {
+            Class<?> clazz = Class.forName("net.minecraft.text.Text$Serialization");
+            serialize = clazz.getDeclaredMethod("toJsonString", Text.class, RegistryWrapper.WrapperLookup.class);
+            deserialize = clazz.getDeclaredMethod("fromJsonTree", JsonElement.class, RegistryWrapper.WrapperLookup.class);
+        } catch (NoSuchMethodException | ClassNotFoundException ignore) {}
+
+        // DEV - 1.20.2 & down
+        try {
+            Class<?> clazz = Class.forName("net.minecraft.text.Text$Serializer");
+            serialize = clazz.getMethod("toJson", Text.class);
+            deserialize = clazz.getMethod("fromJson", JsonElement.class);
         } catch (NoSuchMethodException | ClassNotFoundException ignore) {}
     }
 
