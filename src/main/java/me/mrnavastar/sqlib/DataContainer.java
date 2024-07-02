@@ -10,10 +10,13 @@ import me.mrnavastar.sqlib.util.TextParser;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.StringNbtReader;
 import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 
+import java.awt.*;
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -38,74 +41,89 @@ public class DataContainer {
         return Integer.parseInt(id);
     }
 
+    @SneakyThrows
     public DataContainer put(@NonNull String field, String value) {
         sqlConnection.writeField(table, id, field, value);
         return this;
     }
 
+    @SneakyThrows
     public DataContainer put(@NonNull String field, int value) {
         sqlConnection.writeField(table, id, field, value);
         return this;
     }
 
+    @SneakyThrows
     public DataContainer put(@NonNull String field, double value) {
         sqlConnection.writeField(table, id, field, value);
         return this;
     }
 
+    @SneakyThrows
     public DataContainer put(@NonNull String field, long value) {
         sqlConnection.writeField(table, id, field, value);
         return this;
     }
 
+    @SneakyThrows
     public DataContainer put(@NonNull String field, boolean value) {
         sqlConnection.writeField(table, id, field, value ? 1 : 0); // Convert bool to int, SQLite compat
         return this;
     }
 
+    @SneakyThrows
+    public DataContainer put(@NonNull String field, Date value) {
+        sqlConnection.writeField(table, id, field, value.getTime());
+        return this;
+    }
+
+    @SneakyThrows
+    public DataContainer put(@NonNull String field, Color value) {
+        sqlConnection.writeField(table, id, field, value.getRGB());
+        return this;
+    }
+
+    @SneakyThrows
     public DataContainer put(@NonNull String field, @NonNull BlockPos value) {
         sqlConnection.writeField(table, id, field, value.asLong());
         return this;
     }
 
+    @SneakyThrows
     public DataContainer put(@NonNull String field, @NonNull ChunkPos value) {
         sqlConnection.writeField(table, id, field, value.toLong());
         return this;
     }
 
+    @SneakyThrows
     public DataContainer put(@NonNull String field, @NonNull JsonElement value) {
         sqlConnection.writeField(table, id, field, value.toString());
         return this;
     }
 
+    @SneakyThrows
     public DataContainer put(@NonNull String field, @NonNull NbtElement value) {
         sqlConnection.writeField(table, id, field, value.asString());
         return this;
     }
 
-    public DataContainer put(@NonNull String field, @NonNull MutableText value) {
+    @SneakyThrows
+    public DataContainer put(@NonNull String field, @NonNull Text value) {
         sqlConnection.writeField(table, id, field, TextParser.textToString(value));
         return this;
     }
 
+    @SneakyThrows
     public DataContainer put(@NonNull String field, @NonNull UUID value) {
         sqlConnection.writeField(table, id, field, value.toString());
         return this;
     }
 
+    @SneakyThrows
     public DataContainer put(@NonNull String field, @NonNull Identifier value) {
         sqlConnection.writeField(table, id, field, value.toString());
         return this;
     }
-
-    /*public DataContainer put(@NonNull String field, @NonNull NamespacedKey value) {
-        sqlConnection.writeField(table, id, field, value.asString());
-        return this;
-    }
-
-    public DataContainer put(@NonNull String field, @NonNull Component value) {
-        return put(field, JSONComponentSerializer.json().serialize(value));
-    }*/
 
     @SneakyThrows
     public String getString(@NonNull String field) {
@@ -125,12 +143,26 @@ public class DataContainer {
     @SneakyThrows
     public long getLong(@NonNull String field) {
         // Has to be done this way because the sql driver converts small long values to ints and makes me cry
-        return Long.parseLong(sqlConnection.readField(table, id, field, Number.class).toString());
+        return sqlConnection.readField(table, id, field, Number.class).longValue();
     }
 
     @SneakyThrows
     public boolean getBool(@NonNull String field) {
         return sqlConnection.readField(table, id, field, Integer.class) > 0; //Int to bool, SQLite compat
+    }
+
+    @SneakyThrows
+    public Date getDate(@NonNull String field) {
+        Long time = sqlConnection.readField(table, id, field, Long.class);
+        if (time == null) return null;
+        return new Date(time);
+    }
+
+    @SneakyThrows
+    public Color getColor(@NonNull String field) {
+        Integer color = sqlConnection.readField(table, id, field, Integer.class);
+        if (color == null) return null;
+        return new Color(color);
     }
 
     @SneakyThrows
@@ -162,10 +194,15 @@ public class DataContainer {
     }
 
     @SneakyThrows
-    public MutableText getMutableText(@NonNull String field) {
+    public Text getText(@NonNull String field) {
         String text = sqlConnection.readField(table, id, field, String.class);
         if (text == null) return null;
-        return (MutableText) TextParser.stringToText(text);
+        return TextParser.stringToText(text);
+    }
+
+    @SneakyThrows
+    public MutableText getMutableText(@NonNull String field) {
+        return (MutableText) getText(field);
     }
 
     @SneakyThrows
@@ -179,23 +216,10 @@ public class DataContainer {
     public Identifier getIdentifier(@NonNull String field) {
         String identifier = sqlConnection.readField(table, id, field, String.class);
         if (identifier == null) return null;
-        return new Identifier(identifier);
-    }
-
-    /*@SneakyThrows
-    public NamespacedKey getKey(@NonNull String field) {
-        String key = sqlConnection.readField(table, id, field, String.class);
-        if (key == null) return null;
-        return NamespacedKey.fromString(key);
+        return Identifier.tryParse(identifier);
     }
 
     @SneakyThrows
-    public Component getComponent(@NonNull String field) {
-        String component = sqlConnection.readField(table, id, field, String.class);
-        if (component == null) return null;
-        return JSONComponentSerializer.json().deserialize(component);
-    }*/
-
     public void clear(@NonNull String field) {
         sqlConnection.writeField(table, id, field, null);
     }

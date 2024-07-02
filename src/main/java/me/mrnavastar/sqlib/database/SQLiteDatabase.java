@@ -2,6 +2,7 @@ package me.mrnavastar.sqlib.database;
 
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.SneakyThrows;
 
 import java.io.File;
 
@@ -21,11 +22,12 @@ public class SQLiteDatabase extends Database {
         OFF
     }
 
+    @SneakyThrows
     public SQLiteDatabase(@NonNull String name, @NonNull String directory) {
         super(name);
         this.directory = directory;
         open();
-        executeCommand("PRAGMA journal_mode = %s;".formatted(mode), true);
+        executeCommand("PRAGMA journal_mode = %s;".formatted(mode)).close();
     }
 
     @Override
@@ -44,8 +46,9 @@ public class SQLiteDatabase extends Database {
         return "BEGIN EXCLUSIVE;";
     }
 
+    @SneakyThrows
     public void setMode(@NonNull Mode mode) {
         this.mode = mode;
-        executeCommand("PRAGMA journal_mode = %s;".formatted(mode), true);
+        executeCommand("PRAGMA journal_mode = %s;".formatted(mode)).close();
     }
 }

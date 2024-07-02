@@ -8,7 +8,7 @@ public class MySQLDatabase extends AuthenticatedDatabase {
 
     @Override
     public String getConnectionUrl() {
-        return "jdbc:mariadb://" + address + ":" + port + "/" + name;
+        return "jdbc:mariadb://%s:%s/%s".formatted(address, port, name);
     }
 
     @Override

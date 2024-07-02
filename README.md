@@ -16,7 +16,6 @@ The main focus of this library is to provide an easy and simple way to store dat
 If you are looking for a more advanced database I recommend taking a look at something like [Nitrite](https://github.com/nitrite/nitrite-java).
 
 # Config
-
 The mod generates a config on first time start that allows you to configure the database used by all mods relying on sqlib. 
 The default database is a sqlite database running in the sqlib directory.
 
@@ -29,7 +28,9 @@ The datatypes can be accessed with the `SQLDataType` class. I tend to add suppor
 | Double   | NbtElement  |
 | Long     | Json        |
 | Bool     | MutableText |
-| UUID     | Identifier  |
+| Date     | Identifier  | 
+| Color    |             | 
+| UUID     |             |
 
 # Setup
 In your build.gradle include:
@@ -42,6 +43,7 @@ dependencies {
   modImplementation("maven.modrinth:sqlib:2.2.13")
 }
 ```
+
 # Developer Usage
 This example uses the built-in database managed by sqlib. for 99% of mods, using the built-in database is good, however 
 further down are examples for custom database management.
@@ -104,6 +106,7 @@ table.endTransaction();
 
 playerData.put("nbt", new NbtCompound());
 ```
+
 # Custom SQL Commands
 If you need to do more complex things than the api allows for, you can run custom SQL commands.
 ```java

@@ -1,16 +1,14 @@
 plugins {
-    id 'fabric-loom' version '1.5.6'
-    id 'com.github.johnrengelman.shadow' version '8.1.1'
+    id 'fabric-loom' version '1.6-SNAPSHOT'
+    id "io.github.goooler.shadow" version "8.1.7"
     id 'io.freefair.lombok' version '8.6'
 }
 
-def targetJavaVersion = 17
+def targetJavaVersion = 21
 group = project.maven_group
 
 repositories {
     maven { url "https://api.modrinth.com/maven" }
-    maven { url "https://maven.minecraftforge.net" }
-    maven { url "https://repo.papermc.io/repository/maven-public/" }
     maven {
         name = "sonatype-oss-snapshots1"
         url = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
@@ -26,14 +24,8 @@ dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-    // Forge
-    implementation "net.minecraftforge:javafmllanguage:${project.forge_version}"
-
-    // Paper
-    compileOnly "io.papermc.paper:paper-api:${project.paper_version}"
-    modImplementation "net.kyori:adventure-platform-fabric:${project.adventure_version}"
+    //modImplementation "net.kyori:adventure-platform-fabric:${project.adventure_version}"
 
     // SQL Drivers
     shadow implementation("org.xerial:sqlite-jdbc:${project.sqlite_version}")
@@ -45,7 +37,7 @@ dependencies {
     // Extra
     compileOnly "org.projectlombok:lombok:1.18.32"
 	annotationProcessor "org.projectlombok:lombok:1.18.32"
-    modImplementation "maven.modrinth:easy-eula:1.0.0"
+    modImplementation "maven.modrinth:easy-eula:1.1.0-fabric"
 }
 
 shadowJar {
@@ -63,22 +55,13 @@ shadowJar {
 
 jar.finalizedBy('shadowJar')
 
-remapJar {
-    dependsOn(shadowJar)
-    mustRunAfter(shadowJar)
 
-    inputFile = file(shadowJar.archivePath)
-}
-
-test {
+/*test {
     useJUnitPlatform()
-}
+}*/
 
 tasks.withType(JavaCompile).configureEach {
     it.options.encoding = "UTF-8"
-    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
-        it.options.release = targetJavaVersion
-    }
 }
 
 java {

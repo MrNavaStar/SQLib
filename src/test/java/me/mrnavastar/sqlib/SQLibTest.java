@@ -2,7 +2,6 @@ package me.mrnavastar.sqlib;
 
 import com.google.gson.JsonObject;
 import me.mrnavastar.sqlib.database.Database;
-import me.mrnavastar.sqlib.database.SQLiteDatabase;
 import me.mrnavastar.sqlib.sql.SQLDataType;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.MutableText;
@@ -14,8 +13,10 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.awt.*;
 import java.io.File;
 import java.nio.file.Path;
+import java.util.Date;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -29,6 +30,8 @@ public class SQLibTest {
     private final double testDouble = Math.PI;
     private final long testLong = 3458309862334564524L;
     private final boolean testBool = true;
+    private final Date testDate = new Date();
+    private final Color testColor = Color.CYAN;
     private final UUID testUuid = UUID.randomUUID();
     private final BlockPos testBlockpos = new BlockPos(7, 8, 9);
     private final ChunkPos testChunkpos = new ChunkPos(5, 99);
@@ -52,6 +55,7 @@ public class SQLibTest {
                 .addColumn("double", SQLDataType.DOUBLE)
                 .addColumn("long", SQLDataType.LONG)
                 .addColumn("bool", SQLDataType.BOOL)
+                .addColumn("date", SQLDataType.DATE)
                 .addColumn("uuid", SQLDataType.UUID)
                 .addColumn("blockpos", SQLDataType.BLOCKPOS)
                 .addColumn("chunkpos", SQLDataType.CHUNKPOS)
@@ -69,6 +73,8 @@ public class SQLibTest {
         dataContainer.put("double", testDouble);
         dataContainer.put("long", testLong);
         dataContainer.put("bool", testBool);
+        dataContainer.put("date", testDate);
+        dataContainer.put("color", testColor);
         dataContainer.put("uuid", testUuid);
         dataContainer.put("blockpos", testBlockpos);
         dataContainer.put("chunkpos", testChunkpos);
@@ -87,6 +93,8 @@ public class SQLibTest {
         assertEquals(testDouble, dataContainer.getDouble("double"));
         assertEquals(testLong, dataContainer.getLong("long"));
         assertEquals(testBool, dataContainer.getBool("bool"));
+        assertEquals(testDate, dataContainer.getDate("date"));
+        assertEquals(testColor, dataContainer.getColor("color"));
         assertEquals(testUuid, dataContainer.getUUID("uuid"));
         assertEquals(testBlockpos, dataContainer.getBlockPos("blockpos"));
         assertEquals(testChunkpos, dataContainer.getChunkPos("chunkpos"));
@@ -100,6 +108,8 @@ public class SQLibTest {
         dataContainer.clear("double");
         dataContainer.clear("long");
         dataContainer.clear("bool");
+        dataContainer.clear("date");
+        dataContainer.clear("color");
         dataContainer.clear("uuid");
         dataContainer.clear("blockpos");
         dataContainer.clear("chunkpos");
@@ -148,5 +158,6 @@ public class SQLibTest {
     public static void cleanup() {
         database.close();
         new File("test.db").delete();
+        new File("sqlib.toml").delete();
     }
 }

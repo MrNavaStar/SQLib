@@ -2,9 +2,12 @@ package me.mrnavastar.sqlib;
 
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.SneakyThrows;
 import me.mrnavastar.sqlib.database.Database;
 import me.mrnavastar.sqlib.sql.SQLConnection;
+import me.mrnavastar.sqlib.sql.SQLDataType;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -21,31 +24,33 @@ public class Table {
     @Getter
     private final Database database;
     private final SQLConnection connection;
-    private final HashMap<String, DataContainer> dataContainers = new HashMap<>();
+    private final HashMap<String, SQLDataType> columns;
 
     @Getter
     private boolean isInTransaction = false;
     private final boolean autoIncrement;
 
-    public Table(@NonNull String modId, @NonNull String name, @NonNull Database database, @NonNull SQLConnection connection, boolean autoIncrement) {
+    public Table(@NonNull String modId, @NonNull String name, @NonNull Database database, HashMap<String, SQLDataType> columns, @NonNull SQLConnection connection, boolean autoIncrement) {
         this.modId = modId;
         this.name = name;
         this.database = database;
+        this.columns = columns;
         this.connection = connection;
         this.autoIncrement = autoIncrement;
-
-        connection.createTable(this, autoIncrement);
-        database.addTable(this);
-        connection.listPrimaryKeys(this).forEach(key -> dataContainers.put(key, new DataContainer(key, this, connection)));
     }
 
     public String getNoConflictName() {
         return modId + "_" + name;
     }
 
+    public HashMap<String, SQLDataType> getColumns() {
+        return (HashMap<String, SQLDataType>) columns.clone();
+    }
+
     /**
      * Create a transactional lock on this database. No data will be written until you call {@link Table#endTransaction()}
      */
+    @SneakyThrows
     public void beginTransaction() {
         if (!isInTransaction) {
             database.beginTransaction();
@@ -56,6 +61,7 @@ public class Table {
     /**
      * Close the transactional lock on this database and write the data.
      */
+    @SneakyThrows
     public void endTransaction() {
         database.endTransaction();
         isInTransaction = false;
@@ -64,27 +70,29 @@ public class Table {
     /**
      * @return A list of all the {@link DataContainer} ids in this table.
      */
+    @SneakyThrows
     public List<String> getIds() {
-        return dataContainers.keySet().stream().toList();
+        return connection.listPrimaryKeys(this);
     }
 
     /**
      * @return A list of all the {@link DataContainer} ids in this table.
      */
     public List<UUID> getIdsAsUUIDs() {
-        return dataContainers.keySet().stream().map(UUID::fromString).toList();
+        return getIds().stream().map(UUID::fromString).toList();
     }
 
     /**
      * @return A list of all the {@link DataContainer} ids in this table.
      */
     public List<Integer> getIdsAsInts() {
-        return dataContainers.keySet().stream().map(Integer::parseInt).toList();
+        return getIds().stream().map(Integer::parseInt).toList();
     }
 
     /**
      * Creates a new {@link DataContainer}
      */
+    @SneakyThrows
     public DataContainer createDataContainer(@NonNull String id) {
         if (!autoIncrement) {
             DataContainer dataContainer = get(id);
@@ -94,9 +102,7 @@ public class Table {
         int autoId = connection.createRow(this, id, autoIncrement);
         if (autoIncrement) id = String.valueOf(autoId);
 
-        DataContainer dataContainer = new DataContainer(id, this, connection);
-        dataContainers.put(id, dataContainer);
-        return dataContainer;
+        return new DataContainer(id, this, connection);
     }
 
     /**
@@ -148,9 +154,9 @@ public class Table {
      * Delete the {@link DataContainer} from the database
      * @param dataContainer The {@link DataContainer} to delete
      */
+    @SneakyThrows
     public void drop(@NonNull DataContainer dataContainer) {
-        DataContainer container = dataContainers.remove(dataContainer.getIdAsString());
-        if (container != null) connection.deleteRow(this, dataContainer.getIdAsString());
+        if (contains(dataContainer.getIdAsString())) connection.deleteRow(this, dataContainer.getIdAsString());
     }
 
     /**
@@ -182,7 +188,8 @@ public class Table {
      * @return The {@link DataContainer} or null if it is missing
      */
     public DataContainer get(@NonNull String id) {
-        return dataContainers.get(id);
+        if (contains(id)) return new DataContainer(id, this, connection);
+        return null;
     }
 
     /**
@@ -205,8 +212,9 @@ public class Table {
      * Checks if the table contains a {@link DataContainer}
      * @param id The id of the {@link DataContainer} to look for
      */
+    @SneakyThrows
     public boolean contains(@NonNull String id) {
-        return dataContainers.containsKey(id);
+        return connection.rowExists(this, id);
     }
 
     /**
@@ -228,7 +236,8 @@ public class Table {
     /**
      * @return A list of all the {@link DataContainer}'s in this table
      */
+    @SneakyThrows
     public List<DataContainer> getDataContainers() {
-        return dataContainers.values().stream().toList();
+        return connection.listPrimaryKeys(this).stream().map(id -> new DataContainer(id, this, connection)).toList();
     }
 }

@@ -13,20 +13,17 @@ import org.apache.logging.log4j.LogManager;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 
 public class SQLib {
 
-    public static final String MOD_ID = "sqlib";
+    public static final String MOD_ID = "SQLib";
     public static final Gson GSON = new Gson();
 
-    private static final ArrayList<Database> databases = new ArrayList<>();
+    private static final HashSet<Database> databases = new HashSet<>();
     @Getter
     protected static Database database;
     protected static SQLibConfig config = new SQLibConfig();
@@ -77,11 +74,11 @@ public class SQLib {
     }
 
     public static void registerDatabase(Database database) {
-        if (!databases.contains(database)) databases.add(database);
+        databases.add(database);
     }
 
     public static List<Database> getAllDatabases() {
-        return Collections.unmodifiableList(databases);
+        return databases.stream().toList();
     }
 
     public static void log(Level level, String message) {

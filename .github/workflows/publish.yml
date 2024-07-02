@@ -58,6 +58,9 @@ jobs:
             ${{ github.workspace }}/sqlib-${{ github.event.release.tag_name }}-sources.jar
           java: 17
           game-versions: |
+            1.21
+            1.20.6
+            1.20.5
             1.20.4
             1.20.3
             1.20.2
