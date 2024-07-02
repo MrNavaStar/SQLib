@@ -38,7 +38,7 @@ public class SQLibTest {
     private final JsonObject testJson = new JsonObject();
     private final NbtCompound testNbt = new NbtCompound();
     private final MutableText testText = (MutableText) Text.of("Test Text");
-    private final Identifier testIdentifier = new Identifier("test", "identifier");
+    private final Identifier testIdentifier = Identifier.tryParse("test:identifier");
 
 
     @BeforeAll
