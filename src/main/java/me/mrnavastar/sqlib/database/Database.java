@@ -82,6 +82,10 @@ public abstract class Database {
 
     public abstract String getTableCreationQuery(String tableName, String columns, boolean autoIncrementId);
 
+    public abstract String getTransactionString();
+
+    public abstract String getDataType(SQLDataType dataType);
+
     public void open() {
         if (connection == null) {
             connection = new SQLConnection(getConnectionUrl(), getConnectionProperties());
@@ -93,8 +97,6 @@ public abstract class Database {
         if (connection != null) connection.close();
         connection = null;
     }
-
-    public abstract String getTransactionString();
 
     public void beginTransaction() throws SQLException {
         connection.beginTransaction(getTransactionString());

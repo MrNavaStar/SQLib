@@ -9,6 +9,7 @@ group = project.maven_group
 
 repositories {
     maven { url "https://api.modrinth.com/maven" }
+    maven { url "https://repo.papermc.io/repository/maven-public/" }
     maven {
         name = "sonatype-oss-snapshots1"
         url = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
@@ -25,11 +26,15 @@ dependencies {
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-    //modImplementation "net.kyori:adventure-platform-fabric:${project.adventure_version}"
+    compileOnly "com.velocitypowered:velocity-api:${project.velocity_version}"
+    annotationProcessor "com.velocitypowered:velocity-api:${project.velocity_version}"
+
+    modImplementation "net.kyori:adventure-platform-fabric:${project.adventure_version}"
 
     // SQL Drivers
     shadow implementation("org.xerial:sqlite-jdbc:${project.sqlite_version}")
     shadow implementation("org.mariadb.jdbc:mariadb-java-client:${project.mariadb_version}")
+    shadow implementation("org.postgresql:postgresql:${project.postgres_version}")
     shadow implementation("com.zaxxer:HikariCP:${project.hikari_version}")
     // Config
     shadow implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-toml:${project.jackson_version}")

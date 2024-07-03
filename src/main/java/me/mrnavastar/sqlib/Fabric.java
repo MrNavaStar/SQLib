@@ -5,7 +5,7 @@ import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint;
 
 import java.nio.file.Path;
 
-public class Fabric extends SQLib implements PreLaunchEntrypoint {
+public non-sealed class Fabric extends SQLib implements PreLaunchEntrypoint {
 
     @Override
     public void onPreLaunch() {

@@ -3,14 +3,16 @@
 # Settings that apply regardless of database used
 [database]
     name = "default"
-    # Allowed Values: sqlite, mysql
+    # Allowed Values: sqlite, mysql, mariadb, postgres
     type = "sqlite"
 
-[sqlite]
+# Used for SQLite
+[local]
     # Can be any path that exists on this system
-    directory = "${sqlite_path}"
+    directory = "${local_path}"
 
-[mysql]
+# Used for MySQL, MariaDB, and Postgres
+[server]
     address = "127.0.0.1"
     port = 3306
     username = "user"

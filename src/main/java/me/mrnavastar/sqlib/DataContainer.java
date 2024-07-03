@@ -7,6 +7,9 @@ import lombok.NonNull;
 import lombok.SneakyThrows;
 import me.mrnavastar.sqlib.sql.SQLConnection;
 import me.mrnavastar.sqlib.util.TextParser;
+import net.kyori.adventure.key.Key;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.StringNbtReader;
 import net.minecraft.text.MutableText;
@@ -72,6 +75,12 @@ public class DataContainer {
     }
 
     @SneakyThrows
+    public DataContainer put(@NonNull String field, byte[] value) {
+        sqlConnection.writeField(table, id, field, value);
+        return this;
+    }
+
+    @SneakyThrows
     public DataContainer put(@NonNull String field, Date value) {
         sqlConnection.writeField(table, id, field, value.getTime());
         return this;
@@ -126,6 +135,18 @@ public class DataContainer {
     }
 
     @SneakyThrows
+    public DataContainer put(@NonNull String field, @NonNull Key value) {
+        sqlConnection.writeField(table, id, field, value.asString());
+        return this;
+    }
+
+    @SneakyThrows
+    public DataContainer put(@NonNull String field, @NonNull Component value) {
+        sqlConnection.writeField(table, id, field, MiniMessage.miniMessage().serialize(value));
+        return this;
+    }
+
+    @SneakyThrows
     public String getString(@NonNull String field) {
         return sqlConnection.readField(table, id, field, String.class);
     }
@@ -149,6 +170,11 @@ public class DataContainer {
     @SneakyThrows
     public boolean getBool(@NonNull String field) {
         return sqlConnection.readField(table, id, field, Integer.class) > 0; //Int to bool, SQLite compat
+    }
+
+    @SneakyThrows
+    public byte[] getBytes(@NonNull String field) {
+        return sqlConnection.readField(table, id, field, byte[].class);
     }
 
     @SneakyThrows
@@ -217,6 +243,20 @@ public class DataContainer {
         String identifier = sqlConnection.readField(table, id, field, String.class);
         if (identifier == null) return null;
         return Identifier.tryParse(identifier);
+    }
+
+    @SneakyThrows
+    public Key getAdventureKey(@NonNull String field) {
+        String key = sqlConnection.readField(table, id, field, String.class);
+        if (key == null) return null;
+        return Key.key(key);
+    }
+
+    @SneakyThrows
+    public Component getAdventureComponent(@NonNull String field) {
+        String component = sqlConnection.readField(table, id, field, String.class);
+        if (component == null) return null;
+        return MiniMessage.miniMessage().deserialize(component);
     }
 
     @SneakyThrows

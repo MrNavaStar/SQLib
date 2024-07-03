@@ -78,7 +78,7 @@ public class SQLConnection {
     public void createTable(Table table, boolean autoIncrementId) throws SQLException {
         HashMap<String, SQLDataType> columns = table.getColumns();
         StringBuilder columnString = new StringBuilder();
-        columns.forEach((name, dataType) -> columnString.append("%s %s,".formatted(name, dataType)));
+        columns.forEach((name, dataType) -> columnString.append("%s %s,".formatted(name, table.getDatabase().getDataType(dataType))));
 
         executeCommand(table.getDatabase().getTableCreationQuery(table.getNoConflictName(), columnString.substring(0, columnString.length() - 1), autoIncrementId)).close();
     }

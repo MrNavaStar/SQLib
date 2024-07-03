@@ -27,7 +27,7 @@ The datatypes can be accessed with the `SQLDataType` class. I tend to add suppor
 | Int      | ChunkPos    |
 | Double   | NbtElement  |
 | Long     | Json        |
-| Bool     | MutableText |
+| Bool     | Text        |
 | Date     | Identifier  | 
 | Color    |             | 
 | UUID     |             |

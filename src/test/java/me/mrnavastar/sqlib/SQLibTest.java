@@ -61,7 +61,7 @@ public class SQLibTest {
                 .addColumn("chunkpos", SQLDataType.CHUNKPOS)
                 .addColumn("json", SQLDataType.JSON)
                 .addColumn("nbt", SQLDataType.NBT)
-                .addColumn("text", SQLDataType.MUTABLE_TEXT)
+                .addColumn("text", SQLDataType.TEXT)
                 .addColumn("identifier", SQLDataType.IDENTIFIER)
                 .finish();
 

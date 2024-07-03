@@ -1,8 +1,10 @@
 package me.mrnavastar.sqlib.database;
 
-public class MySQLDatabase extends AuthenticatedDatabase {
+import me.mrnavastar.sqlib.sql.SQLDataType;
 
-    public MySQLDatabase(String name, String address, String port, String username, String password) {
+public class MySQL extends AuthenticatedDatabase {
+
+    public MySQL(String name, String address, String port, String username, String password) {
         super(name, address, port, username, password);
     }
 
@@ -20,5 +22,18 @@ public class MySQLDatabase extends AuthenticatedDatabase {
     @Override
     public String getTransactionString() {
         return "BEGIN;";
+    }
+
+    @Override
+    public String getDataType(SQLDataType dataType) {
+        return switch (dataType) {
+            case STRING, TEXT, JSON, NBT, IDENTIFIER -> "LONGTEXT";
+            case BYTES -> "LONGBLOB";
+            case INT, COLOR -> "INT(255)";
+            case DOUBLE -> "FLOAT(53)";
+            case LONG, DATE, BLOCKPOS, CHUNKPOS -> "BIGINT(255)";
+            case BOOL -> "INT(1)";
+            case UUID -> "CHAR(36)";
+        };
     }
 }

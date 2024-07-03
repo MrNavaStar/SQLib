@@ -3,11 +3,12 @@ package me.mrnavastar.sqlib.database;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.SneakyThrows;
+import me.mrnavastar.sqlib.sql.SQLDataType;
 
 import java.io.File;
 
 @Getter
-public class SQLiteDatabase extends Database {
+public class SQLite extends Database {
 
     private final String directory;
     private Mode mode = Mode.WAL2;
@@ -23,7 +24,7 @@ public class SQLiteDatabase extends Database {
     }
 
     @SneakyThrows
-    public SQLiteDatabase(@NonNull String name, @NonNull String directory) {
+    public SQLite(@NonNull String name, @NonNull String directory) {
         super(name);
         this.directory = directory;
         open();
@@ -43,7 +44,20 @@ public class SQLiteDatabase extends Database {
 
     @Override
     public String getTransactionString() {
-        return "BEGIN EXCLUSIVE;";
+        return "BEGIN;";
+    }
+
+    @Override
+    public String getDataType(SQLDataType dataType) {
+        return switch (dataType) {
+            case STRING, TEXT, JSON, NBT, IDENTIFIER -> "LONGTEXT";
+            case BYTES -> "BLOB";
+            case INT, COLOR -> "INT(255)";
+            case DOUBLE -> "FLOAT(53)";
+            case LONG, DATE, BLOCKPOS, CHUNKPOS -> "BIGINT(255)";
+            case BOOL -> "INT(1)";
+            case UUID -> "CHAR(36)";
+        };
     }
 
     @SneakyThrows
