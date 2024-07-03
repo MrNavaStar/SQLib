@@ -21,16 +21,16 @@ The default database is a sqlite database running in the sqlib directory.
 
 # Supported Datatypes
 The datatypes can be accessed with the `SQLDataType` class. I tend to add support for new types as I run into them in my projects. If you would like one added, pleade make an issue!
-| Standard | Minecraft   | 
-|----------|-------------|
-| String   | BlockPos    |
-| Int      | ChunkPos    |
-| Double   | NbtElement  |
-| Long     | Json        |
-| Bool     | Text        |
-| Date     | Identifier  | 
-| Color    |             | 
-| UUID     |             |
+| Standard | Minecraft   | Adventure |
+|----------|-------------|-----------|
+| String   | BlockPos    | Key       |
+| Int      | ChunkPos    | Component |
+| Double   | NbtElement  |           |
+| Long     | Json        |           |
+| Bool     | Text        |           |
+| Date     | Identifier  |           |
+| Color    |             |           |
+| UUID     |             |           |
 
 # Setup
 In your build.gradle include:
