@@ -5,9 +5,11 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import me.mrnavastar.sqlib.SQLib;
-import me.mrnavastar.sqlib.Table;
+import me.mrnavastar.sqlib.api.Table;
+import me.mrnavastar.sqlib.sql.ColumnType;
+import me.mrnavastar.sqlib.sql.Column;
 import me.mrnavastar.sqlib.sql.SQLConnection;
-import me.mrnavastar.sqlib.sql.SQLDataType;
+import me.mrnavastar.sqlib.sql.SQLPrimitives;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -33,9 +35,7 @@ public abstract class Database {
         private final String modId;
         private final String name;
         private final Database database;
-        private final HashMap<String, SQLDataType> columns = new HashMap<>();
-        protected boolean autoIncrement = false;
-
+        private final HashMap<String, Column> columns = new HashMap<>();
 
         public TableBuilder(@NonNull String modId, @NonNull String name, @NonNull Database database) {
             this.modId = modId;
@@ -44,20 +44,35 @@ public abstract class Database {
         }
 
         /**
-         * Make this table use auto incremented ids. See {@link Table#createDataContainerAutoID()}
+         * Adds a column to the table definition
+         * @param name The name of the column
+         * @param dataType The {@link ColumnType} of this column
          */
-        public TableBuilder setAutoIncrement() {
-            autoIncrement = true;
+        public TableBuilder column(@NonNull String name, @NonNull ColumnType<?> dataType) {
+            if (name.equalsIgnoreCase("SQLIB_AUTO_ID")) throw new RuntimeException("Invalid column! SQLIB_AUTO_ID is used internally!");
+            columns.put(name, new Column(name, dataType, false, false));
             return this;
         }
 
         /**
          * Adds a column to the table definition
          * @param name The name of the column
-         * @param dataType The {@link SQLDataType} of this column
+         * @param dataType The {@link ColumnType} of this column
          */
-        public TableBuilder addColumn(@NonNull String name, @NonNull SQLDataType dataType) {
-            columns.put(name, dataType);
+        public TableBuilder uniqueColumn(@NonNull String name, @NonNull ColumnType dataType) {
+            if (name.equalsIgnoreCase("SQLIB_AUTO_ID")) throw new RuntimeException("Invalid column! SQLIB_AUTO_ID is used internally!");
+            columns.put(name, new Column(name, dataType, false, true));
+            return this;
+        }
+
+        /**
+         * Adds a column to the table definition
+         * @param name The name of the column
+         * @param dataType The {@link ColumnType} of this column
+         */
+        public TableBuilder arrayColumn(@NonNull String name, @NonNull ColumnType dataType) {
+            if (name.equalsIgnoreCase("SQLIB_AUTO_ID")) throw new RuntimeException("Invalid column! SQLIB_AUTO_ID is used internally!");
+            columns.put(name, new Column(name, dataType, true, true));
             return this;
         }
 
@@ -67,8 +82,8 @@ public abstract class Database {
          */
         @SneakyThrows
         public Table finish() {
-            Table table = new Table(modId, name, database, columns, database.connection, autoIncrement);
-            database.connection.createTable(table, autoIncrement);
+            Table table = new Table(modId, name, database, columns, database.connection);
+            database.connection.createTable(table);
             database.tables.put(table.getNoConflictName(), table);
             return table;
         }
@@ -80,11 +95,13 @@ public abstract class Database {
         return new Properties();
     }
 
-    public abstract String getTableCreationQuery(String tableName, String columns, boolean autoIncrementId);
+    public abstract String getTableCreationQuery(String tableName, String columns);
 
-    public abstract String getTransactionString();
+    public String getTransactionString() {
+        return "BEGIN;";
+    };
 
-    public abstract String getDataType(SQLDataType dataType);
+    public abstract String getDataType(SQLPrimitives<?> dataType);
 
     public void open() {
         if (connection == null) {
@@ -96,14 +113,6 @@ public abstract class Database {
     public void close() {
         if (connection != null) connection.close();
         connection = null;
-    }
-
-    public void beginTransaction() throws SQLException {
-        connection.beginTransaction(getTransactionString());
-    };
-
-    public void endTransaction() throws SQLException {
-        connection.endTransaction();
     }
 
     public TableBuilder createTable(String modId, String name) {

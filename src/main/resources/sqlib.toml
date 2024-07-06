@@ -5,6 +5,8 @@
     name = "default"
     # Allowed Values: sqlite, mysql, mariadb, postgres
     type = "sqlite"
+    # Transaction timeout value in seconds
+    timeout = 30
 
 # Used for SQLite
 [local]

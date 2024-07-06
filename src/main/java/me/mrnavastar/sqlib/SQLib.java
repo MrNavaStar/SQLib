@@ -1,6 +1,5 @@
 package me.mrnavastar.sqlib;
 
-import com.google.gson.Gson;
 import lombok.Getter;
 import me.mrnavastar.sqlib.config.Config;
 import me.mrnavastar.sqlib.database.Database;
@@ -12,9 +11,6 @@ import java.util.HashSet;
 import java.util.List;
 
 public sealed class SQLib permits Fabric, Velocity {
-
-    public static final String MOD_ID = "SQLib";
-    public static final Gson GSON = new Gson();
 
     private static final HashSet<Database> databases = new HashSet<>();
     @Getter
@@ -35,6 +31,6 @@ public sealed class SQLib permits Fabric, Velocity {
     }
 
     public static void log(Level level, String message) {
-        LogManager.getLogger().log(level, "[" + MOD_ID + "] " + message);
+        LogManager.getLogger().log(level, "[SQLib] " + message);
     }
 }

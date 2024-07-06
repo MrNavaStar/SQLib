@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "id": "testmod",
+  "version": "debug-build",
+  "name": "TestMod",
+  "description": "SQLib Test Mod",
+  "authors": ["MrNavaStar"],
+  "contact": {},
+  "license": "CC0-1.0",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["me.mrnavastar.sqlib.TestMod"]
+  },
+  "depends": {
+    "minecraft": ">=1.16.5"
+  }
+}

@@ -1,6 +1,9 @@
 package me.mrnavastar.sqlib.util;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import lombok.SneakyThrows;
+import lombok.experimental.UtilityClass;
 import me.mrnavastar.sqlib.SQLib;
 import net.minecraft.registry.BuiltinRegistries;
 import net.minecraft.registry.RegistryWrapper;
@@ -9,8 +12,10 @@ import net.minecraft.text.Text;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+@UtilityClass
 public class TextParser {
 
+    private static final Gson GSON = new Gson();
     private static Method serialize = null;
     private static Method deserialize = null;
 
@@ -69,10 +74,11 @@ public class TextParser {
         }
     }
 
-    public static Text stringToText(String s) throws InvocationTargetException, IllegalAccessException {
+    @SneakyThrows
+    public static Text stringToText(String s) {
         if (serialize.getParameterCount() > 1) {
-            return (Text) deserialize.invoke(null, SQLib.GSON.fromJson(s, JsonElement.class), BuiltinRegistries.createWrapperLookup());
+            return (Text) deserialize.invoke(null, GSON.fromJson(s, JsonElement.class), BuiltinRegistries.createWrapperLookup());
         }
-        return (Text) deserialize.invoke(null, SQLib.GSON.fromJson(s, JsonElement.class));
+        return (Text) deserialize.invoke(null, GSON.fromJson(s, JsonElement.class));
     }
 }

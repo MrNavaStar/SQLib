@@ -1,6 +1,6 @@
 package me.mrnavastar.sqlib.database;
 
-import me.mrnavastar.sqlib.sql.SQLDataType;
+import me.mrnavastar.sqlib.sql.SQLPrimitives;
 
 public class MySQL extends AuthenticatedDatabase {
 
@@ -14,26 +14,21 @@ public class MySQL extends AuthenticatedDatabase {
     }
 
     @Override
-    public String getTableCreationQuery(String tableName, String columns, boolean autoIncrementId) {
-        if (autoIncrementId) return "CREATE TABLE IF NOT EXISTS %s (ID int, %s, PRIMARY KEY (ID) AUTO_INCREMENT);".formatted(tableName, columns);
-        return "CREATE TABLE IF NOT EXISTS %s (ID TEXT, %s, PRIMARY KEY (ID(256)));".formatted(tableName, columns);
+    public String getTableCreationQuery(String tableName, String columns) {
+        return "CREATE TABLE IF NOT EXISTS %s (SQLIB_AUTO_ID INT AUTO_INCREMENT UNIQUE, %s, PRIMARY KEY (SQLIB_AUTO_ID));".formatted(tableName, columns);
     }
 
     @Override
-    public String getTransactionString() {
-        return "BEGIN;";
-    }
+    public String getDataType(SQLPrimitives<?> type) {
+        return switch (type.getType()) {
+            default -> type.getType().name();
 
-    @Override
-    public String getDataType(SQLDataType dataType) {
-        return switch (dataType) {
-            case STRING, TEXT, JSON, NBT, IDENTIFIER -> "LONGTEXT";
+            case BYTE -> "TINYINT";
             case BYTES -> "LONGBLOB";
-            case INT, COLOR -> "INT(255)";
-            case DOUBLE -> "FLOAT(53)";
-            case LONG, DATE, BLOCKPOS, CHUNKPOS -> "BIGINT(255)";
-            case BOOL -> "INT(1)";
-            case UUID -> "CHAR(36)";
+            case SHORT -> "SMALLINT";
+            case LONG -> "BIGINT";
+            case STRING -> "LONGTEXT";
+            case CHAR -> "CHAR(1)";
         };
     }
 }

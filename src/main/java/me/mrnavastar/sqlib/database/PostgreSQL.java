@@ -1,6 +1,6 @@
 package me.mrnavastar.sqlib.database;
 
-import me.mrnavastar.sqlib.sql.SQLDataType;
+import me.mrnavastar.sqlib.sql.SQLPrimitives;
 
 public class PostgreSQL extends AuthenticatedDatabase {
 
@@ -14,27 +14,23 @@ public class PostgreSQL extends AuthenticatedDatabase {
     }
 
     @Override
-    public String getTableCreationQuery(String tableName, String columns, boolean autoIncrementId) {
-        if (autoIncrementId) return "CREATE TABLE IF NOT EXISTS %s (ID SERIAL PRIMARY KEY, %s);".formatted(tableName, columns);
-        return "CREATE TABLE IF NOT EXISTS %s (ID TEXT PRIMARY KEY, %s);".formatted(tableName, columns);
+    public String getTableCreationQuery(String tableName, String columns) {
+        return "CREATE TABLE IF NOT EXISTS %s (SQLIB_AUTO_ID BIGSERIAL PRIMARY KEY, %s);".formatted(tableName, columns);
     }
 
     @Override
-    public String getTransactionString() {
-        return "BEGIN;";
-    }
+    public String getDataType(SQLPrimitives<?> type) {
+        return switch (type.getType()) {
+            default -> type.getType().name();
 
-    @Override
-    public String getDataType(SQLDataType dataType) {
-        return switch (dataType) {
-            case STRING, TEXT, NBT, IDENTIFIER -> "TEXT";
-            case JSON -> "JSON";
+            case BYTE -> "INT";
             case BYTES -> "BYTEA";
-            case INT, COLOR -> "INT";
-            case DOUBLE -> "DECIMAL";
-            case LONG, DATE, BLOCKPOS, CHUNKPOS -> "BIGINT";
-            case BOOL -> "SMALLINT";
-            case UUID -> "UUID";
+            case SHORT -> "SMALLINT";
+            case INT -> "INT";
+            case DOUBLE -> "DOUBLE PRECISION";
+            case LONG -> "BIGINT";
+            case STRING -> "TEXT";
+            case CHAR -> "CHAR(1)";
         };
     }
 }

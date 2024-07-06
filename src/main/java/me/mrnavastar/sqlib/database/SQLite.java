@@ -3,7 +3,7 @@ package me.mrnavastar.sqlib.database;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.SneakyThrows;
-import me.mrnavastar.sqlib.sql.SQLDataType;
+import me.mrnavastar.sqlib.sql.SQLPrimitives;
 
 import java.io.File;
 
@@ -37,26 +37,22 @@ public class SQLite extends Database {
     }
 
     @Override
-    public String getTableCreationQuery(String tableName, String columns, boolean autoIncrementId) {
-        if (autoIncrementId) return "CREATE TABLE IF NOT EXISTS %s (%s, ID INTEGER PRIMARY KEY AUTOINCREMENT);".formatted(tableName, columns);
-        return "CREATE TABLE IF NOT EXISTS %s (%s, ID MEDIUMTEXT PRIMARY KEY);".formatted(tableName, columns);
+    public String getTableCreationQuery(String tableName, String columns) {
+        return "CREATE TABLE IF NOT EXISTS %s (SQLIB_AUTO_ID INTEGER PRIMARY KEY UNIQUE, %s);".formatted(tableName, columns);
     }
 
     @Override
-    public String getTransactionString() {
-        return "BEGIN;";
-    }
+    public String getDataType(SQLPrimitives<?> type) {
+        return switch (type.getType()) {
+            default -> type.getType().name();
 
-    @Override
-    public String getDataType(SQLDataType dataType) {
-        return switch (dataType) {
-            case STRING, TEXT, JSON, NBT, IDENTIFIER -> "LONGTEXT";
+            case BYTE -> "TINYINT";
             case BYTES -> "BLOB";
-            case INT, COLOR -> "INT(255)";
-            case DOUBLE -> "FLOAT(53)";
-            case LONG, DATE, BLOCKPOS, CHUNKPOS -> "BIGINT(255)";
-            case BOOL -> "INT(1)";
-            case UUID -> "CHAR(36)";
+            case BOOL -> "BOOLEAN";
+            case SHORT -> "SMALLINT";
+            case LONG -> "BIGINT";
+            case STRING -> "TEXT";
+            case CHAR -> "CHARACTER";
         };
     }
 

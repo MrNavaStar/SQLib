@@ -7,6 +7,29 @@ plugins {
 def targetJavaVersion = 21
 group = project.maven_group
 
+sourceSets {
+    testMod {
+        compileClasspath += main.compileClasspath
+        runtimeClasspath += main.runtimeClasspath
+    }
+}
+
+loom {
+    runs {
+        testMod {
+            server()
+            ideConfigGenerated project.rootProject == project
+            name = "TestMod"
+            source sourceSets.testMod
+        }
+    }
+}
+
+loom.mods.register("testMod") {
+    sourceSet sourceSets.testMod
+}
+
+
 repositories {
     maven { url "https://api.modrinth.com/maven" }
     maven { url "https://repo.papermc.io/repository/maven-public/" }
@@ -18,8 +41,7 @@ repositories {
 }
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.2'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.2'
+    testModImplementation sourceSets.main.output
 
     // Fabric
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
@@ -40,8 +62,8 @@ dependencies {
     shadow implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-toml:${project.jackson_version}")
 
     // Extra
-    compileOnly "org.projectlombok:lombok:1.18.32"
-	annotationProcessor "org.projectlombok:lombok:1.18.32"
+    compileOnly "org.projectlombok:lombok:1.18.34"
+	annotationProcessor "org.projectlombok:lombok:1.18.34"
     modImplementation "maven.modrinth:easy-eula:1.1.0-fabric"
 }
 
@@ -57,13 +79,8 @@ shadowJar {
         exclude(dependency('net.java.dev.jna:.*:.*'))
     }
 }
-
 jar.finalizedBy('shadowJar')
 
-
-/*test {
-    useJUnitPlatform()
-}*/
 
 tasks.withType(JavaCompile).configureEach {
     it.options.encoding = "UTF-8"
