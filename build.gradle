@@ -48,16 +48,20 @@ dependencies {
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
+    // Velocity
     compileOnly "com.velocitypowered:velocity-api:${project.velocity_version}"
     annotationProcessor "com.velocitypowered:velocity-api:${project.velocity_version}"
 
+    // Adventure
     modImplementation "net.kyori:adventure-platform-fabric:${project.adventure_version}"
 
-    // SQL Drivers
+    // SQL
+    shadow implementation("com.zaxxer:HikariCP:${project.hikari_version}")
+    shadow implementation("org.jdbi:jdbi3-core:${project.jdbi_version}")
     shadow implementation("org.xerial:sqlite-jdbc:${project.sqlite_version}")
     shadow implementation("org.mariadb.jdbc:mariadb-java-client:${project.mariadb_version}")
     shadow implementation("org.postgresql:postgresql:${project.postgres_version}")
-    shadow implementation("com.zaxxer:HikariCP:${project.hikari_version}")
+
     // Config
     shadow implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-toml:${project.jackson_version}")
 
@@ -71,7 +75,7 @@ shadowJar {
     archiveBaseName.set('sqlib')
     configurations = [project.configurations.shadow]
 
-    relocate 'com.fasterxml', 'me.mrnavastar.fasterxml'
+    relocate 'com.fasterxml', 'me.mrnavastar.sqlib.libs.com.fasterxml'
 
     dependencies {
         mergeServiceFiles()
@@ -80,7 +84,6 @@ shadowJar {
     }
 }
 jar.finalizedBy('shadowJar')
-
 
 tasks.withType(JavaCompile).configureEach {
     it.options.encoding = "UTF-8"

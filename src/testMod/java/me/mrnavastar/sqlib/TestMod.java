@@ -29,10 +29,7 @@ public class TestMod implements ModInitializer {
 
     private final String testString = "Test String";
     private final byte[] testBytes = testString.getBytes(StandardCharsets.UTF_8);
-    private final int testInt = 37;
-    private final double testDouble = Math.PI;
-    private final long testLong = 3458309862334564524L;
-    private final boolean testBool = true;
+
     private final Date testDate = new Date();
     private final Color testColor = Color.CYAN;
     private final UUID testUuid = UUID.randomUUID();
@@ -48,11 +45,7 @@ public class TestMod implements ModInitializer {
     private final Component testComponent = Component.text("Test Component");
 
     private void assertEquals(Object expected, Object actual) {
-        if (expected instanceof byte[]) {
-            if (expected != actual) throw new RuntimeException("Expected " + expected.getClass().getName() + " but got " + actual.getClass().getName());
-        }
-        else if (!expected.equals(actual)) throw new RuntimeException("Expected " + expected.getClass().getName() + " but got " + actual.getClass().getName());
-        System.out.println("Poggers");
+        if (!expected.equals(actual) || !actual.getClass().equals(expected.getClass())) throw new RuntimeException("Expected " + expected.getClass().getName() + " but got " + actual.getClass().getName());
     }
 
     private void assertNotEquals(Object o1, Object o2) {
@@ -67,24 +60,31 @@ public class TestMod implements ModInitializer {
         if (bool) throw new RuntimeException("Expected False but got True");
     }
 
-    private void testAllTransactions() throws SQLException {
+    private void testAllTransactions() {
         Table table = SQLib.getDatabase().createTable("test", "table1")
                 .column("byte", ColumnType.BYTE)
                 .column("bytes", ColumnType.BYTES)
                 .column("bool", ColumnType.BOOL)
                 .column("short", ColumnType.SHORT)
+                .column("int", ColumnType.INT)
+                .column("float", ColumnType.FLOAT)
+                .column("double", ColumnType.DOUBLE)
+                .column("long", ColumnType.LONG)
+                .column("string", ColumnType.STRING)
+                .column("char", ColumnType.CHAR)
+
+                .column("date", ColumnType.DATE)
                 .finish();
 
         DataContainer container = table.createDataContainer();
-        System.out.println(container.getId());
 
         // Test Byte
         container.put(ColumnType.BYTE, "byte", Byte.MAX_VALUE);
         assertEquals(Byte.MAX_VALUE, container.get(ColumnType.BYTE, "byte"));
         container.put(ColumnType.BYTE, "byte", Byte.MIN_VALUE);
         assertEquals(Byte.MIN_VALUE, container.get(ColumnType.BYTE, "byte"));
-        //container.put(ColumnType.BYTE, "byte", (byte) 0);
-        //assertEquals((byte) 0, container.get(ColumnType.BYTE, "byte"));
+        container.put(ColumnType.BYTE, "byte", (byte) 0);
+        assertEquals((byte) 0, container.get(ColumnType.BYTE, "byte"));
 
         // Test Bytes
         /*container.put(ColumnType.BYTES, "bytes", testBytes);
@@ -96,13 +96,58 @@ public class TestMod implements ModInitializer {
         container.put(ColumnType.BOOL, "bool", false);
         assertFalse(container.get(ColumnType.BOOL, "bool"));
 
-        //Test Short
-        /*container.put(ColumnType.SHORT, "short", Short.MAX_VALUE);
+        // Test Short
+        container.put(ColumnType.SHORT, "short", Short.MAX_VALUE);
         assertEquals(Short.MAX_VALUE, container.get(ColumnType.SHORT, "short"));
         container.put(ColumnType.SHORT, "short", Short.MIN_VALUE);
         assertEquals(Short.MIN_VALUE, container.get(ColumnType.SHORT, "short"));
         container.put(ColumnType.SHORT, "short", (short) 0);
-        assertEquals((short) 0, container.get(ColumnType.SHORT, "short"));*/
+        assertEquals((short) 0, container.get(ColumnType.SHORT, "short"));
+
+        // Test Int
+        container.put(ColumnType.INT, "int", Integer.MAX_VALUE);
+        assertEquals(Integer.MAX_VALUE, container.get(ColumnType.INT, "int"));
+        container.put(ColumnType.INT, "int", Integer.MIN_VALUE);
+        assertEquals(Integer.MIN_VALUE, container.get(ColumnType.INT, "int"));
+        container.put(ColumnType.INT, "int", 0);
+        assertEquals(0, container.get(ColumnType.INT, "int"));
+
+        // Test Float
+        container.put(ColumnType.FLOAT, "float", Float.MAX_VALUE);
+        assertEquals(Float.MAX_VALUE, container.get(ColumnType.FLOAT, "float"));
+        container.put(ColumnType.FLOAT, "float", Float.MIN_VALUE);
+        assertEquals(Float.MIN_VALUE, container.get(ColumnType.FLOAT, "float"));
+        container.put(ColumnType.FLOAT, "float", 0F);
+        assertEquals(0F, container.get(ColumnType.FLOAT, "float"));
+
+        // Test Double
+        container.put(ColumnType.DOUBLE, "double", Double.MAX_VALUE);
+        assertEquals(Double.MAX_VALUE, container.get(ColumnType.DOUBLE, "double"));
+        container.put(ColumnType.DOUBLE, "double", Double.MIN_VALUE);
+        assertEquals(Double.MIN_VALUE, container.get(ColumnType.DOUBLE, "double"));
+        container.put(ColumnType.DOUBLE, "double", 0.0);
+        assertEquals(0.0, container.get(ColumnType.DOUBLE, "double"));
+
+        // Test Long
+        container.put(ColumnType.LONG, "long", Long.MAX_VALUE);
+        assertEquals(Long.MAX_VALUE, container.get(ColumnType.LONG, "long"));
+        container.put(ColumnType.LONG, "long", Long.MIN_VALUE);
+        assertEquals(Long.MIN_VALUE, container.get(ColumnType.LONG, "long"));
+        container.put(ColumnType.LONG, "long", 0L);
+        assertEquals(0L, container.get(ColumnType.LONG, "long"));
+
+        // Test String
+        container.put(ColumnType.STRING, "string", "test");
+        assertEquals("test",  container.get(ColumnType.STRING, "string"));
+
+        // Test Char
+        container.put(ColumnType.CHAR, "char", 'c');
+        assertEquals('c',  container.get(ColumnType.CHAR, "char"));
+
+        // Test Date
+        Date date = new Date();
+        container.put(ColumnType.DATE, "date", date);
+        assertEquals(date, container.get(ColumnType.DATE, "date"));
     }
 
     private void testTableFunctions() {

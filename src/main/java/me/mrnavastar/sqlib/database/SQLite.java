@@ -28,7 +28,7 @@ public class SQLite extends Database {
         super(name);
         this.directory = directory;
         open();
-        executeCommand("PRAGMA journal_mode = %s;".formatted(mode)).close();
+        connection.getSql().useHandle(h -> h.execute("PRAGMA journal_mode = %s;".formatted(mode)));
     }
 
     @Override
@@ -59,6 +59,6 @@ public class SQLite extends Database {
     @SneakyThrows
     public void setMode(@NonNull Mode mode) {
         this.mode = mode;
-        executeCommand("PRAGMA journal_mode = %s;".formatted(mode)).close();
+        connection.getSql().useHandle(h -> h.execute("PRAGMA journal_mode = %s;".formatted(mode)));
     }
 }

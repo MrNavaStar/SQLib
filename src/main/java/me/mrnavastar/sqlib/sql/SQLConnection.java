@@ -2,32 +2,52 @@ package me.mrnavastar.sqlib.sql;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import me.mrnavastar.sqlib.SQLib;
+import lombok.Getter;
 import me.mrnavastar.sqlib.api.Table;
 import me.mrnavastar.sqlib.config.Config;
-import org.apache.logging.log4j.Level;
+import me.mrnavastar.sqlib.util.ReflectionHacks;
+import org.jdbi.v3.core.Handle;
+import org.jdbi.v3.core.Jdbi;
+import org.slf4j.LoggerFactory;
 
-import java.sql.*;
+import java.lang.reflect.Field;
 import java.util.*;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+
 
 public class SQLConnection {
 
-    private record CacheEntry(Table table, int id, String field, Object value) {}
-
-    private final ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(1);
     private final HikariDataSource ds;
-    private final ConcurrentLinkedQueue<CacheEntry> queue = new ConcurrentLinkedQueue<>();
-    private Connection connection;
+    @Getter
+    private final Jdbi sql;
+
+    //TODO: This is broken
+    static {
+        // We do not care - Mike Tomlin
+
+        try {
+            Field logger = HikariDataSource.class.getDeclaredField("LOGGER");
+            logger.setAccessible(true);
+
+            ReflectionHacks.setFinalStatic(logger, LoggerFactory.getLogger("bruh"));
+
+
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        }
+
+        /*Logger.getLogger("com.zaxxer.hikari.pool.PoolBase").setLevel(Level.OFF);
+        Logger.getLogger("com.zaxxer.hikari.pool.HikariPool").setLevel(Level.OFF);
+        Logger.getLogger("com.zaxxer.hikari.HikariDataSource").setLevel(Level.OFF);
+        Logger.getLogger("com.zaxxer.hikari.HikariConfig").setLevel(Level.OFF);
+        Logger.getLogger("com.zaxxer.hikari.util.DriverDataSource").setLevel(Level.OFF);*/
+    }
 
     public SQLConnection(String connectionUrl, Properties properties) {
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl(connectionUrl);
         config.setUsername(properties.getProperty("user"));
         config.setPassword(properties.getProperty("password"));
-        config.setMaximumPoolSize(8);
+        config.setMaximumPoolSize(50);
         config.setConnectionTimeout(Config.INSTANCE.database.timeout * 1000L);
         config.setMaxLifetime(1800000); // 30 min
         config.addDataSourceProperty("cachePrepStmts", "true");
@@ -35,50 +55,22 @@ public class SQLConnection {
         config.addDataSourceProperty("prepStmtCacheSize", "250");
         config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
         ds = new HikariDataSource(config);
+        sql = Jdbi.create(ds);
 
-        try {
-            String shouldConfigTimeout = properties.getProperty("config_timout");
-            if (shouldConfigTimeout == null) {
-                ds.getConnection().close();
-                return;
-            }
-
+        // TODO: This probably doesn't work lol - fix it
+        if (properties.getProperty("config_timout") == null) return;
+        sql.useHandle(h -> {
             // Try and set the connection's max lifetime to be half of the databases wait_timeout
-            try (PreparedStatement stmt = executeCommand("SHOW VARIABLES LIKE 'wait_timeout';")) {
-                ResultSet resultSet = stmt.getResultSet();
-                if (resultSet.next()) config.setMaxLifetime(resultSet.getInt("value") / 2);
-            }
-        } catch (SQLException e) {
-            SQLib.log(Level.ERROR, "Failed to connect to database!");
-            SQLib.log(Level.ERROR, e.getLocalizedMessage());
-            System.exit(1);
-        }
+            Integer timeout = h.select("SHOW VARIABLES LIKE 'wait_timeout';").mapTo(Integer.class).one();
+            if (timeout != null) config.setMaxLifetime(timeout / 2);
+        });
     }
 
     public void close() {
         ds.close();
     }
 
-    public PreparedStatement executeCommand(String sql, Object... params) throws SQLException {
-        Connection connection = ds.getConnection();
-        PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-        stmt.setQueryTimeout(Config.INSTANCE.database.timeout);
-
-        for (int i = 0; i < params.length; i++) {
-            stmt.setObject(i + 1, params[i]);
-        }
-        stmt.execute();
-        return stmt;
-    }
-
-    public void holdTransaction() throws SQLException {
-        if (connection == null) {
-            connection = ds.getConnection();
-            connection.setAutoCommit(false);
-        }
-    }
-
-    public void createTable(Table table) throws SQLException {
+    public void createTable(Table table) {
         Map<String, Column> columns = table.getColumns();
         StringBuilder columnString = new StringBuilder();
         columns.forEach((name, column) -> {
@@ -89,72 +81,45 @@ public class SQLConnection {
                 columnString.append(",");
             }
         );
-        executeCommand(table.getDatabase().getTableCreationQuery(table.getNoConflictName(), columnString.substring(0, columnString.length() - 1))).close();
+        sql.useHandle(h -> h.execute(table.getDatabase().getTableCreationQuery(table.getNoConflictName(), columnString.substring(0, columnString.length() - 1))));
     }
 
-    public int createRow(Table table) throws SQLException {
-        executeCommand("REPLACE INTO %s DEFAULT VALUES;".formatted(table.getNoConflictName())).close();
-        PreparedStatement stmt = executeCommand("SELECT MAX(SQLIB_AUTO_ID) FROM %s LIMIT 1;".formatted(table.getNoConflictName()));
-        ResultSet resultSet = stmt.getResultSet();
-        resultSet.next();
-        int autoId = resultSet.getInt(1);
-        stmt.close();
-        stmt.getConnection().close();
-        return autoId;
-    }
-
-    public void deleteRow(Table table, int id) throws SQLException {
-        executeCommand("DELETE FROM %s WHERE SQLIB_AUTO_ID = ?;".formatted(table.getNoConflictName()), id).close();
-    }
-
-    public boolean rowExists(Table table, int id) throws SQLException {
-        try (PreparedStatement stmt = executeCommand("SELECT 1 FROM %s WHERE SQLIB_AUTO_ID = ?;".formatted(table.getNoConflictName()), id)) {
-            return stmt.getResultSet().next();
+    public int createRow(Table table) {
+        try (Handle h = sql.open()) {
+            h.execute("REPLACE INTO %s DEFAULT VALUES".formatted(table.getNoConflictName()));
+            return h.select("SELECT MAX(SQLIB_AUTO_ID) FROM %s LIMIT 1".formatted(table.getNoConflictName())).mapTo(Integer.class).one();
         }
     }
 
-    public List<Integer> findRows(Table table, String field, Object value) throws SQLException {
-        try (PreparedStatement stmt = executeCommand("SELECT SQLIB_AUTO_ID FROM %s WHERE %s = ?;".formatted(table.getNoConflictName(), field), value)) {
-            List<Integer> ids = new ArrayList<>();
-            ResultSet resultSet = stmt.getResultSet();
-            while (resultSet.next()) ids.add(resultSet.getInt(1));
-            return ids;
+    public void deleteRow(Table table, int id) {
+        sql.useHandle(h -> h.execute("DELETE FROM %s WHERE SQLIB_AUTO_ID = ?".formatted(table.getNoConflictName()), id));
+    }
+
+    public boolean rowExists(Table table, int id) {
+        try (Handle h = sql.open()) {
+            return h.select("SELECT 1 FROM %s WHERE SQLIB_AUTO_ID = ?".formatted(table.getNoConflictName()), id).mapTo(Object.class).one() != null;
         }
     }
 
-    public List<Integer> listIds(Table table) throws SQLException {
-        try (PreparedStatement stmt = executeCommand("SELECT SQLIB_AUTO_ID FROM %s;".formatted(table.getNoConflictName()))) {
-            List<Integer> ids = new ArrayList<>();
-            ResultSet resultSet = stmt.getResultSet();
-            while (resultSet.next()) ids.add(resultSet.getInt(1));
-            return ids;
+    public List<Integer> findRows(Table table, String field, Object value) {
+        try (Handle h = sql.open()) {
+            return h.select("SELECT SQLIB_AUTO_ID FROM %s WHERE %s = ?".formatted(table.getNoConflictName(), field), value).mapTo(Integer.class).list();
         }
     }
 
-    public Object readField(Table table, int id, String field) throws SQLException {
-        try (PreparedStatement stmt = executeCommand("SELECT %s FROM %s WHERE SQLIB_AUTO_ID = ?;".formatted(field, table.getNoConflictName()), id)) {
-            ResultSet resultSet = stmt.getResultSet();
-            resultSet.next();
-            Object o = resultSet.getObject(field);
-            System.out.println("READ: " + o.getClass().getName());
-            return o;
+    public List<Integer> listIds(Table table) {
+        try (Handle h = sql.open()) {
+            return h.select("SELECT SQLIB_AUTO_ID FROM %s".formatted(table.getNoConflictName())).mapTo(Integer.class).list();
         }
     }
 
-    public void writeField(Table table, int id, String field, Object value) throws SQLException {
-        /*queue.add(new CacheEntry(table, id, field, value));
+    public <T> T readField(Table table, int id, String field, Class<T> clazz) {
+        try (Handle h = sql.open()) {
+            return h.select("SELECT %s FROM %s WHERE SQLIB_AUTO_ID = ?".formatted(field, table.getNoConflictName()), id).mapTo(clazz).one();
+        }
+    }
 
-        exec.getQueue().isEmpty()
-
-        exec.scheduleAtFixedRate(() -> {
-            if (queue.isEmpty()) {
-                exec.shutdown();
-                return;
-            }
-        }, 0, 1, TimeUnit.SECONDS);*/
-        System.out.println("pain");
-
-        executeCommand("UPDATE %s SET %s = ? WHERE SQLIB_AUTO_ID = ?;".formatted(table.getNoConflictName(), field), value, id).close();
-        System.out.println("pain2");
+    public void writeField(Table table, int id, String field, Object value) {
+        sql.useHandle(h -> h.execute("UPDATE %s SET %s = ? WHERE SQLIB_AUTO_ID = ?;".formatted(table.getNoConflictName(), field), value, id));
     }
 }

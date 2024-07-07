@@ -6,11 +6,10 @@ import lombok.NonNull;
 import lombok.SneakyThrows;
 import me.mrnavastar.sqlib.sql.SQLConnection;
 import me.mrnavastar.sqlib.sql.ColumnType;
-
-import java.sql.SQLException;
+import me.mrnavastar.sqlib.database.Database;
 
 /**
- * This class represents a row in the {@link Table} in the {@link me.mrnavastar.sqlib.database.Database}
+ * This class represents a row a {@link Table} in a {@link Database}.
  */
 @AllArgsConstructor
 public class DataContainer {
@@ -20,13 +19,13 @@ public class DataContainer {
     private final int id;
     @NonNull private final SQLConnection sqlConnection;
 
-    public <T> DataContainer put(ColumnType<T> type, @NonNull String field, T value) throws SQLException {
+    public <T> DataContainer put(ColumnType<T> type, @NonNull String field, T value) {
         sqlConnection.writeField(table, id, field, type.serialize(value));
         return this;
     }
 
-    public <T> T get(ColumnType<T> type, @NonNull String field) throws SQLException {
-        return type.deserialize(type.sqlType().getClazz().cast(sqlConnection.readField(table, id, field)));
+    public <T> T get(ColumnType<T> type, @NonNull String field) {
+        return type.deserialize(sqlConnection.readField(table, id, field, type.sqlType().getClazz()));
     }
 
     @SneakyThrows

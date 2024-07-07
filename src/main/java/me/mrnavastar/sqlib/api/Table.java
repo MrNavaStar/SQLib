@@ -10,7 +10,7 @@ import me.mrnavastar.sqlib.sql.SQLConnection;
 import java.util.*;
 
 /**
- * This class acts as a wrapper for a table in a {@link Database}
+ * This class represents a table in a {@link Database}.
  */
 public class Table {
 
@@ -22,9 +22,6 @@ public class Table {
     private final Database database;
     private final SQLConnection connection;
     private final HashMap<String, Column> columns;
-
-    @Getter
-    private boolean isInTransaction = false;
 
     public Table(@NonNull String modId, @NonNull String name, @NonNull Database database, HashMap<String, Column> columns, @NonNull SQLConnection connection) {
         this.modId = modId;
@@ -51,7 +48,7 @@ public class Table {
     }
 
     /**
-     * Tries to get a {@link DataContainer} or creates a new {@link DataContainer} if it is missing
+     * Tries to get a {@link DataContainer} or creates a new {@link DataContainer} if it is missing.
      */
     public DataContainer getOrCreateDataContainer(int id) {
         DataContainer dataContainer = getDataContainer(id);
@@ -67,7 +64,7 @@ public class Table {
     }
 
     /**
-     * @return A {@link DataContainer} or null if it is missing
+     * @return A {@link DataContainer} or null if it is missing.
      */
     @SneakyThrows
     public DataContainer getDataContainer(int id) {
@@ -76,7 +73,7 @@ public class Table {
     }
 
     /**
-     * @return A list of all the {@link DataContainer}'s in this table
+     * @return A list of all the {@link DataContainer}'s in this table.
      */
     @SneakyThrows
     public List<DataContainer> getDataContainers() {
@@ -85,7 +82,7 @@ public class Table {
     }
 
     /**
-     * @return A list of all the {@link DataContainer}'s with a matching key value pair
+     * @return A list of all the {@link DataContainer}'s with a matching key value pair.
      */
     @SneakyThrows
     public List<DataContainer> getDataContainers(@NonNull String field, @NonNull Object value) {
