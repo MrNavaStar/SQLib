@@ -2,7 +2,7 @@ package me.mrnavastar.sqlib;
 
 import lombok.Getter;
 import me.mrnavastar.sqlib.config.Config;
-import me.mrnavastar.sqlib.database.Database;
+import me.mrnavastar.sqlib.api.database.Database;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 

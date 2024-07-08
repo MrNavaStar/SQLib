@@ -4,9 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.SneakyThrows;
-import me.mrnavastar.sqlib.sql.SQLConnection;
-import me.mrnavastar.sqlib.sql.ColumnType;
-import me.mrnavastar.sqlib.database.Database;
+import me.mrnavastar.sqlib.api.types.SQLibType;
+import me.mrnavastar.sqlib.impl.SQLConnection;
+import me.mrnavastar.sqlib.api.database.Database;
 
 /**
  * This class represents a row a {@link Table} in a {@link Database}.
@@ -19,13 +19,13 @@ public class DataContainer {
     private final int id;
     @NonNull private final SQLConnection sqlConnection;
 
-    public <T> DataContainer put(ColumnType<T> type, @NonNull String field, T value) {
+    public <T> DataContainer put(SQLibType<T> type, @NonNull String field, T value) {
         sqlConnection.writeField(table, id, field, type.serialize(value));
         return this;
     }
 
-    public <T> T get(ColumnType<T> type, @NonNull String field) {
-        return type.deserialize(sqlConnection.readField(table, id, field, type.sqlType().getClazz()));
+    public <T> T get(SQLibType<T> type, @NonNull String field) {
+        return type.deserialize(sqlConnection.readField(table, id, field, type.getType().getClazz()));
     }
 
     @SneakyThrows

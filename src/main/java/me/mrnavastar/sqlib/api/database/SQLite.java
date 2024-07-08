@@ -1,9 +1,9 @@
-package me.mrnavastar.sqlib.database;
+package me.mrnavastar.sqlib.api.database;
 
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.SneakyThrows;
-import me.mrnavastar.sqlib.sql.SQLPrimitives;
+import me.mrnavastar.sqlib.impl.SQLPrimitive;
 
 import java.io.File;
 
@@ -42,7 +42,7 @@ public class SQLite extends Database {
     }
 
     @Override
-    public String getDataType(SQLPrimitives<?> type) {
+    public String getDataType(SQLPrimitive<?> type) {
         return switch (type.getType()) {
             default -> type.getType().name();
 

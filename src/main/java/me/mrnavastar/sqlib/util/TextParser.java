@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
-import me.mrnavastar.sqlib.SQLib;
 import net.minecraft.registry.BuiltinRegistries;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.text.Text;

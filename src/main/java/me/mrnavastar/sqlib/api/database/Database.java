@@ -1,4 +1,4 @@
-package me.mrnavastar.sqlib.database;
+package me.mrnavastar.sqlib.api.database;
 
 import lombok.Getter;
 import lombok.NonNull;
@@ -6,13 +6,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import me.mrnavastar.sqlib.SQLib;
 import me.mrnavastar.sqlib.api.Table;
-import me.mrnavastar.sqlib.sql.ColumnType;
-import me.mrnavastar.sqlib.sql.Column;
-import me.mrnavastar.sqlib.sql.SQLConnection;
-import me.mrnavastar.sqlib.sql.SQLPrimitives;
+import me.mrnavastar.sqlib.api.types.SQLibType;
+import me.mrnavastar.sqlib.impl.Column;
+import me.mrnavastar.sqlib.impl.SQLConnection;
+import me.mrnavastar.sqlib.impl.SQLPrimitive;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
@@ -46,9 +44,9 @@ public abstract class Database {
         /**
          * Adds a column to the table definition
          * @param name The name of the column
-         * @param dataType The {@link ColumnType} of this column
+         * @param dataType The {@link SQLibType} of this column
          */
-        public TableBuilder column(@NonNull String name, @NonNull ColumnType<?> dataType) {
+        public TableBuilder column(@NonNull String name, @NonNull SQLibType<?> dataType) {
             if (name.equalsIgnoreCase("SQLIB_AUTO_ID")) throw new RuntimeException("Invalid column! SQLIB_AUTO_ID is used internally!");
             columns.put(name, new Column(name, dataType, false, false));
             return this;
@@ -57,9 +55,9 @@ public abstract class Database {
         /**
          * Adds a column to the table definition
          * @param name The name of the column
-         * @param dataType The {@link ColumnType} of this column
+         * @param dataType The {@link SQLibType} of this column
          */
-        public TableBuilder uniqueColumn(@NonNull String name, @NonNull ColumnType dataType) {
+        public TableBuilder uniqueColumn(@NonNull String name, @NonNull SQLibType dataType) {
             if (name.equalsIgnoreCase("SQLIB_AUTO_ID")) throw new RuntimeException("Invalid column! SQLIB_AUTO_ID is used internally!");
             columns.put(name, new Column(name, dataType, false, true));
             return this;
@@ -68,9 +66,9 @@ public abstract class Database {
         /**
          * Adds a column to the table definition
          * @param name The name of the column
-         * @param dataType The {@link ColumnType} of this column
+         * @param dataType The {@link SQLibType} of this column
          */
-        public TableBuilder arrayColumn(@NonNull String name, @NonNull ColumnType dataType) {
+        public TableBuilder arrayColumn(@NonNull String name, @NonNull SQLibType dataType) {
             if (name.equalsIgnoreCase("SQLIB_AUTO_ID")) throw new RuntimeException("Invalid column! SQLIB_AUTO_ID is used internally!");
             columns.put(name, new Column(name, dataType, true, true));
             return this;
@@ -101,7 +99,7 @@ public abstract class Database {
         return "BEGIN;";
     };
 
-    public abstract String getDataType(SQLPrimitives<?> dataType);
+    public abstract String getDataType(SQLPrimitive<?> dataType);
 
     public void open() {
         if (connection == null) {

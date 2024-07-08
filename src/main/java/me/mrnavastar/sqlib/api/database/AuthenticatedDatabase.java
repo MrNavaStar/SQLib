@@ -1,4 +1,4 @@
-package me.mrnavastar.sqlib.database;
+package me.mrnavastar.sqlib.api.database;
 
 import lombok.Getter;
 

@@ -2,9 +2,9 @@ package me.mrnavastar.sqlib.config;
 
 import com.fasterxml.jackson.dataformat.toml.TomlMapper;
 import me.mrnavastar.sqlib.SQLib;
-import me.mrnavastar.sqlib.database.MySQL;
-import me.mrnavastar.sqlib.database.PostgreSQL;
-import me.mrnavastar.sqlib.database.SQLite;
+import me.mrnavastar.sqlib.api.database.MySQL;
+import me.mrnavastar.sqlib.api.database.PostgreSQL;
+import me.mrnavastar.sqlib.api.database.SQLite;
 import org.apache.logging.log4j.Level;
 
 import java.io.File;
@@ -59,7 +59,7 @@ public class Config {
         return database.type.equalsIgnoreCase("postgres") && server.validate();
     }
 
-    public static me.mrnavastar.sqlib.database.Database load(Path localDir, Path configDir) {
+    public static me.mrnavastar.sqlib.api.database.Database load(Path localDir, Path configDir) {
         INSTANCE = new Config();
         try {
             File configFile = new File(configDir + "/sqlib.toml");

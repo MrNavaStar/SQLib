@@ -3,9 +3,9 @@ package me.mrnavastar.sqlib.api;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.SneakyThrows;
-import me.mrnavastar.sqlib.database.Database;
-import me.mrnavastar.sqlib.sql.Column;
-import me.mrnavastar.sqlib.sql.SQLConnection;
+import me.mrnavastar.sqlib.api.database.Database;
+import me.mrnavastar.sqlib.impl.Column;
+import me.mrnavastar.sqlib.impl.SQLConnection;
 
 import java.util.*;
 
@@ -49,10 +49,11 @@ public class Table {
 
     /**
      * Tries to get a {@link DataContainer} or creates a new {@link DataContainer} if it is missing.
+     * Note that the created {@link DataContainer} is not guaranteed to have the same id as the one passed in.
      */
     public DataContainer getOrCreateDataContainer(int id) {
         DataContainer dataContainer = getDataContainer(id);
-        return dataContainer == null ? createDataContainer() : dataContainer;
+        return dataContainer != null ? dataContainer : createDataContainer();
     }
 
     /**

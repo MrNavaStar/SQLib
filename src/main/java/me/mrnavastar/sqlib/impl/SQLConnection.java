@@ -1,4 +1,4 @@
-package me.mrnavastar.sqlib.sql;
+package me.mrnavastar.sqlib.impl;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -76,7 +76,7 @@ public class SQLConnection {
         columns.forEach((name, column) -> {
                 columnString.append(column.getName());
                 columnString.append(" ");
-                columnString.append(table.getDatabase().getDataType(column.getType().sqlType()));
+                columnString.append(table.getDatabase().getDataType(column.getType().getType()));
                 if (column.isUnique()) columnString.append(" UNIQUE");
                 columnString.append(",");
             }
