@@ -15,12 +15,5 @@ jobs:
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v3
 
-      - name: Execute Gradle build
-        run: ./gradlew build
-
-      - name: Publish Test Report
-        uses: mikepenz/action-junit-report@v4
-        if: success()
-        with:
-          fail_on_failure: true
-          report_paths: '**/build/test-results/test/TEST-*.xml'
+      - name: Run Test Mod
+        run: ./gradlew runTestMod
