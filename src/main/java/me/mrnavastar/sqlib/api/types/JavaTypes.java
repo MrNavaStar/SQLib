@@ -3,6 +3,7 @@ package me.mrnavastar.sqlib.api.types;
 import me.mrnavastar.sqlib.impl.SQLPrimitive;
 
 import java.awt.*;
+import java.net.*;
 import java.util.Date;
 
 public class JavaTypes {
@@ -23,4 +24,18 @@ public class JavaTypes {
     public static final SQLibType<Date> DATE = new SQLibType<>(SQLPrimitive.LONG, Date::getTime, Date::new);
     public static final SQLibType<Color> COLOR = new SQLibType<>(SQLPrimitive.INT, Color::getRGB, Color::new);
     public static final SQLibType<java.util.UUID> UUID = new SQLibType<>(SQLPrimitive.STRING, java.util.UUID::toString, java.util.UUID::fromString);
+    public static final SQLibType<java.net.URI> URI = new SQLibType<>(SQLPrimitive.STRING, java.net.URI::toString, java.net.URI::create);
+    public static final SQLibType<java.net.URL> URL = new SQLibType<>(URI, v -> {
+        try {
+            return v.toURI();
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+    }, v -> {
+        try {
+            return v.toURL();
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
+    });
 }

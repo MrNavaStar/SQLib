@@ -8,12 +8,12 @@ import me.mrnavastar.sqlib.api.types.JavaTypes;
 import me.mrnavastar.sqlib.api.types.MinecraftTypes;
 import me.mrnavastar.sqlib.api.Table;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
@@ -24,6 +24,7 @@ import net.minecraft.util.math.Vec3i;
 
 import java.awt.*;
 import java.io.File;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.UUID;
 
@@ -86,8 +87,11 @@ public class TestMod implements ModInitializer {
         assertEquals((byte) 0, container.get(JavaTypes.BYTE, "byte"));
 
         // Test Bytes
-        /*container.put(ColumnType.BYTES, "bytes", testBytes);
-        assertEquals(testBytes, container.get(ColumnType.BYTES, "bytes"));*/
+        byte[] bytes = new byte[]{1, 2, 3, 4};
+        container.put(JavaTypes.BYTES, "bytes", bytes);
+        if (!Arrays.equals(bytes, container.get(JavaTypes.BYTES, "bytes"))) {
+            throw new RuntimeException("Expected bytes, got " + Arrays.toString(bytes));
+        }
 
         // Test Bool
         container.put(JavaTypes.BOOL, "bool", true);
@@ -224,6 +228,8 @@ public class TestMod implements ModInitializer {
     @Override
     @SneakyThrows
     public void onInitialize() {
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> server.stop(false));
+
         System.out.println("---------- Starting Tests ----------");
         System.out.println("Starting Transactions");
         testAllTransactions();

@@ -5,12 +5,9 @@ import com.zaxxer.hikari.HikariDataSource;
 import lombok.Getter;
 import me.mrnavastar.sqlib.api.Table;
 import me.mrnavastar.sqlib.config.Config;
-import me.mrnavastar.sqlib.util.ReflectionHacks;
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
-import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Field;
 import java.util.*;
 
 
@@ -24,7 +21,7 @@ public class SQLConnection {
     static {
         // We do not care - Mike Tomlin
 
-        try {
+        /*try {
             Field logger = HikariDataSource.class.getDeclaredField("LOGGER");
             logger.setAccessible(true);
 
@@ -33,7 +30,7 @@ public class SQLConnection {
 
         } catch (NoSuchFieldException e) {
             throw new RuntimeException(e);
-        }
+        }*/
 
         /*Logger.getLogger("com.zaxxer.hikari.pool.PoolBase").setLevel(Level.OFF);
         Logger.getLogger("com.zaxxer.hikari.pool.HikariPool").setLevel(Level.OFF);

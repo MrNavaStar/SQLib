@@ -30,19 +30,4 @@ public class SQLibType<T> {
     public T deserialize(Object value) {
         return deserializer.apply(value);
     }
-
-    /*public ColumnType<List<T>> list() {
-        return new ColumnType<>(sqlType,
-                v -> {
-                    ByteBuf buf = Unpooled.buffer();
-                    v.stream().map(this::serialize).forEach(p -> buf.writeBytes(ByteParser.primToBytes(p)));
-                    return buf.array();
-                },
-                v -> {
-
-
-                    return new ArrayList<>(Collections.singletonList((T) v));
-                }
-        );
-    }*/
 }

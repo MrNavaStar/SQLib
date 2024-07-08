@@ -19,10 +19,6 @@ public class ByteParser {
     public static <T> T bytesToPrim(byte[] bytes, Class<T> clazz) {
         ByteBuffer buf = ByteBuffer.wrap(bytes);
 
-        /*if (clazz.equals(String.class)) {
-            buf.get
-
-        }*/
 
         return (T) clazz;
     }

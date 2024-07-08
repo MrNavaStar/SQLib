@@ -24,8 +24,9 @@ public abstract class AuthenticatedDatabase extends Database {
     @Override
     public Properties getConnectionProperties() {
         Properties properties = new Properties();
-        properties.put("user", username);
-        properties.put("password", password);
+        properties.setProperty("user", username);
+        properties.setProperty("password", password);
+        properties.setProperty("ssl", "true");
         properties.put("config_timeout", true);
         return properties;
     }
