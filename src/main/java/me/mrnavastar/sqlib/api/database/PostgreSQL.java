@@ -10,7 +10,7 @@ public class PostgreSQL extends AuthenticatedDatabase {
 
     @Override
     public String getConnectionUrl() {
-        return "jdbc:postgresql//%s:%s/%s".formatted(address, port, name);
+        return "jdbc:postgresql://%s:%s/%s".formatted(address, port, name);
     }
 
     @Override
