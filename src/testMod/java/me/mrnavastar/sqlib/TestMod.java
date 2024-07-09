@@ -2,6 +2,7 @@ package me.mrnavastar.sqlib;
 
 import com.google.gson.JsonObject;
 import lombok.SneakyThrows;
+import me.mrnavastar.easyeula.EasyEula;
 import me.mrnavastar.sqlib.api.DataContainer;
 import me.mrnavastar.sqlib.api.types.AdventureTypes;
 import me.mrnavastar.sqlib.api.types.JavaTypes;
@@ -228,6 +229,7 @@ public class TestMod implements ModInitializer {
     @Override
     @SneakyThrows
     public void onInitialize() {
+        EasyEula.acceptEula();
         ServerLifecycleEvents.SERVER_STARTED.register(server -> server.stop(false));
 
         System.out.println("---------- Starting Tests ----------");
