@@ -15,7 +15,7 @@ public class MySQL extends AuthenticatedDatabase {
 
     @Override
     public String getTableCreationQuery(String tableName, String columns) {
-        return "CREATE TABLE IF NOT EXISTS %s (SQLIB_AUTO_ID INT AUTO_INCREMENT UNIQUE, %s, PRIMARY KEY (SQLIB_AUTO_ID));".formatted(tableName, columns);
+        return "CREATE TABLE IF NOT EXISTS %s (SQLIB_AUTO_ID INT AUTO_INCREMENT, %s, PRIMARY KEY (SQLIB_AUTO_ID));".formatted(tableName, columns);
     }
 
     @Override
@@ -23,7 +23,7 @@ public class MySQL extends AuthenticatedDatabase {
         return switch (type.getType()) {
             default -> type.getType().name();
 
-            case BYTE -> "TINYINT";
+            case BYTE, BOOL -> "TINYINT";
             case BYTES -> "LONGBLOB";
             case SHORT -> "SMALLINT";
             case LONG -> "BIGINT";

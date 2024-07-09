@@ -71,6 +71,7 @@ public class SQLConnection {
         Map<String, Column> columns = table.getColumns();
         StringBuilder columnString = new StringBuilder();
         columns.forEach((name, column) -> {
+                columnString.append("_");
                 columnString.append(column.getName());
                 columnString.append(" ");
                 columnString.append(table.getDatabase().getDataType(column.getType().getType()));
@@ -112,11 +113,11 @@ public class SQLConnection {
 
     public <T> T readField(Table table, int id, String field, Class<T> clazz) {
         try (Handle h = sql.open()) {
-            return h.select("SELECT %s FROM %s WHERE SQLIB_AUTO_ID = ?".formatted(field, table.getNoConflictName()), id).mapTo(clazz).one();
+            return h.select("SELECT _%s FROM %s WHERE SQLIB_AUTO_ID = ?".formatted(field, table.getNoConflictName()), id).mapTo(clazz).one();
         }
     }
 
     public void writeField(Table table, int id, String field, Object value) {
-        sql.useHandle(h -> h.execute("UPDATE %s SET %s = ? WHERE SQLIB_AUTO_ID = ?;".formatted(table.getNoConflictName(), field), value, id));
+        sql.useHandle(h -> h.execute("UPDATE %s SET _%s = ? WHERE SQLIB_AUTO_ID = ?;".formatted(table.getNoConflictName(), field), value, id));
     }
 }

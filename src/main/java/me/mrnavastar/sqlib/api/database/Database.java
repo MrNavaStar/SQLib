@@ -47,7 +47,6 @@ public abstract class Database {
          * @param dataType The {@link SQLibType} of this column
          */
         public TableBuilder column(@NonNull String name, @NonNull SQLibType<?> dataType) {
-            if (name.equalsIgnoreCase("SQLIB_AUTO_ID")) throw new RuntimeException("Invalid column! SQLIB_AUTO_ID is used internally!");
             columns.put(name, new Column(name, dataType, false, false));
             return this;
         }
@@ -58,19 +57,7 @@ public abstract class Database {
          * @param dataType The {@link SQLibType} of this column
          */
         public TableBuilder uniqueColumn(@NonNull String name, @NonNull SQLibType dataType) {
-            if (name.equalsIgnoreCase("SQLIB_AUTO_ID")) throw new RuntimeException("Invalid column! SQLIB_AUTO_ID is used internally!");
             columns.put(name, new Column(name, dataType, false, true));
-            return this;
-        }
-
-        /**
-         * Adds a column to the table definition
-         * @param name The name of the column
-         * @param dataType The {@link SQLibType} of this column
-         */
-        public TableBuilder arrayColumn(@NonNull String name, @NonNull SQLibType dataType) {
-            if (name.equalsIgnoreCase("SQLIB_AUTO_ID")) throw new RuntimeException("Invalid column! SQLIB_AUTO_ID is used internally!");
-            columns.put(name, new Column(name, dataType, true, true));
             return this;
         }
 

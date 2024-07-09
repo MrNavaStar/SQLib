@@ -46,9 +46,8 @@ public class SQLite extends Database {
         return switch (type.getType()) {
             default -> type.getType().name();
 
-            case BYTE -> "TINYINT";
+            case BYTE, BOOL -> "TINYINT";
             case BYTES -> "BLOB";
-            case BOOL -> "BOOLEAN";
             case SHORT -> "SMALLINT";
             case LONG -> "BIGINT";
             case STRING -> "TEXT";

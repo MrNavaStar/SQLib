@@ -23,7 +23,7 @@ public class PostgreSQL extends AuthenticatedDatabase {
         return switch (type.getType()) {
             default -> type.getType().name();
 
-            case BYTE -> "INT";
+            case BYTE, BOOL -> "TINYINT";
             case BYTES -> "BYTEA";
             case SHORT -> "SMALLINT";
             case INT -> "INT";
