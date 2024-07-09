@@ -54,8 +54,8 @@ public class Config {
         if (database == null || !database.validate()) return false;
 
         if (database.type.equalsIgnoreCase("sqlite") && local.validate()) return true;
-        if (database.type.equalsIgnoreCase("mysql") && local.validate()) return true;
-        if (database.type.equalsIgnoreCase("mariadb") && local.validate()) return true;
+        if (database.type.equalsIgnoreCase("mysql") && server.validate()) return true;
+        if (database.type.equalsIgnoreCase("mariadb") && server.validate()) return true;
         return database.type.equalsIgnoreCase("postgres") && server.validate();
     }
 
