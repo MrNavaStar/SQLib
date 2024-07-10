@@ -14,8 +14,13 @@ public class MySQL extends AuthenticatedDatabase {
     }
 
     @Override
-    public String getTableCreationQuery(String tableName, String columns) {
-        return "CREATE TABLE IF NOT EXISTS %s (SQLIB_AUTO_ID INT AUTO_INCREMENT, %s, PRIMARY KEY (SQLIB_AUTO_ID));".formatted(tableName, columns);
+    public String getTableCreationQuery(String tableName) {
+        return "CREATE TABLE IF NOT EXISTS %s (SQLIB_AUTO_ID INT AUTO_INCREMENT, PRIMARY KEY (SQLIB_AUTO_ID))".formatted(tableName);
+    }
+
+    @Override
+    public String getRowCreationQuery(String rowName) {
+        return "INSERT INTO %s VALUES(DEFAULT)".formatted(rowName);
     }
 
     @Override
@@ -28,7 +33,7 @@ public class MySQL extends AuthenticatedDatabase {
             case SHORT -> "SMALLINT";
             case LONG -> "BIGINT";
             case STRING -> "LONGTEXT";
-            case CHAR -> "CHAR(1)";
+            case CHAR -> "CHAR(2)";
         };
     }
 }

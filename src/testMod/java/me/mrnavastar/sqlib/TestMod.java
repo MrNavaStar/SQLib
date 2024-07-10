@@ -7,7 +7,7 @@ import me.mrnavastar.sqlib.api.DataContainer;
 import me.mrnavastar.sqlib.api.types.AdventureTypes;
 import me.mrnavastar.sqlib.api.types.JavaTypes;
 import me.mrnavastar.sqlib.api.types.MinecraftTypes;
-import me.mrnavastar.sqlib.api.Table;
+import me.mrnavastar.sqlib.api.DataStore;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.loader.api.FabricLoader;
@@ -48,36 +48,7 @@ public class TestMod implements ModInitializer {
     }
 
     private void testAllTransactions() {
-        Table table = SQLib.getDatabase().createTable("test", "table1")
-                .column("byte", JavaTypes.BYTE)
-                .column("bytes", JavaTypes.BYTES)
-                .column("bool", JavaTypes.BOOL)
-                .column("short", JavaTypes.SHORT)
-                .column("int", JavaTypes.INT)
-                .column("float", JavaTypes.FLOAT)
-                .column("double", JavaTypes.DOUBLE)
-                .column("long", JavaTypes.LONG)
-                .column("string", JavaTypes.STRING)
-                .column("char", JavaTypes.CHAR)
-
-                .column("date", JavaTypes.DATE)
-                .column("color", JavaTypes.COLOR)
-                .column("uuid", JavaTypes.UUID)
-
-                .column("vec3i", MinecraftTypes.VEC3I)
-                .column("blockpos", MinecraftTypes.BLOCKPOS)
-                .column("chunkpos", MinecraftTypes.CHUNKPOS)
-                .column("json", MinecraftTypes.JSON)
-                .column("nbt", MinecraftTypes.NBT)
-                .column("text", MinecraftTypes.TEXT)
-                .column("identifier", MinecraftTypes.IDENTIFIER)
-                .column("sound", MinecraftTypes.SOUND)
-
-                .column("key", AdventureTypes.KEY)
-                .column("component", AdventureTypes.COMPONENT)
-                .finish();
-
-        DataContainer container = table.createDataContainer();
+        DataContainer container = SQLib.getDatabase().dataStore("test", "store1").createContainer();
 
         // Test Byte
         container.put(JavaTypes.BYTE, "byte", Byte.MAX_VALUE);
@@ -211,20 +182,15 @@ public class TestMod implements ModInitializer {
         Component component = MiniMessage.miniMessage().deserialize("test");
         container.put(AdventureTypes.COMPONENT, "component", component);
         assertEquals(component, container.get(AdventureTypes.COMPONENT, "component"));
+
+        // Test Transaction
+        container.transaction()
+                .put(JavaTypes.STRING, "gamer", "epic")
+                .put(MinecraftTypes.IDENTIFIER, "pog", Identifier.tryParse("pog:champ"))
+                .put(JavaTypes.BOOL, "what", false)
+                .commit();
     }
 
-    private void testTableFunctions() {
-        Table table = SQLib.getDatabase().createTable("test", "table2")
-                .column("test", JavaTypes.STRING)
-                .finish();
-
-        assertEquals("test_table2", table.getNoConflictName());
-        assertNotEquals(null, SQLib.getDatabase().getTable("test", "table2"));
-        assertNotEquals(0, SQLib.getDatabase().getTables().size());
-
-
-        //assertEquals(0, table.getDataContainers().size());
-    }
 
     @Override
     @SneakyThrows

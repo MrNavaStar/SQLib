@@ -3,7 +3,8 @@ package me.mrnavastar.sqlib.impl;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.Getter;
-import me.mrnavastar.sqlib.api.Table;
+import me.mrnavastar.sqlib.api.DataContainer;
+import me.mrnavastar.sqlib.api.DataStore;
 import me.mrnavastar.sqlib.config.Config;
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
@@ -64,60 +65,71 @@ public class SQLConnection {
     }
 
     public void close() {
-        ds.close();
+        if (ds != null) ds.close();
     }
 
-    public void createTable(Table table) {
-        Map<String, Column> columns = table.getColumns();
-        StringBuilder columnString = new StringBuilder();
-        columns.forEach((name, column) -> {
-                columnString.append("_");
-                columnString.append(column.getName());
-                columnString.append(" ");
-                columnString.append(table.getDatabase().getDataType(column.getType().getType()));
-                if (column.isUnique()) columnString.append(" UNIQUE");
-                columnString.append(",");
+    public void createTable(DataStore store) {
+        try {
+            sql.useHandle(h -> h.execute(store.getDatabase().getTableCreationQuery(store.toString())));
+        } catch (Exception ignore) {}
+    }
+
+    public int createRow(DataStore store) {
+        try (Handle h = sql.open()) {
+            h.execute(store.getDatabase().getTableCreationQuery(store.toString()));
+            return h.select("SELECT MAX(SQLIB_AUTO_ID) FROM %s LIMIT 1".formatted(store.toString())).mapTo(Integer.class).one();
+        }
+    }
+
+    public void deleteRow(DataStore store, int id) {
+        sql.useHandle(h -> h.execute("DELETE FROM %s WHERE SQLIB_AUTO_ID = ?".formatted(store.toString()), id));
+    }
+
+    public boolean rowExists(DataStore store, int id) {
+        try (Handle h = sql.open()) {
+            return h.select("SELECT 1 FROM %s WHERE SQLIB_AUTO_ID = ?".formatted(store.toString()), id).mapTo(Object.class).one() != null;
+        }
+    }
+
+    public List<Integer> findRows(DataStore store, String field, Object value) {
+        try (Handle h = sql.open()) {
+            return h.select("SELECT SQLIB_AUTO_ID FROM %s WHERE _%s = ?".formatted(store.toString(), field), value).mapTo(Integer.class).list();
+        }
+    }
+
+    public List<Integer> listIds(DataStore store) {
+        try (Handle h = sql.open()) {
+            return h.select("SELECT SQLIB_AUTO_ID FROM %s".formatted(store.toString())).mapTo(Integer.class).list();
+        }
+    }
+
+    public <T> T readField(DataStore store, int id, String field, Class<T> clazz) {
+        try (Handle h = sql.open()) {
+            return h.select("SELECT _%s FROM %s WHERE SQLIB_AUTO_ID = ?".formatted(field, store.toString()), id).mapTo(clazz).one();
+        }
+    }
+
+    public void writeField(DataStore store, int id, List<DataContainer.Transaction.Put> puts) {
+        sql.useHandle(h -> {
+            StringJoiner fields = new StringJoiner(",");
+            ArrayList<Object> values = new ArrayList<>();
+
+            for (DataContainer.Transaction.Put put : puts) {
+                fields.add("_%s = ?".formatted(put.field()));
+                values.add(put.value());
             }
-        );
-        sql.useHandle(h -> h.execute(table.getDatabase().getTableCreationQuery(table.getNoConflictName(), columnString.substring(0, columnString.length() - 1))));
-    }
+            values.add(id);
 
-    public int createRow(Table table) {
-        try (Handle h = sql.open()) {
-            h.execute("REPLACE INTO %s DEFAULT VALUES".formatted(table.getNoConflictName()));
-            return h.select("SELECT MAX(SQLIB_AUTO_ID) FROM %s LIMIT 1".formatted(table.getNoConflictName())).mapTo(Integer.class).one();
-        }
-    }
-
-    public void deleteRow(Table table, int id) {
-        sql.useHandle(h -> h.execute("DELETE FROM %s WHERE SQLIB_AUTO_ID = ?".formatted(table.getNoConflictName()), id));
-    }
-
-    public boolean rowExists(Table table, int id) {
-        try (Handle h = sql.open()) {
-            return h.select("SELECT 1 FROM %s WHERE SQLIB_AUTO_ID = ?".formatted(table.getNoConflictName()), id).mapTo(Object.class).one() != null;
-        }
-    }
-
-    public List<Integer> findRows(Table table, String field, Object value) {
-        try (Handle h = sql.open()) {
-            return h.select("SELECT SQLIB_AUTO_ID FROM %s WHERE %s = ?".formatted(table.getNoConflictName(), field), value).mapTo(Integer.class).list();
-        }
-    }
-
-    public List<Integer> listIds(Table table) {
-        try (Handle h = sql.open()) {
-            return h.select("SELECT SQLIB_AUTO_ID FROM %s".formatted(table.getNoConflictName())).mapTo(Integer.class).list();
-        }
-    }
-
-    public <T> T readField(Table table, int id, String field, Class<T> clazz) {
-        try (Handle h = sql.open()) {
-            return h.select("SELECT _%s FROM %s WHERE SQLIB_AUTO_ID = ?".formatted(field, table.getNoConflictName()), id).mapTo(clazz).one();
-        }
-    }
-
-    public void writeField(Table table, int id, String field, Object value) {
-        sql.useHandle(h -> h.execute("UPDATE %s SET _%s = ? WHERE SQLIB_AUTO_ID = ?;".formatted(table.getNoConflictName(), field), value, id));
+            String update = "UPDATE %s SET %s WHERE SQLIB_AUTO_ID = ?".formatted(store.toString(), fields);
+            try {
+                h.execute(update, values.toArray());
+            } catch (Exception ignore) {
+                h.inTransaction(t -> {
+                    for (DataContainer.Transaction.Put put : puts)
+                        t.execute("ALTER TABLE %s ADD COLUMN _%s %s".formatted(store.toString(), put.field(), store.getDatabase().getDataType(put.type().getType())));
+                    return t.execute(update, values.toArray());
+                });
+            }
+        });
     }
 }

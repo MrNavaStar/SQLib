@@ -27,7 +27,7 @@ public class SQLite extends Database {
     public SQLite(@NonNull String name, @NonNull String directory) {
         super(name);
         this.directory = directory;
-        open();
+        connect();
         connection.getSql().useHandle(h -> h.execute("PRAGMA journal_mode = %s;".formatted(mode)));
     }
 
@@ -37,8 +37,8 @@ public class SQLite extends Database {
     }
 
     @Override
-    public String getTableCreationQuery(String tableName, String columns) {
-        return "CREATE TABLE IF NOT EXISTS %s (SQLIB_AUTO_ID INTEGER PRIMARY KEY UNIQUE, %s);".formatted(tableName, columns);
+    public String getTableCreationQuery(String tableName) {
+        return "CREATE TABLE IF NOT EXISTS %s (SQLIB_AUTO_ID INTEGER PRIMARY KEY UNIQUE)".formatted(tableName);
     }
 
     @Override

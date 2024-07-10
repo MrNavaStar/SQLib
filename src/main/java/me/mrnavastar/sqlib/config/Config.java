@@ -61,6 +61,8 @@ public class Config {
 
     public static me.mrnavastar.sqlib.api.database.Database load(Path localDir, Path configDir) {
         INSTANCE = new Config();
+        localDir.toFile().mkdirs();
+
         try {
             File configFile = new File(configDir + "/sqlib.toml");
             if (!configFile.exists()) {

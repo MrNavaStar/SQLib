@@ -2,113 +2,59 @@ package me.mrnavastar.sqlib.api.database;
 
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
-import me.mrnavastar.sqlib.SQLib;
-import me.mrnavastar.sqlib.api.Table;
-import me.mrnavastar.sqlib.api.types.SQLibType;
-import me.mrnavastar.sqlib.impl.Column;
+import me.mrnavastar.sqlib.api.DataStore;
 import me.mrnavastar.sqlib.impl.SQLConnection;
 import me.mrnavastar.sqlib.impl.SQLPrimitive;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Properties;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.*;
 
 /**
  * This class can be extended to allow for new database implementations
  */
-@RequiredArgsConstructor
 public abstract class Database {
 
-    @Getter
-    @NonNull
-    protected final String name;
-    private final ConcurrentHashMap<String, Table> tables = new ConcurrentHashMap<>();
-    protected SQLConnection connection;
+    private static final HashSet<Database> databases = new HashSet<>();
 
-    public static class TableBuilder {
-
-        private final String modId;
-        private final String name;
-        private final Database database;
-        private final HashMap<String, Column> columns = new HashMap<>();
-
-        public TableBuilder(@NonNull String modId, @NonNull String name, @NonNull Database database) {
-            this.modId = modId;
-            this.name = name;
-            this.database = database;
-        }
-
-        /**
-         * Adds a column to the table definition
-         * @param name The name of the column
-         * @param dataType The {@link SQLibType} of this column
-         */
-        public TableBuilder column(@NonNull String name, @NonNull SQLibType<?> dataType) {
-            columns.put(name, new Column(name, dataType, false, false));
-            return this;
-        }
-
-        /**
-         * Adds a column to the table definition
-         * @param name The name of the column
-         * @param dataType The {@link SQLibType} of this column
-         */
-        public TableBuilder uniqueColumn(@NonNull String name, @NonNull SQLibType dataType) {
-            columns.put(name, new Column(name, dataType, false, true));
-            return this;
-        }
-
-        /**
-         * Call this function when you are done configuring your table.
-         * @return The finished table
-         */
-        @SneakyThrows
-        public Table finish() {
-            Table table = new Table(modId, name, database, columns, database.connection);
-            database.connection.createTable(table);
-            database.tables.put(table.getNoConflictName(), table);
-            return table;
-        }
+    static {
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> databases.forEach(Database::close)));
     }
 
-    public abstract String getConnectionUrl();
+    public static List<Database> getDatabases() {
+        return List.copyOf(databases);
+    }
 
-    public Properties getConnectionProperties() {
+    @Getter
+    protected final String name;
+    protected SQLConnection connection;
+
+    public Database(@NonNull String name) {
+        this.name = name;
+        databases.add(this);
+    }
+
+    protected abstract String getConnectionUrl();
+
+    protected Properties getConnectionProperties() {
         return new Properties();
     }
 
-    public abstract String getTableCreationQuery(String tableName, String columns);
+    public abstract String getTableCreationQuery(String tableName);
 
-    public String getTransactionString() {
-        return "BEGIN;";
-    };
+    public String getRowCreationQuery(String rowName) {
+        return "INSERT INTO %s DEFAULT VALUES".formatted(rowName);
+    }
 
     public abstract String getDataType(SQLPrimitive<?> dataType);
 
-    public void open() {
-        if (connection == null) {
-            connection = new SQLConnection(getConnectionUrl(), getConnectionProperties());
-            SQLib.registerDatabase(this);
-        }
+    protected void connect() {
+        connection = new SQLConnection(getConnectionUrl(), getConnectionProperties());
     }
 
     public void close() {
-        if (connection != null) connection.close();
-        connection = null;
+        connection.close();
     }
 
-    public TableBuilder createTable(String modId, String name) {
-        return new TableBuilder(modId, name, this);
-    }
-
-    public Table getTable(String modId, String name) {
-        return tables.get(modId + "_" + name);
-    }
-
-    public ArrayList<Table> getTables() {
-        return new ArrayList<>(tables.values());
+    public DataStore dataStore(String modId, String name) {
+        return new DataStore(modId, name, this, connection);
     }
 }

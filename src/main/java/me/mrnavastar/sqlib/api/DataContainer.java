@@ -1,43 +1,62 @@
 package me.mrnavastar.sqlib.api;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.SneakyThrows;
+import lombok.*;
 import me.mrnavastar.sqlib.api.types.SQLibType;
 import me.mrnavastar.sqlib.impl.SQLConnection;
-import me.mrnavastar.sqlib.api.database.Database;
 
-/**
- * This class represents a row a {@link Table} in a {@link Database}.
- */
+import java.util.ArrayList;
+import java.util.List;
+
 @AllArgsConstructor
 public class DataContainer {
 
-    @NonNull private final Table table;
+    @Getter
+    private final DataStore store;
     @Getter
     private final int id;
-    @NonNull private final SQLConnection sqlConnection;
+    private final SQLConnection connection;
 
-    public <T> DataContainer put(SQLibType<T> type, @NonNull String field, T value) {
-        sqlConnection.writeField(table, id, field, type.serialize(value));
-        return this;
+    @AllArgsConstructor
+    public static class Transaction {
+
+        public record Put(SQLibType<?> type, String field, Object value) {}
+
+        private final DataContainer container;
+        private final SQLConnection connection;
+        private final ArrayList<Put> puts = new ArrayList<>();
+
+        public <T> Transaction put(SQLibType<T> type, @NonNull String field, T value) {
+            puts.add(new Put(type, field, type.serialize(value)));
+            return this;
+        }
+
+        public void commit() {
+            connection.writeField(container.store, container.id, puts);
+        }
+    }
+
+    public Transaction transaction() {
+        return new Transaction(this, connection);
+    }
+
+    public <T> void put(SQLibType<T> type, @NonNull String field, T value) {
+        connection.writeField(store, id, List.of(new Transaction.Put(type, field, type.serialize(value))));
     }
 
     public <T> T get(SQLibType<T> type, @NonNull String field) {
-        return type.deserialize(sqlConnection.readField(table, id, field, type.getType().getClazz()));
+        return type.deserialize(connection.readField(store, id, field, type.getType().getClazz()));
     }
 
-    @SneakyThrows
+    /*@SneakyThrows
     public void clear(@NonNull String field) {
-        sqlConnection.writeField(table, id, field, null);
-    }
+        connection.writeField(store, id, field, null, );
+    }*/
 
     /**
      * Delete the {@link DataContainer} from the database
      */
     @SneakyThrows
     public void delete() {
-        sqlConnection.deleteRow(table, id);
+        connection.deleteRow(store, id);
     }
 }

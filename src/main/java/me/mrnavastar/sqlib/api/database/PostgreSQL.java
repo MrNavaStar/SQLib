@@ -14,8 +14,8 @@ public class PostgreSQL extends AuthenticatedDatabase {
     }
 
     @Override
-    public String getTableCreationQuery(String tableName, String columns) {
-        return "CREATE TABLE IF NOT EXISTS %s (SQLIB_AUTO_ID BIGSERIAL PRIMARY KEY, %s);".formatted(tableName, columns);
+    public String getTableCreationQuery(String tableName) {
+        return "CREATE TABLE IF NOT EXISTS %s (SQLIB_AUTO_ID BIGSERIAL PRIMARY KEY)".formatted(tableName);
     }
 
     @Override
@@ -30,7 +30,7 @@ public class PostgreSQL extends AuthenticatedDatabase {
             case DOUBLE -> "DOUBLE PRECISION";
             case LONG -> "BIGINT";
             case STRING -> "TEXT";
-            case CHAR -> "CHAR(1)";
+            case CHAR -> "CHAR(2)";
         };
     }
 }

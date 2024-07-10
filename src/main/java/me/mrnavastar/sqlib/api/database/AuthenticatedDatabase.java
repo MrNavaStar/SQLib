@@ -18,7 +18,7 @@ public abstract class AuthenticatedDatabase extends Database {
         this.port = port;
         this.username = username;
         this.password = password;
-        open();
+        connect();
     }
 
     @Override
