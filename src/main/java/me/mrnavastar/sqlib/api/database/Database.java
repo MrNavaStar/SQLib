@@ -41,7 +41,7 @@ public abstract class Database {
     public abstract String getTableCreationQuery(String tableName);
 
     public String getRowCreationQuery(String rowName) {
-        return "INSERT INTO %s VALUES(DEFAULT) RETURNING SQLIB_AUTO_ID".formatted(rowName);
+        return "INSERT INTO %s DEFAULT VALUES RETURNING SQLIB_AUTO_ID".formatted(rowName);
     }
 
     public abstract String getDataType(SQLPrimitive<?> dataType);
