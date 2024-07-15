@@ -191,6 +191,11 @@ public class TestMod implements ModInitializer {
                 .commit();
     }
 
+/*    private void testStoreFunctions() {
+        DataStore store = SQLib.getDatabase().dataStore("test", "store2");
+
+
+    }*/
 
     @Override
     @SneakyThrows
@@ -201,11 +206,8 @@ public class TestMod implements ModInitializer {
         System.out.println("---------- Starting Tests ----------");
         System.out.println("Starting Transactions");
         testAllTransactions();
-        //System.out.println("Starting Table Functions");
-        //testTableFunctions();
+        //System.out.println("Starting Store Functions");
+        //testStoreFunctions();
         System.out.println("--------------- Done ----------------");
-
-        SQLib.getDatabase().close();
-        new File(FabricLoader.getInstance().getGameDir() + "/sqlib").delete();
     }
 }

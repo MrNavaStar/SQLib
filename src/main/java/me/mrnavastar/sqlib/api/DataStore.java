@@ -52,6 +52,14 @@ public class DataStore {
     }
 
     /**
+     * Tries to get a {@link DataContainer} with a matching key value pair or creates a new {@link DataContainer} if it is missing.
+     */
+    public DataContainer getOrCreateContainer(@NonNull String field, @NonNull Object value) {
+        DataContainer container = getContainer(field, value);
+        return container != null ? container : createContainer();
+    }
+
+    /**
      * @return A {@link DataContainer}'s with a matching key value pair or null if one does not exist.
      */
     @SneakyThrows
