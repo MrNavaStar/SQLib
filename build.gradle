@@ -56,15 +56,15 @@ dependencies {
     // Adventure
     modImplementation "net.kyori:adventure-platform-fabric:${project.adventure_version}"
 
+    // Config
+    shadow implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-toml:${project.jackson_version}")
+
     // SQL
     shadow implementation("com.zaxxer:HikariCP:${project.hikari_version}")
     shadow implementation("org.jdbi:jdbi3-core:${project.jdbi_version}")
     shadow implementation("org.xerial:sqlite-jdbc:${project.sqlite_version}")
     shadow implementation("org.mariadb.jdbc:mariadb-java-client:${project.mariadb_version}")
     shadow implementation("org.postgresql:postgresql:${project.postgres_version}")
-
-    // Config
-    shadow implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-toml:${project.jackson_version}")
 
     // Extra
     compileOnly "org.projectlombok:lombok:1.18.34"
@@ -77,6 +77,8 @@ shadowJar {
     configurations = [project.configurations.shadow]
 
     relocate 'com.fasterxml', 'me.mrnavastar.sqlib.libs.com.fasterxml'
+    relocate 'com.zaxxer', 'me.mrnavastar.sqlib.libs.com.zaxxer'
+    relocate 'org.jdbi', 'me.mrnavastar.sqlib.libs.org.jdbi'
 
     dependencies {
         mergeServiceFiles()

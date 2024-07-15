@@ -1,4 +1,4 @@
-package me.mrnavastar.sqlib.config;
+package me.mrnavastar.sqlib.impl;
 
 import com.fasterxml.jackson.dataformat.toml.TomlMapper;
 import me.mrnavastar.sqlib.SQLib;

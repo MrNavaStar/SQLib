@@ -5,10 +5,8 @@ import com.zaxxer.hikari.HikariDataSource;
 import lombok.Getter;
 import me.mrnavastar.sqlib.api.DataContainer;
 import me.mrnavastar.sqlib.api.DataStore;
-import me.mrnavastar.sqlib.config.Config;
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
-import org.mariadb.jdbc.message.server.ErrorPacket;
 
 import java.util.*;
 
@@ -18,28 +16,6 @@ public class SQLConnection {
     private final HikariDataSource ds;
     @Getter
     private final Jdbi sql;
-
-    //TODO: This is broken
-    static {
-        // We do not care - Mike Tomlin
-
-        /*try {
-            Field logger = HikariDataSource.class.getDeclaredField("LOGGER");
-            logger.setAccessible(true);
-
-            ReflectionHacks.setFinalStatic(logger, LoggerFactory.getLogger("bruh"));
-
-
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException(e);
-        }*/
-
-        /*Logger.getLogger("com.zaxxer.hikari.pool.PoolBase").setLevel(Level.OFF);
-        Logger.getLogger("com.zaxxer.hikari.pool.HikariPool").setLevel(Level.OFF);
-        Logger.getLogger("com.zaxxer.hikari.HikariDataSource").setLevel(Level.OFF);
-        Logger.getLogger("com.zaxxer.hikari.HikariConfig").setLevel(Level.OFF);
-        Logger.getLogger("com.zaxxer.hikari.util.DriverDataSource").setLevel(Level.OFF);*/
-    }
 
     public SQLConnection(String connectionUrl, Properties properties) {
         HikariConfig config = new HikariConfig();

@@ -12,6 +12,7 @@
     "main": ["me.mrnavastar.sqlib.TestMod"]
   },
   "depends": {
+    "java": "21",
     "minecraft": ">=1.16.5"
   }
 }

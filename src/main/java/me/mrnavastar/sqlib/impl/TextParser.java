@@ -1,4 +1,4 @@
-package me.mrnavastar.sqlib.util;
+package me.mrnavastar.sqlib.impl;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;

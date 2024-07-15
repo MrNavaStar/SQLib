@@ -13,6 +13,7 @@
     "preLaunch": ["me.mrnavastar.sqlib.Fabric"]
   },
   "depends": {
+    "java": "21",
     "minecraft": ">=1.16.5"
   },
   "custom": {
@@ -21,7 +22,7 @@
     },
     "mc-publish": {
       "modrinth": "IM84wwxs",
-      "loaders": ["fabric", "quilt"]
+      "loaders": ["fabric", "quilt", "velocity"]
     }
   }
 }

@@ -4,7 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.mrnavastar.sqlib.impl.SQLPrimitive;
-import me.mrnavastar.sqlib.util.TextParser;
+import me.mrnavastar.sqlib.impl.TextParser;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.StringNbtReader;
 import net.minecraft.sound.SoundEvent;

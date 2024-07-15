@@ -1,8 +1,7 @@
-package me.mrnavastar.sqlib.util;
+package me.mrnavastar.sqlib.impl;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 
 public class ByteParser {
 
@@ -22,7 +21,6 @@ public class ByteParser {
 
     public static <T> T bytesToPrim(byte[] bytes, Class<T> clazz) {
         ByteBuffer buffer = ByteBuffer.wrap(bytes);
-
         if (clazz == Byte.class) return clazz.cast(bytes[0]);
         if (clazz == byte[].class) return clazz.cast(bytes);
         if (clazz == Boolean.class) return clazz.cast(bytes.length > 0);
