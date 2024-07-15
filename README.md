@@ -19,18 +19,27 @@ If you are looking for a more advanced database I recommend taking a look at som
 The mod generates a config on first time start that allows you to configure the database used by all mods relying on sqlib. 
 The default database is a sqlite database running in the sqlib directory.
 
-# Supported Datatypes
-The datatypes can be accessed with the `SQLDataType` class. I tend to add support for new types as I run into them in my projects. If you would like one added, pleade make an issue!
+# Datatypes
+The datatypes can be accessed via `JavaTpes`, `MinecraftTypes` or the `AdventureTypes` classes. I tend to add support for new types as I run into them in my projects. If you would like one added, pleade make an issue!
 | Standard | Minecraft   | Adventure |
 |----------|-------------|-----------|
-| String   | BlockPos    | Key       |
-| Int      | ChunkPos    | Component |
-| Double   | NbtElement  |           |
-| Long     | Json        |           |
-| Bool     | Text        |           |
-| Date     | Identifier  |           |
+| Byte     | Vec3i       | Key       |
+| Byte[]   | BlockPos    | Component |
+| Bool     | ChunkPos    |           |
+| Short    | Text        |           |
+| Int      | Identifier  |           |
+| Float    | Sound       |           |
+| Double   | Json        |           |
+| Long     | NbtElement  |           |
+| String   |             |           |
+| Char     |             |           |
+| Date     |             |           |
 | Color    |             |           |
 | UUID     |             |           |
+| URI      |             |           |
+| URL      |             |           |
+
+You can also add your own custom types as seen here:
 
 # Setup
 In your build.gradle include:
@@ -40,7 +49,7 @@ repositories {
 }
 
 dependencies {
-  modImplementation("maven.modrinth:sqlib:2.2.13")
+  modImplementation("maven.modrinth:sqlib:3.0.0")
 }
 ```
 
@@ -48,84 +57,47 @@ dependencies {
 This example uses the built-in database managed by sqlib. for 99% of mods, using the built-in database is good, however 
 further down are examples for custom database management.
 ```java
-// Do not call SQLib.getDatabase() in a early mod initializer. 
-// Doing so will likely crash your mod if your mod.
+// Do not call SQLib.getDatabase() in a early mod initializer. Doing so will likely crash your mod.
 // Calling in or after the regular mod initializer is ok.
-Database database = SQLib.getDatabase();
+Database db = SQLib.getDatabase();
 
-Table table = database.createTable("myModId", "userdata")
-        .addColumn("username", SQLDataType.STRING)
-        .addColumn("home", SQLDataType.BLOCKPOS)
-        .addColumn("nbt", SQLDataType.NBT)
-        .finish();
+DataStore store = db.dataStore("myModId", "userdata");
         
-DataContainer playerData = table.createDataContainer(UUID.randomUUID());
-playerData.put("username", "CoolGuy123")
-          .put("home", new BlockPos(304, 62, 37)
-          .put("nbt", new NbtCompound());
+DataContainer playerData = store.createDataContainer();
+playerData.put(JavaTypes.STRING, "username", "CoolGuy123");
+playerData.put(MinecraftTypes.BLOCKPOS, "home", new BlockPos(304, 62, 37));
+playerData.put(MinecraftTypes.NBT, "nbt", new NbtCompound());
 
-System.out.println(playerdata.getString("username"));
-System.out.println(playerdata.getBlockPos("home"));
-System.out.println(playerdata.getNbt("nbt"));
+System.out.println(playerdata.get(JavaTypes.STRING, "username"));
+System.out.println(playerdata.get(MinecraftTypes.BLOCKPOS, "home"));
+System.out.println(playerdata.get(MinecraftTypes.NBT, "nbt"));
 ```
 
 # Custom Database Management
 ```java
-MySQLDatabase database = new MySQLDatabase("modId", "mydata", "192.168.1.69", "3306", "cooluser", "radman");
+Postgres db = new Postgres("modId", "mydata", "192.168.1.69", "3306", "cooluser", "radman");
 // OR
-SQLiteDatabase database = new SQLiteDatabase("modId", "mydata", "some/dir");
-```
-
-# Auto Incrementing Tables
-You can make a table that auto increments its id with the following:
-```java
-Table table = SQLib.getDatabase().createTable("modId", "towns")
-        .setAutoIncrement()
-        .addColumn("city", SQLDataType.STRING)
-        .addColumn("portal", SQLDataType.BLOCKPOS)
-        .finish();
-
-DataContainer data = table.createDataContainerAutoID();
-int id = data.getIdAsInt();
+MySQL db = new MySQL("modId", "mydata", "192.168.1.69", "3306", "cooluser", "radman");
+// OR
+SQLite db = new SQLite("modId", "mydata", "some/dir");
 ```
 
 # Transaction Support
-This approach will bach sql commands into one command for faster read/writes of large amounts of data. You can begin and end a transaction at anytime.
+This approach will bach sql commands into one command for faster read/writes of large amounts of data.
 ```java
-Table table = data.createTable("modId", "userdata")
-        .addColumn("username", SQLDataType.STRING)
-        .addColumn("home", SQLDataType.BLOCKPOS)
-        .addColumn("nbt", SQLDataType.NBT)
-        .finish();
+DataStore store = db.dataStore("modId", "userdata");
 
-table.beginTransaction();
-DataContainer playerData = table.createDataContainer(UUID.randomUUID());
-playerData.put("username", "CoolGuy123");
-playerData.put("home", new BlockPos(304, 62, 37);
-table.endTransaction();
-
-playerData.put("nbt", new NbtCompound());
+DataContainer playerData = table.createDataContainer();
+playerData.transaction().put("username", "CoolGuy123").put("home", new BlockPos(304, 62, 37).commit();
 ```
 
-# Custom SQL Commands
-If you need to do more complex things than the api allows for, you can run custom SQL commands.
+# Custom Types
+You can add a custom type by following the implentations in `JavaTypes`, `MinecraftTypes` and `AdventureTypes`. Then you can use it like any other native SQLib type.
 ```java
-MySQLDatabase database = new MySQLDatabase("modId", "mydata", "192.168.1.69", "3306", "cooluser", "radman");
-Table table = data.createTable("modId", "userdata")
-        .addColumn("username", SQLDataType.STRING)
-        .addColumn("home", SQLDataType.BLOCKPOS)
-        .addColumn("nbt", SQLDataType.NBT)
-        .finish();
+// The SQLPrimitive is the base type to serialize to, and the two function lambdas are to serialize and deserialize from it
+public static final SQLibType<JsonElement> JSON = new SQLibType<>(SQLPrimitive.STRING, JsonElement::toString, JsonParser::parseString);
 
-PreparedStatment stmt = database.executeCommand("SELECT ID FROM userdata WHERE username = ?", false, "bobross");
-ResultSet result = stmt.getResultSet();
-
-// Handle result
-        
-// Very important!! Your database connection may crash later if you never close it & give it back to the connection pool!
-stmt.close();
-stmt.getConnection().close();
-
-//If you just want to run a command and not handle the result do the following. It will autoclose for you.
-database.executeCommand("DELETE FROM userdata WHERE ID = ?", true, "bobross");
+// You can also extend a type like this:
+public static final SQLibType<Identifier> IDENTIFIER = new SQLibType<>(SQLPrimitive.STRING, Identifier::toString, Identifier::tryParse);
+public static final SQLibType<SoundEvent> SOUND = new SQLibType<>(IDENTIFIER, SoundEvent::getId, SoundEvent::of);
 ```
