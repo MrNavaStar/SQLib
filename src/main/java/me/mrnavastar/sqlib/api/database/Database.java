@@ -45,7 +45,7 @@ public abstract class Database {
     }
 
     public String getRowIdQuery() {
-        return "SELECT SCOPE_IDENTITY()";
+        return "SELECT LAST_INSERT_ID()";
     }
 
     public abstract String getDataType(SQLPrimitive<?> dataType);
