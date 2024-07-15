@@ -42,8 +42,8 @@ public class SQLite extends Database {
     }
 
     @Override
-    public String getRowIdQuery() {
-        return "SELECT last_insert_rowid()";
+    public String getRowCreationQuery(String rowName) {
+        return "INSERT INTO %s DEFAULT VALUES RETURNING SQLIB_AUTO_ID".formatted(rowName);
     }
 
     @Override

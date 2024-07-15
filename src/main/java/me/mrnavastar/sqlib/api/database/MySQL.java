@@ -19,11 +19,6 @@ public class MySQL extends AuthenticatedDatabase {
     }
 
     @Override
-    public String getRowCreationQuery(String rowName) {
-        return "INSERT INTO %s VALUES(DEFAULT)".formatted(rowName);
-    }
-
-    @Override
     public String getDataType(SQLPrimitive<?> type) {
         return switch (type.getType()) {
             default -> type.getType().name();

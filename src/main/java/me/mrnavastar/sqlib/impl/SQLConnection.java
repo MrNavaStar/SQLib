@@ -8,6 +8,7 @@ import me.mrnavastar.sqlib.api.DataStore;
 import me.mrnavastar.sqlib.config.Config;
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
+import org.mariadb.jdbc.message.server.ErrorPacket;
 
 import java.util.*;
 
@@ -52,6 +53,7 @@ public class SQLConnection {
         config.addDataSourceProperty("useServerPrepStmts", "true");
         config.addDataSourceProperty("prepStmtCacheSize", "250");
         config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+        config.addDataSourceProperty("db.log.active", "false");
         ds = new HikariDataSource(config);
         sql = Jdbi.create(ds);
 
@@ -76,8 +78,7 @@ public class SQLConnection {
 
     public int createRow(DataStore store) {
         try (Handle h = sql.open()) {
-            h.execute(store.getDatabase().getRowCreationQuery(store.toString()));
-            return h.select(store.getDatabase().getRowIdQuery()).mapTo(Integer.class).one();
+            return h.select(store.getDatabase().getRowCreationQuery(store.toString())).mapTo(Integer.class).one();
         }
     }
 
