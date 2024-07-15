@@ -42,6 +42,11 @@ public class SQLite extends Database {
     }
 
     @Override
+    public String getRowIdQuery() {
+        return "SELECT last_insert_rowid()";
+    }
+
+    @Override
     public String getDataType(SQLPrimitive<?> type) {
         return switch (type.getType()) {
             default -> type.getType().name();

@@ -52,7 +52,7 @@ public class DataStore {
     }
 
     /**
-     * @return A {@link DataContainer}'s with a matching unique key value pair or null if one does not exist.
+     * @return A {@link DataContainer}'s with a matching key value pair or null if one does not exist.
      */
     @SneakyThrows
     public DataContainer getContainer(@NonNull String field, @NonNull Object value) {

@@ -76,8 +76,8 @@ public class SQLConnection {
 
     public int createRow(DataStore store) {
         try (Handle h = sql.open()) {
-            h.execute(store.getDatabase().getTableCreationQuery(store.toString()));
-            return h.select("SELECT MAX(SQLIB_AUTO_ID) FROM %s LIMIT 1".formatted(store.toString())).mapTo(Integer.class).one();
+            h.execute(store.getDatabase().getRowCreationQuery(store.toString()));
+            return h.select(store.getDatabase().getRowIdQuery()).mapTo(Integer.class).one();
         }
     }
 

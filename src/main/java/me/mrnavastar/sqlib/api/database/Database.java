@@ -44,6 +44,10 @@ public abstract class Database {
         return "INSERT INTO %s DEFAULT VALUES".formatted(rowName);
     }
 
+    public String getRowIdQuery() {
+        return "SELECT SCOPE_IDENTITY()";
+    }
+
     public abstract String getDataType(SQLPrimitive<?> dataType);
 
     protected void connect() {
