@@ -71,6 +71,8 @@ public class SQLConnection {
     public List<Integer> findRows(DataStore store, String field, Object value) {
         try (Handle h = sql.open()) {
             return h.select("SELECT SQLIB_AUTO_ID FROM %s WHERE _%s = ?".formatted(store.toString(), field), value).mapTo(Integer.class).list();
+        } catch(Exception ignore) {
+            return new ArrayList<>();
         }
     }
 
