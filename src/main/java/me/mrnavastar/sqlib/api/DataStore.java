@@ -8,6 +8,7 @@ import me.mrnavastar.sqlib.api.database.Database;
 import me.mrnavastar.sqlib.impl.SQLConnection;
 
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
@@ -61,11 +62,11 @@ public class DataStore {
      * @param onCreate A function that gets run only when the container is created. This is useful for setting things
      *                 such as a container id or other elements that are only set once.
      */
-    public DataContainer getOrCreateContainer(int id, Function<DataContainer, Void> onCreate) {
+    public DataContainer getOrCreateContainer(int id, Consumer<DataContainer> onCreate) {
         DataContainer container = getContainer(id);
         if (container != null) return container;
         container = createContainer();
-        onCreate.apply(container);
+        onCreate.accept(container);
         return container;
     }
 
@@ -83,11 +84,11 @@ public class DataStore {
      * @param onCreate A function that gets run only when the container is created. This is useful for setting things
      *                 such as a container id or other elements that are only set once.
      */
-    public DataContainer getOrCreateContainer(@NonNull String field, @NonNull Object value, Function<DataContainer, Void> onCreate) {
+    public DataContainer getOrCreateContainer(@NonNull String field, @NonNull Object value, Consumer<DataContainer> onCreate) {
         DataContainer container = getContainer(field, value);
         if (container != null) return container;
         container = createContainer();
-        onCreate.apply(container);
+        onCreate.accept(container);
         return container;
     }
 
