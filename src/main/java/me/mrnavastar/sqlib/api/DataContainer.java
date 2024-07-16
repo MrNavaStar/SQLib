@@ -31,8 +31,9 @@ public class DataContainer {
             return this;
         }
 
-        public void commit() {
+        public DataContainer commit() {
             connection.writeField(container.store, container.id, puts);
+            return container;
         }
     }
 
