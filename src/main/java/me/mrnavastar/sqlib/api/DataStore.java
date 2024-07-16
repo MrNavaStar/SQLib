@@ -1,5 +1,6 @@
 package me.mrnavastar.sqlib.api;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.SneakyThrows;
@@ -11,6 +12,7 @@ import java.util.*;
 /**
  * This class represents a table in a {@link Database}.
  */
+@EqualsAndHashCode
 public class DataStore {
 
     @Getter
