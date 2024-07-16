@@ -8,6 +8,7 @@ import me.mrnavastar.sqlib.api.database.Database;
 import me.mrnavastar.sqlib.impl.SQLConnection;
 
 import java.util.*;
+import java.util.function.Function;
 
 /**
  * This class represents a table in a {@link Database}.
@@ -54,11 +55,40 @@ public class DataStore {
     }
 
     /**
+     * Tries to get a {@link DataContainer} or creates a new {@link DataContainer} if it is missing.
+     * Note that the created {@link DataContainer} is not guaranteed to have the same id as the one passed in.
+     *
+     * @param onCreate A function that gets run only when the container is created. This is useful for setting things
+     *                 such as a container id or other elements that are only set once.
+     */
+    public DataContainer getOrCreateContainer(int id, Function<DataContainer, Void> onCreate) {
+        DataContainer container = getContainer(id);
+        if (container != null) return container;
+        container = createContainer();
+        onCreate.apply(container);
+        return container;
+    }
+
+    /**
      * Tries to get a {@link DataContainer} with a matching key value pair or creates a new {@link DataContainer} if it is missing.
      */
     public DataContainer getOrCreateContainer(@NonNull String field, @NonNull Object value) {
         DataContainer container = getContainer(field, value);
         return container != null ? container : createContainer();
+    }
+
+    /**
+     * Tries to get a {@link DataContainer} with a matching key value pair or creates a new {@link DataContainer} if it is missing.
+     *
+     * @param onCreate A function that gets run only when the container is created. This is useful for setting things
+     *                 such as a container id or other elements that are only set once.
+     */
+    public DataContainer getOrCreateContainer(@NonNull String field, @NonNull Object value, Function<DataContainer, Void> onCreate) {
+        DataContainer container = getContainer(field, value);
+        if (container != null) return container;
+        container = createContainer();
+        onCreate.apply(container);
+        return container;
     }
 
     /**
