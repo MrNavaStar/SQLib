@@ -1,11 +1,14 @@
 package me.mrnavastar.sqlib.api.database;
 
+import lombok.SneakyThrows;
 import me.mrnavastar.sqlib.impl.SQLPrimitive;
 
 public class PostgreSQL extends AuthenticatedDatabase {
 
+    @SneakyThrows
     public PostgreSQL(String name, String address, String port, String username, String password) {
         super(name, address, port, username, password);
+        Class.forName("org.postgresql.Driver");
     }
 
     @Override

@@ -26,6 +26,7 @@ public class SQLite extends Database {
     @SneakyThrows
     public SQLite(@NonNull String name, @NonNull String directory) {
         super(name);
+        Class.forName("org.sqlite.JDBC");
         this.directory = directory;
         connect();
         connection.getSql().useHandle(h -> h.execute("PRAGMA journal_mode = %s;".formatted(mode)));
