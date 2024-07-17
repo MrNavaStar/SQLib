@@ -2,6 +2,7 @@ package me.mrnavastar.sqlib.api.database;
 
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.SneakyThrows;
 import me.mrnavastar.sqlib.api.DataStore;
 import me.mrnavastar.sqlib.impl.SQLConnection;
 import me.mrnavastar.sqlib.impl.SQLPrimitive;
@@ -17,6 +18,12 @@ public abstract class Database {
 
     static {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> databases.forEach(Database::close)));
+    }
+
+    @SneakyThrows
+    protected static void loadDriver(String driver) {
+        if (Boolean.parseBoolean(System.getProperty("fabric.development", "false"))) driver = "me.mrnavastar.sqlib.libs." + driver;
+        Class.forName(driver);
     }
 
     public static List<Database> getDatabases() {

@@ -1,14 +1,12 @@
 package me.mrnavastar.sqlib.api.database;
 
-import lombok.SneakyThrows;
 import me.mrnavastar.sqlib.impl.SQLPrimitive;
 
 public class MySQL extends AuthenticatedDatabase {
 
-    @SneakyThrows
     public MySQL(String name, String address, String port, String username, String password) {
         super(name, address, port, username, password);
-        Class.forName("me.mrnavastar.sqlib.libs.org.mariadb.jdbc.Driver");
+        loadDriver("org.mariadb.jdbc.Driver");
     }
 
     @Override
