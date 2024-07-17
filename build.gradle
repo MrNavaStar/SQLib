@@ -87,8 +87,8 @@ shadowJar {
     relocate 'org.checkerframework', 'me.mrnavastar.sqlib.libs.org.checkerframework'
     relocate 'org.jdbi', 'me.mrnavastar.sqlib.libs.org.jdbi'
     //relocate 'org.sqlite', 'me.mrnavastar.sqlib.libs.org.sqlite'
-    relocate 'org.mariadb', 'me.mrnavastar.sqlib.libs.org.mariadb'
-    relocate 'org.postgresql', 'me.mrnavastar.sqlib.libs.org.postgresql'
+    //relocate 'org.mariadb', 'me.mrnavastar.sqlib.libs.org.mariadb'
+    //relocate 'org.postgresql', 'me.mrnavastar.sqlib.libs.org.postgresql'
 
     dependencies {
         mergeServiceFiles()
