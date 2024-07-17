@@ -1,5 +1,6 @@
 plugins {
     id 'fabric-loom' version '1.7-SNAPSHOT'
+    id "xyz.jpenilla.run-velocity" version "2.3.0"
     id "io.github.goooler.shadow" version "8.1.8"
     id 'io.freefair.lombok' version '8.6'
 }
@@ -76,10 +77,18 @@ shadowJar {
     archiveBaseName.set('sqlib')
     configurations = [project.configurations.shadow]
 
-    relocate 'com', 'me.mrnavastar.sqlib.libs.com'
+    relocate 'com.fasterxml', 'me.mrnavastar.sqlib.libs.com.fasterxml'
+    relocate 'com.github', 'me.mrnavastar.sqlib.libs.com.github'
+    relocate 'com.google.errorprone', 'me.mrnavastar.sqlib.libs.com.google.errorprone'
+    relocate 'com.zaxxer', 'me.mrnavastar.sqlib.libs.com.zaxxer'
+
     relocate 'io', 'me.mrnavastar.sqlib.libs.io'
     relocate 'waffle', 'me.mrnavastar.sqlib.libs.waffle'
-    relocate 'org', 'me.mrnavastar.sqlib.libs.org'
+    relocate 'org.checkerframework', 'me.mrnavastar.sqlib.libs.org.checkerframework'
+    relocate 'org.jdbi', 'me.mrnavastar.sqlib.libs.org.jdbi'
+    //relocate 'org.sqlite', 'me.mrnavastar.sqlib.libs.org.sqlite'
+    relocate 'org.mariadb', 'me.mrnavastar.sqlib.libs.org.mariadb'
+    relocate 'org.postgresql', 'me.mrnavastar.sqlib.libs.org.postgresql'
 
     dependencies {
         mergeServiceFiles()
@@ -115,5 +124,11 @@ sourcesJar {
 jar {
     from("LICENSE") {
         rename { "${it}_${project.archivesBaseName}" }
+    }
+}
+
+tasks {
+    runVelocity {
+        velocityVersion(project.velocity_version)
     }
 }

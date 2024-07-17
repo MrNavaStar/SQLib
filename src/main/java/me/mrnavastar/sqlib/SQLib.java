@@ -9,7 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import java.nio.file.Path;
 import java.util.List;
 
-public sealed class SQLib permits Fabric, Velocity {
+public class SQLib {
 
     @Getter
     protected static Database database;

@@ -5,18 +5,18 @@ import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 
 import java.nio.file.Path;
-import java.util.logging.Logger;
 
 @Plugin(
         id = "sqlib",
         name = "SQLib",
         version = "debug-build",
-        authors = "MrNavaStar"
+        authors = "MrNavaStar",
+        description = "A simple SQL wrapper with a focus on Minecraft use cases"
 )
-public non-sealed class Velocity extends SQLib {
+public class Velocity extends SQLib {
 
     @Inject
-    public Velocity(Logger logger, @DataDirectory Path dir) {
-        init(dir, dir);
+    public Velocity(@DataDirectory Path dataDirectory) {
+        init(dataDirectory, dataDirectory);
     }
 }
