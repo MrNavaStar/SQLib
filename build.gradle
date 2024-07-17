@@ -79,7 +79,7 @@ shadowJar {
     relocate 'com', 'me.mrnavastar.sqlib.libs.com'
     relocate 'io', 'me.mrnavastar.sqlib.libs.io'
     relocate 'waffle', 'me.mrnavastar.sqlib.libs.waffle'
-    relocate 'org.jdbi', 'me.mrnavastar.sqlib.libs.org.jdbi'
+    relocate 'org', 'me.mrnavastar.sqlib.libs.org'
 
     dependencies {
         mergeServiceFiles()

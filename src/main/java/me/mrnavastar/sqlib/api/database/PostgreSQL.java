@@ -8,7 +8,7 @@ public class PostgreSQL extends AuthenticatedDatabase {
     @SneakyThrows
     public PostgreSQL(String name, String address, String port, String username, String password) {
         super(name, address, port, username, password);
-        Class.forName("org.postgresql.Driver");
+        Class.forName("me.mrnavastar.sqlib.libs.org.postgresql.Driver");
     }
 
     @Override
