@@ -22,7 +22,7 @@ public abstract class Database {
 
     @SneakyThrows
     protected static void loadDriver(String driver) {
-        if (Boolean.parseBoolean(System.getProperty("fabric.development", "false"))) driver = "me.mrnavastar.sqlib.libs." + driver;
+        if (!Boolean.parseBoolean(System.getProperty("fabric.development", "false"))) driver = "me.mrnavastar.sqlib.libs." + driver;
         Class.forName(driver);
     }
 
