@@ -1,6 +1,5 @@
 plugins {
     id 'fabric-loom' version '1.7-SNAPSHOT'
-    id "xyz.jpenilla.run-velocity" version "2.3.0"
     id "io.github.goooler.shadow" version "8.1.8"
     id 'io.freefair.lombok' version '8.6'
 }
@@ -32,6 +31,7 @@ loom.mods.register("testMod") {
 
 
 repositories {
+    maven { url "https://maven.quiltmc.org/repository/release" }
     maven { url "https://api.modrinth.com/maven" }
     maven { url "https://repo.papermc.io/repository/maven-public/" }
     maven {
@@ -50,9 +50,8 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-    // Velocity
-    compileOnly "com.velocitypowered:velocity-api:${project.velocity_version}"
-    annotationProcessor "com.velocitypowered:velocity-api:${project.velocity_version}"
+    // Quilt
+    modCompileOnly "org.quiltmc:quilt-loader:0.26.4-beta.1"
 
     // Adventure
     modImplementation "net.kyori:adventure-platform-fabric:${project.adventure_version}"
@@ -124,11 +123,5 @@ sourcesJar {
 jar {
     from("LICENSE") {
         rename { "${it}_${project.archivesBaseName}" }
-    }
-}
-
-tasks {
-    runVelocity {
-        velocityVersion(project.velocity_version)
     }
 }

@@ -9,9 +9,6 @@
   "license": "CC0-1.0",
   "icon": "assets/sqlib/icon.png",
   "environment": "*",
-  "entrypoints": {
-    "preLaunch": ["me.mrnavastar.sqlib.Fabric"]
-  },
   "depends": {
     "java": "21",
     "minecraft": ">=1.16.5"

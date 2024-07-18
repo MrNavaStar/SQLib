@@ -1,14 +1,12 @@
 package me.mrnavastar.sqlib;
 
 import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint;
 
 import java.nio.file.Path;
 
-public class Fabric extends SQLib implements PreLaunchEntrypoint {
+public class Fabric extends SQLib {
 
-    @Override
-    public void onPreLaunch() {
+    public static void init() {
         init(Path.of(FabricLoader.getInstance().getGameDir() + "/sqlib"), FabricLoader.getInstance().getConfigDir());
     }
 }
