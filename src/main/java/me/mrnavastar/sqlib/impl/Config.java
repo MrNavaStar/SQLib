@@ -6,6 +6,7 @@ import me.mrnavastar.sqlib.api.database.MySQL;
 import me.mrnavastar.sqlib.api.database.PostgreSQL;
 import me.mrnavastar.sqlib.api.database.SQLite;
 import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -77,7 +78,7 @@ public class Config {
         }
 
         if (!INSTANCE.validate()) {
-            SQLib.log(Level.ERROR, "Invalid config - Stopping");
+            log(Level.ERROR, "Invalid config - Stopping");
             System.exit(1);
         }
 
@@ -87,5 +88,9 @@ public class Config {
             case "postgres" -> new PostgreSQL(INSTANCE.database.name, INSTANCE.server.address, String.valueOf(INSTANCE.server.port), INSTANCE.server.username, INSTANCE.server.password);
             default -> null;
         };
+    }
+
+    public static void log(Level level, String message) {
+        LogManager.getLogger().log(level, "[SQLib] " + message);
     }
 }

@@ -1,11 +1,7 @@
 package me.mrnavastar.sqlib;
 
-import me.mrnavastar.sqlib.impl.Config;
 import me.mrnavastar.sqlib.api.database.Database;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
 
-import java.nio.file.Path;
 import java.util.List;
 
 public class SQLib {
@@ -36,15 +32,7 @@ public class SQLib {
         }
     }
 
-    protected static void init(Path localDir, Path configDir) {
-        database = Config.load(localDir, configDir);
-    }
-
     public static List<Database> getDatabases() {
         return Database.getDatabases();
-    }
-
-    public static void log(Level level, String message) {
-        LogManager.getLogger().log(level, "[SQLib] " + message);
     }
 }
