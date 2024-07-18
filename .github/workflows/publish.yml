@@ -16,6 +16,7 @@ jobs:
       - name: Set Version
         run: |
           sed -i 's/debug-build/${{ github.event.release.tag_name }}/g' src/main/resources/fabric.mod.json
+          sed -i 's/debug-build/${{ github.event.release.tag_name }}/g' src/main/resources/velocity-plugin.json
       
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v3
