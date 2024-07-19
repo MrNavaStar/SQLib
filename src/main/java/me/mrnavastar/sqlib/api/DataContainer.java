@@ -49,15 +49,13 @@ public class DataContainer {
         return type.deserialize(connection.readField(store, id, field, type.getType().getClazz()));
     }
 
-    /*@SneakyThrows
     public void clear(@NonNull String field) {
-        connection.writeField(store, id, field, null, );
-    }*/
+        connection.clearField(store, id, field);
+    }
 
     /**
      * Delete the {@link DataContainer} from the database
      */
-    @SneakyThrows
     public void delete() {
         connection.deleteRow(store, id);
     }

@@ -111,4 +111,8 @@ public class SQLConnection {
             }
         });
     }
+
+    public void clearField(DataStore store, int id, String field) {
+        sql.useHandle(h -> h.execute("UPDATE %s SET %s = NULL WHERE SQLIB_AUTO_ID = ?".formatted(store.toString(), field), id));
+    }
 }

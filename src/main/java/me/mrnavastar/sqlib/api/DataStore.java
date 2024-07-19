@@ -9,7 +9,6 @@ import me.mrnavastar.sqlib.impl.SQLConnection;
 
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 /**
  * This class represents a table in a {@link Database}.
@@ -51,8 +50,7 @@ public class DataStore {
      * Note that the created {@link DataContainer} is not guaranteed to have the same id as the one passed in.
      */
     public DataContainer getOrCreateContainer(int id) {
-        DataContainer container = getContainer(id);
-        return container != null ? container : createContainer();
+        return getContainer(id).orElseGet(this::createContainer);
     }
 
     /**
@@ -63,19 +61,18 @@ public class DataStore {
      *                 such as a container id or other elements that are only set once.
      */
     public DataContainer getOrCreateContainer(int id, Consumer<DataContainer> onCreate) {
-        DataContainer container = getContainer(id);
-        if (container != null) return container;
-        container = createContainer();
-        onCreate.accept(container);
-        return container;
+        return getContainer(id).orElseGet(() -> {
+            DataContainer newContainer = createContainer();
+            onCreate.accept(newContainer);
+            return newContainer;
+        });
     }
 
     /**
      * Tries to get a {@link DataContainer} with a matching key value pair or creates a new {@link DataContainer} if it is missing.
      */
     public DataContainer getOrCreateContainer(@NonNull String field, @NonNull Object value) {
-        DataContainer container = getContainer(field, value);
-        return container != null ? container : createContainer();
+        return getContainer(field, value).orElseGet(this::createContainer);
     }
 
     /**
@@ -85,28 +82,27 @@ public class DataStore {
      *                 such as a container id or other elements that are only set once.
      */
     public DataContainer getOrCreateContainer(@NonNull String field, @NonNull Object value, Consumer<DataContainer> onCreate) {
-        DataContainer container = getContainer(field, value);
-        if (container != null) return container;
-        container = createContainer();
-        onCreate.accept(container);
-        return container;
+        return getContainer(field, value).orElseGet(() -> {
+            DataContainer newContainer = createContainer();
+            onCreate.accept(newContainer);
+            return newContainer;
+        });
     }
 
     /**
      * @return A {@link DataContainer}'s with a matching key value pair or null if one does not exist.
      */
     @SneakyThrows
-    public DataContainer getContainer(@NonNull String field, @NonNull Object value) {
-        return getContainers(field, value).stream().findFirst().orElse(null);
+    public Optional<DataContainer> getContainer(@NonNull String field, @NonNull Object value) {
+        return getContainers(field, value).stream().findFirst();
     }
 
     /**
      * @return A {@link DataContainer} or null if it is missing.
      */
     @SneakyThrows
-    public DataContainer getContainer(int id) {
-        if (!connection.rowExists(this, id)) return null;
-        return new DataContainer(this, id, connection);
+    public Optional<DataContainer> getContainer(int id) {
+        return connection.rowExists(this, id) ? Optional.of(new DataContainer(this, id, connection)) : Optional.empty();
     }
 
     /**

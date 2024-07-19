@@ -23,7 +23,6 @@ public class SQLite extends Database {
         OFF
     }
 
-    @SneakyThrows
     public SQLite(@NonNull String name, @NonNull String directory) {
         super(name);
         loadDriver("org.sqlite.JDBC");
