@@ -64,7 +64,7 @@ public class SQLConnection {
 
     public boolean rowExists(DataStore store, int id) {
         try (Handle h = sql.open()) {
-            return h.select("SELECT 1 FROM %s WHERE SQLIB_AUTO_ID = ?".formatted(store.toString()), id).mapTo(Integer.class).one() != null;
+            return h.select("SELECT 1 FROM %s WHERE SQLIB_AUTO_ID = ?".formatted(store.toString()), id).mapTo(Integer.class).findFirst().isPresent();
         }
     }
 
