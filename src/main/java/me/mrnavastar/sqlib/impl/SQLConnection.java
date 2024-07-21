@@ -85,6 +85,8 @@ public class SQLConnection {
     public <T> T readField(DataStore store, int id, String field, Class<T> clazz) {
         try (Handle h = sql.open()) {
             return h.select("SELECT _%s FROM %s WHERE SQLIB_AUTO_ID = ?".formatted(field, store.toString()), id).mapTo(clazz).one();
+        } catch (Exception ignore) {
+            return null;
         }
     }
 
