@@ -46,7 +46,9 @@ public class DataContainer {
     }
 
     public <T> T get(SQLibType<T> type, @NonNull String field) {
-        return type.deserialize(connection.readField(store, id, field, type.getType().getClazz()));
+        Object value = connection.readField(store, id, field, type.getType().getClazz());
+        if (value == null) return null;
+        return type.deserialize(value);
     }
 
     public void clear(@NonNull String field) {
