@@ -52,136 +52,136 @@ public class TestMod implements ModInitializer {
 
         // Test Byte
         container.put(JavaTypes.BYTE, "byte", Byte.MAX_VALUE);
-        assertEquals(Byte.MAX_VALUE, container.get(JavaTypes.BYTE, "byte"));
+        assertEquals(Byte.MAX_VALUE, container.get(JavaTypes.BYTE, "byte").orElseThrow());
         container.put(JavaTypes.BYTE, "byte", Byte.MIN_VALUE);
-        assertEquals(Byte.MIN_VALUE, container.get(JavaTypes.BYTE, "byte"));
+        assertEquals(Byte.MIN_VALUE, container.get(JavaTypes.BYTE, "byte").orElseThrow());
         container.put(JavaTypes.BYTE, "byte", (byte) 0);
-        assertEquals((byte) 0, container.get(JavaTypes.BYTE, "byte"));
+        assertEquals((byte) 0, container.get(JavaTypes.BYTE, "byte").orElseThrow());
 
         // Test Bytes
         byte[] bytes = new byte[]{1, 2, 3, 4};
         container.put(JavaTypes.BYTES, "bytes", bytes);
-        if (!Arrays.equals(bytes, container.get(JavaTypes.BYTES, "bytes"))) {
+        if (!Arrays.equals(bytes, container.get(JavaTypes.BYTES, "bytes").orElseThrow())) {
             throw new RuntimeException("Expected bytes, got " + Arrays.toString(bytes));
         }
 
         // Test Bool
         container.put(JavaTypes.BOOL, "bool", true);
-        assertTrue(container.get(JavaTypes.BOOL, "bool"));
+        assertTrue(container.get(JavaTypes.BOOL, "bool").orElseThrow());
         container.put(JavaTypes.BOOL, "bool", false);
-        assertFalse(container.get(JavaTypes.BOOL, "bool"));
+        assertFalse(container.get(JavaTypes.BOOL, "bool").orElseThrow());
 
         // Test Short
         container.put(JavaTypes.SHORT, "short", Short.MAX_VALUE);
-        assertEquals(Short.MAX_VALUE, container.get(JavaTypes.SHORT, "short"));
+        assertEquals(Short.MAX_VALUE, container.get(JavaTypes.SHORT, "short").orElseThrow());
         container.put(JavaTypes.SHORT, "short", Short.MIN_VALUE);
-        assertEquals(Short.MIN_VALUE, container.get(JavaTypes.SHORT, "short"));
+        assertEquals(Short.MIN_VALUE, container.get(JavaTypes.SHORT, "short").orElseThrow());
         container.put(JavaTypes.SHORT, "short", (short) 0);
-        assertEquals((short) 0, container.get(JavaTypes.SHORT, "short"));
+        assertEquals((short) 0, container.get(JavaTypes.SHORT, "short").orElseThrow());
 
         // Test Int
         container.put(JavaTypes.INT, "int", Integer.MAX_VALUE);
-        assertEquals(Integer.MAX_VALUE, container.get(JavaTypes.INT, "int"));
+        assertEquals(Integer.MAX_VALUE, container.get(JavaTypes.INT, "int").orElseThrow());
         container.put(JavaTypes.INT, "int", Integer.MIN_VALUE);
-        assertEquals(Integer.MIN_VALUE, container.get(JavaTypes.INT, "int"));
+        assertEquals(Integer.MIN_VALUE, container.get(JavaTypes.INT, "int").orElseThrow());
         container.put(JavaTypes.INT, "int", 0);
-        assertEquals(0, container.get(JavaTypes.INT, "int"));
+        assertEquals(0, container.get(JavaTypes.INT, "int").orElseThrow());
 
         // Test Float
         container.put(JavaTypes.FLOAT, "float", Float.MAX_VALUE);
-        assertEquals(Float.MAX_VALUE, container.get(JavaTypes.FLOAT, "float"));
+        assertEquals(Float.MAX_VALUE, container.get(JavaTypes.FLOAT, "float").orElseThrow());
         container.put(JavaTypes.FLOAT, "float", Float.MIN_VALUE);
-        assertEquals(Float.MIN_VALUE, container.get(JavaTypes.FLOAT, "float"));
+        assertEquals(Float.MIN_VALUE, container.get(JavaTypes.FLOAT, "float").orElseThrow());
         container.put(JavaTypes.FLOAT, "float", 0F);
-        assertEquals(0F, container.get(JavaTypes.FLOAT, "float"));
+        assertEquals(0F, container.get(JavaTypes.FLOAT, "float").orElseThrow());
 
         // Test Double
         container.put(JavaTypes.DOUBLE, "double", Double.MAX_VALUE);
-        assertEquals(Double.MAX_VALUE, container.get(JavaTypes.DOUBLE, "double"));
+        assertEquals(Double.MAX_VALUE, container.get(JavaTypes.DOUBLE, "double").orElseThrow());
         container.put(JavaTypes.DOUBLE, "double", Double.MIN_VALUE);
-        assertEquals(Double.MIN_VALUE, container.get(JavaTypes.DOUBLE, "double"));
+        assertEquals(Double.MIN_VALUE, container.get(JavaTypes.DOUBLE, "double").orElseThrow());
         container.put(JavaTypes.DOUBLE, "double", 0.0);
-        assertEquals(0.0, container.get(JavaTypes.DOUBLE, "double"));
+        assertEquals(0.0, container.get(JavaTypes.DOUBLE, "double").orElseThrow());
 
         // Test Long
         container.put(JavaTypes.LONG, "long", Long.MAX_VALUE);
-        assertEquals(Long.MAX_VALUE, container.get(JavaTypes.LONG, "long"));
+        assertEquals(Long.MAX_VALUE, container.get(JavaTypes.LONG, "long").orElseThrow());
         container.put(JavaTypes.LONG, "long", Long.MIN_VALUE);
-        assertEquals(Long.MIN_VALUE, container.get(JavaTypes.LONG, "long"));
+        assertEquals(Long.MIN_VALUE, container.get(JavaTypes.LONG, "long").orElseThrow());
         container.put(JavaTypes.LONG, "long", 0L);
-        assertEquals(0L, container.get(JavaTypes.LONG, "long"));
+        assertEquals(0L, container.get(JavaTypes.LONG, "long").orElseThrow());
 
         // Test String
         container.put(JavaTypes.STRING, "string", "Test");
-        assertEquals("Test",  container.get(JavaTypes.STRING, "string"));
+        assertEquals("Test",  container.get(JavaTypes.STRING, "string").orElseThrow());
 
         // Test Char
         container.put(JavaTypes.CHAR, "char", 'c');
-        assertEquals('c',  container.get(JavaTypes.CHAR, "char"));
+        assertEquals('c',  container.get(JavaTypes.CHAR, "char").orElseThrow());
 
         // Test Date
         Date date = new Date();
         container.put(JavaTypes.DATE, "date", date);
-        assertEquals(date, container.get(JavaTypes.DATE, "date"));
+        assertEquals(date, container.get(JavaTypes.DATE, "date").orElseThrow());
 
         // Test Color
         Color color = new Color(1, 2, 3);
         container.put(JavaTypes.COLOR, "color", color);
-        assertEquals(color, container.get(JavaTypes.COLOR, "color"));
+        assertEquals(color, container.get(JavaTypes.COLOR, "color").orElseThrow());
 
         // Test UUID
         UUID uuid = UUID.randomUUID();
         container.put(JavaTypes.UUID, "uuid", uuid);
-        assertEquals(uuid, container.get(JavaTypes.UUID, "uuid"));
+        assertEquals(uuid, container.get(JavaTypes.UUID, "uuid").orElseThrow());
 
         // Test Vec3i
         Vec3i vec3i = new Vec3i(7, 8, 9);
         container.put(MinecraftTypes.VEC3I, "vec3i", vec3i);
-        assertEquals(vec3i, container.get(MinecraftTypes.VEC3I, "vec3i"));
+        assertEquals(vec3i, container.get(MinecraftTypes.VEC3I, "vec3i").orElseThrow());
 
         // Test BlockPos
         BlockPos blockPos = new BlockPos(7, 8, 9);
         container.put(MinecraftTypes.BLOCKPOS, "blockpos", blockPos);
-        assertEquals(blockPos, container.get(MinecraftTypes.BLOCKPOS, "blockpos"));
+        assertEquals(blockPos, container.get(MinecraftTypes.BLOCKPOS, "blockpos").orElseThrow());
 
         // Test ChunkPos
         ChunkPos chunkPos = new ChunkPos(1, 2);
         container.put(MinecraftTypes.CHUNKPOS, "chunkpos", chunkPos);
-        assertEquals(chunkPos, container.get(MinecraftTypes.CHUNKPOS, "chunkpos"));
+        assertEquals(chunkPos, container.get(MinecraftTypes.CHUNKPOS, "chunkpos").orElseThrow());
 
         // Test JSON
         JsonObject jsonElement = new JsonObject();
         container.put(MinecraftTypes.JSON, "json", jsonElement);
-        assertEquals(jsonElement, container.get(MinecraftTypes.JSON, "json"));
+        assertEquals(jsonElement, container.get(MinecraftTypes.JSON, "json").orElseThrow());
 
         // Test NBT
         NbtCompound nbtCompound = new NbtCompound();
         container.put(MinecraftTypes.NBT, "nbt", nbtCompound);
-        assertEquals(nbtCompound, container.get(MinecraftTypes.NBT, "nbt"));
+        assertEquals(nbtCompound, container.get(MinecraftTypes.NBT, "nbt").orElseThrow());
 
         // Test Text
         Text text = Text.of("Test");
         container.put(MinecraftTypes.TEXT, "text", text);
-        assertEquals(text, container.get(MinecraftTypes.TEXT, "text"));
+        assertEquals(text, container.get(MinecraftTypes.TEXT, "text").orElseThrow());
 
         // Test Identifier
         Identifier identifier = Identifier.tryParse("cool:guys");
         container.put(MinecraftTypes.IDENTIFIER, "identifier", identifier);
-        assertEquals(identifier, container.get(MinecraftTypes.IDENTIFIER, "identifier"));
+        assertEquals(identifier, container.get(MinecraftTypes.IDENTIFIER, "identifier").orElseThrow());
 
         SoundEvent soundEvent = SoundEvents.BLOCK_BARREL_OPEN;
         container.put(MinecraftTypes.SOUND, "sound", soundEvent);
-        assertEquals(soundEvent.getId(), container.get(MinecraftTypes.SOUND, "sound").getId());
+        assertEquals(soundEvent.getId(), container.get(MinecraftTypes.SOUND, "sound").orElseThrow().getId());
 
         // Test Adventure Key
         Key key = Key.key("cool:guys");
         container.put(AdventureTypes.KEY, "key", key);
-        assertEquals(key, container.get(AdventureTypes.KEY, "key"));
+        assertEquals(key, container.get(AdventureTypes.KEY, "key").orElseThrow());
 
         // Test Adventure Component
         Component component = MiniMessage.miniMessage().deserialize("test");
         container.put(AdventureTypes.COMPONENT, "component", component);
-        assertEquals(component, container.get(AdventureTypes.COMPONENT, "component"));
+        assertEquals(component, container.get(AdventureTypes.COMPONENT, "component").orElseThrow());
 
         // Test Transaction
         container.transaction()

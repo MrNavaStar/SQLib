@@ -6,6 +6,7 @@ import me.mrnavastar.sqlib.impl.SQLConnection;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @AllArgsConstructor
 @EqualsAndHashCode
@@ -45,10 +46,10 @@ public class DataContainer {
         connection.writeField(store, id, List.of(new Transaction.Put(type, field, type.serialize(value))));
     }
 
-    public <T> T get(SQLibType<T> type, @NonNull String field) {
+    public <T> Optional<T> get(SQLibType<T> type, @NonNull String field) {
         Object value = connection.readField(store, id, field, type.getType().getClazz());
-        if (value == null) return null;
-        return type.deserialize(value);
+        if (value == null) return Optional.empty();
+        return Optional.ofNullable(type.deserialize(value));
     }
 
     public void clear(@NonNull String field) {
