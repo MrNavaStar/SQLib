@@ -47,9 +47,7 @@ public class SQLConnection {
     }
 
     public void createTable(DataStore store) {
-        try {
-            sql.useHandle(h -> h.execute(store.getDatabase().getTableCreationQuery(store.toString())));
-        } catch (Exception ignore) {}
+        sql.useHandle(h -> h.execute(store.getDatabase().getTableCreationQuery(store.toString())));
     }
 
     public int createRow(DataStore store) {

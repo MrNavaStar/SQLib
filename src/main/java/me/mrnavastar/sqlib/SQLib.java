@@ -28,7 +28,7 @@ public class SQLib {
             Velocity.init();
             return database;
         } catch (ClassNotFoundException ignore) {
-            throw new RuntimeException("SQLib currently only support Fabric, Quilt, and Velocity!");
+            throw new RuntimeException("SQLib currently only supports Fabric, Quilt, and Velocity!");
         }
     }
 
