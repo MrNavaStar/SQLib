@@ -67,7 +67,7 @@ public class Config {
         try {
             File configFile = new File(configDir + "/sqlib.toml");
             if (!configFile.exists()) {
-                String data = new String(Objects.requireNonNull(SQLib.class.getResourceAsStream("/sqlib.toml")).readAllBytes()).replace("${local_path}", localDir.toString());
+                String data = new String(Objects.requireNonNull(SQLib.class.getResourceAsStream("/sqlib.toml")).readAllBytes()).replace("${local_path}", localDir.toString().replace("\\", "/"));
                 try (FileWriter writer = new FileWriter(configFile)) {
                     writer.write(data);
                 }
