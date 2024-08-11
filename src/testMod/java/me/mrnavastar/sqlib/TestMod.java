@@ -7,6 +7,7 @@ import me.mrnavastar.sqlib.api.DataContainer;
 import me.mrnavastar.sqlib.api.types.AdventureTypes;
 import me.mrnavastar.sqlib.api.types.JavaTypes;
 import me.mrnavastar.sqlib.api.types.MinecraftTypes;
+import me.mrnavastar.sqlib.api.types.GsonTypes;
 import me.mrnavastar.sqlib.api.DataStore;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
