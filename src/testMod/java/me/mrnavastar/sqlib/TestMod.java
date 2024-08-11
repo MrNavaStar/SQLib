@@ -151,8 +151,8 @@ public class TestMod implements ModInitializer {
 
         // Test JSON
         JsonObject jsonElement = new JsonObject();
-        container.put(MinecraftTypes.JSON, "json", jsonElement);
-        assertEquals(jsonElement, container.get(MinecraftTypes.JSON, "json").orElseThrow());
+        container.put(GsonTypes.OBJECT, "json", jsonElement);
+        assertEquals(jsonElement, container.get(GsonTypes.OBJECT, "json").orElseThrow());
 
         // Test NBT
         NbtCompound nbtCompound = new NbtCompound();
