@@ -75,11 +75,11 @@ System.out.println(playerdata.get(MinecraftTypes.NBT, "nbt"));
 
 # Custom Database Management
 ```java
-Postgres db = new Postgres("modId", "mydata", "192.168.1.69", "3306", "cooluser", "radman");
+Postgres db = new Postgres("name", "192.168.1.69", "3306", "cooluser", "radman");
 // OR
-MySQL db = new MySQL("modId", "mydata", "192.168.1.69", "3306", "cooluser", "radman");
+MySQL db = new MySQL( "name", "192.168.1.69", "3306", "cooluser", "radman");
 // OR
-SQLite db = new SQLite("modId", "mydata", "some/dir");
+SQLite db = new SQLite("name", "some/dir");
 ```
 
 # Transaction Support
