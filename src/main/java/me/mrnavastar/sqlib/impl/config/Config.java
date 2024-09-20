@@ -1,4 +1,4 @@
-package me.mrnavastar.sqlib.impl;
+package me.mrnavastar.sqlib.impl.config;
 
 import com.fasterxml.jackson.dataformat.toml.TomlMapper;
 import me.mrnavastar.sqlib.SQLib;
@@ -60,8 +60,30 @@ public class Config {
         return database.type.equalsIgnoreCase("postgres") && server.validate();
     }
 
+    public static void load() {
+        if (INSTANCE != null) return;
+
+        try {
+            Class.forName("net.fabricmc.loader.api.FabricLoader");
+            Fabric.load();
+            return;
+        } catch (ClassNotFoundException ignore) {}
+
+        try {
+            Class.forName("org.quiltmc.loader.api.QuiltLoader");
+            Quilt.load();
+            return;
+        } catch (ClassNotFoundException ignore) {}
+
+        try {
+            Class.forName("com.velocitypowered.api.plugin.Plugin");
+            Velocity.load();
+        } catch (ClassNotFoundException ignore) {
+            throw new RuntimeException("SQLib currently only supports Fabric, Quilt, and Velocity!");
+        }
+    }
+
     public static me.mrnavastar.sqlib.api.database.Database load(Path localDir, Path configDir) {
-        INSTANCE = new Config();
         localDir.toFile().mkdirs();
 
         try {
@@ -91,6 +113,6 @@ public class Config {
     }
 
     public static void log(Level level, String message) {
-        LogManager.getLogger().log(level, "[SQLib] " + message);
+        LogManager.getLogger().log(level, "[SQLib]: " + message);
     }
 }

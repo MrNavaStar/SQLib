@@ -5,6 +5,7 @@ import lombok.NonNull;
 import me.mrnavastar.sqlib.api.DataStore;
 import me.mrnavastar.sqlib.impl.SQLConnection;
 import me.mrnavastar.sqlib.impl.SQLPrimitive;
+import me.mrnavastar.sqlib.impl.config.Config;
 
 import java.util.*;
 
@@ -17,6 +18,7 @@ public abstract class Database {
 
     static {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> databases.forEach(Database::close)));
+        Config.load();
     }
 
     protected static void loadDriver(String driver) {
@@ -51,6 +53,8 @@ public abstract class Database {
     public String getRowCreationQuery(String rowName) {
         return "INSERT INTO %s DEFAULT VALUES RETURNING SQLIB_AUTO_ID".formatted(rowName);
     }
+
+    public abstract String getColumnListQuery(String tableName);
 
     public abstract String getDataType(SQLPrimitive<?> dataType);
 

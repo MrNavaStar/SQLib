@@ -5,6 +5,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import lombok.Getter;
 import me.mrnavastar.sqlib.api.DataContainer;
 import me.mrnavastar.sqlib.api.DataStore;
+import me.mrnavastar.sqlib.impl.config.Config;
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
 
@@ -52,7 +53,9 @@ public class SQLConnection {
 
     public int createRow(DataStore store) {
         try (Handle h = sql.open()) {
-            return h.select(store.getDatabase().getRowCreationQuery(store.toString())).mapTo(Integer.class).one();
+            return h.select(store.getDatabase().getRowCreationQuery(store.toString()))
+                    .mapTo(Integer.class)
+                    .one();
         }
     }
 
@@ -62,7 +65,10 @@ public class SQLConnection {
 
     public boolean rowExists(DataStore store, int id) {
         try (Handle h = sql.open()) {
-            return h.select("SELECT 1 FROM %s WHERE SQLIB_AUTO_ID = ?".formatted(store.toString()), id).mapTo(Integer.class).findFirst().isPresent();
+            return h.select("SELECT 1 FROM %s WHERE SQLIB_AUTO_ID = ?".formatted(store.toString()), id)
+                    .mapTo(Integer.class)
+                    .findFirst()
+                    .isPresent();
         }
     }
 
@@ -76,13 +82,27 @@ public class SQLConnection {
 
     public List<Integer> listIds(DataStore store) {
         try (Handle h = sql.open()) {
-            return h.select("SELECT SQLIB_AUTO_ID FROM %s".formatted(store.toString())).mapTo(Integer.class).list();
+            return h.select("SELECT SQLIB_AUTO_ID FROM %s".formatted(store.toString()))
+                    .mapTo(Integer.class)
+                    .list();
+        }
+    }
+
+    public List<String> listColumns(DataStore store) {
+        try (Handle h = sql.open()) {
+            return h.select(store.getDatabase().getColumnListQuery(store.toString()))
+                    .mapTo(String.class)
+                    .filter(name -> !name.equals("SQLIB_AUTO_ID"))
+                    .map(name -> name.substring(1))
+                    .list();
         }
     }
 
     public <T> T readField(DataStore store, int id, String field, Class<T> clazz) {
         try (Handle h = sql.open()) {
-            return h.select("SELECT _%s FROM %s WHERE SQLIB_AUTO_ID = ?".formatted(field, store.toString()), id).mapTo(clazz).one();
+            return h.select("SELECT _%s FROM %s WHERE SQLIB_AUTO_ID = ?".formatted(field, store.toString()), id)
+                    .mapTo(clazz)
+                    .one();
         } catch (Exception ignore) {
             return null;
         }

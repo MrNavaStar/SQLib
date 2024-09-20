@@ -122,4 +122,11 @@ public class DataStore {
         // Done this way to ensure that we always match the true state of the database in the case that the database is modified externally
         return connection.findRows(this, field, value).stream().map(id -> new DataContainer(this, id, connection)).toList();
     }
+
+    /**
+     * @return A list of every key present in this {@link DataStore}.
+     */
+    public List<String> getKeys() {
+        return connection.listColumns(this);
+    }
 }

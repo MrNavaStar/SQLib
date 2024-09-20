@@ -42,16 +42,20 @@ public class SQLite extends Database {
     }
 
     @Override
+    public String getColumnListQuery(String tableName) {
+        return "SELECT NAME FROM PRAGMA_TABLE_INFO('%s')".formatted(tableName);
+    }
+
+    @Override
     public String getDataType(SQLPrimitive<?> type) {
         return switch (type.getType()) {
-            default -> type.getType().name();
-
             case BYTE, BOOL -> "TINYINT";
             case BYTES -> "BLOB";
             case SHORT -> "SMALLINT";
             case LONG -> "BIGINT";
             case STRING -> "TEXT";
             case CHAR -> "CHARACTER";
+            default -> type.getType().name();
         };
     }
 

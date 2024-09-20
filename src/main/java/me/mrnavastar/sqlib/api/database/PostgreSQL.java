@@ -25,10 +25,13 @@ public class PostgreSQL extends AuthenticatedDatabase {
     }
 
     @Override
+    public String getColumnListQuery(String tableName) {
+        return "SELECT * FROM %s WHERE 1 = 0".formatted(tableName);
+    }
+
+    @Override
     public String getDataType(SQLPrimitive<?> type) {
         return switch (type.getType()) {
-            default -> type.getType().name();
-
             case BYTE, BOOL -> "TINYINT";
             case BYTES -> "BYTEA";
             case SHORT -> "SMALLINT";
@@ -37,6 +40,7 @@ public class PostgreSQL extends AuthenticatedDatabase {
             case LONG -> "BIGINT";
             case STRING -> "TEXT";
             case CHAR -> "CHAR(2)";
+            default -> type.getType().name();
         };
     }
 }

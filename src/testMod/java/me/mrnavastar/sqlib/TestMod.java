@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import lombok.SneakyThrows;
 import me.mrnavastar.easyeula.EasyEula;
 import me.mrnavastar.sqlib.api.DataContainer;
+import me.mrnavastar.sqlib.api.database.SQLite;
 import me.mrnavastar.sqlib.api.types.AdventureTypes;
 import me.mrnavastar.sqlib.api.types.JavaTypes;
 import me.mrnavastar.sqlib.api.types.MinecraftTypes;
@@ -192,11 +193,11 @@ public class TestMod implements ModInitializer {
                 .commit();
     }
 
-/*    private void testStoreFunctions() {
-        DataStore store = SQLib.getDatabase().dataStore("test", "store2");
+    private void testStoreFunctions() {
+        DataStore store = SQLib.getDatabase().dataStore("test", "store1");
 
-
-    }*/
+        System.out.println(store.getKeys());
+    }
 
     @Override
     @SneakyThrows
@@ -207,8 +208,8 @@ public class TestMod implements ModInitializer {
         System.out.println("---------- Starting Tests ----------");
         System.out.println("Starting Transactions");
         testAllTransactions();
-        //System.out.println("Starting Store Functions");
-        //testStoreFunctions();
+        System.out.println("Starting Store Functions");
+        testStoreFunctions();
         System.out.println("--------------- Done ----------------");
     }
 }

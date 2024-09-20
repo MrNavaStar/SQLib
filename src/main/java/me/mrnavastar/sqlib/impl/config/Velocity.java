@@ -1,12 +1,13 @@
-package me.mrnavastar.sqlib;
+package me.mrnavastar.sqlib.impl.config;
 
-import me.mrnavastar.sqlib.impl.Config;
+import me.mrnavastar.sqlib.SQLib;
 
 import java.nio.file.Path;
 
 public class Velocity extends SQLib {
 
-    public static void init() {
+    public static void load() {
+        if (database != null) return;
         Path dir = Path.of("plugins/sqlib");
         database = Config.load(dir,dir);
     }
