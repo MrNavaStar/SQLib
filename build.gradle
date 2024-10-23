@@ -50,23 +50,18 @@ dependencies {
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-
     // Quilt
     modCompileOnly "org.quiltmc:quilt-loader:0.26.4"
-
     // Adventure
     modImplementation "net.kyori:adventure-platform-fabric:${project.adventure_version}"
-
     // Config
     shadow implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-toml:${project.jackson_version}")
-
     // SQL
     shadow implementation("com.zaxxer:HikariCP:${project.hikari_version}")
     shadow implementation("org.jdbi:jdbi3-core:${project.jdbi_version}")
     shadow implementation("org.xerial:sqlite-jdbc:${project.sqlite_version}")
     shadow implementation("org.mariadb.jdbc:mariadb-java-client:${project.mariadb_version}")
     shadow implementation("org.postgresql:postgresql:${project.postgres_version}")
-
     // Extra
     compileOnly "org.projectlombok:lombok:1.18.34"
 	annotationProcessor "org.projectlombok:lombok:1.18.34"
@@ -86,6 +81,7 @@ shadowJar {
     relocate 'waffle', 'me.mrnavastar.sqlib.libs.waffle'
     relocate 'org.checkerframework', 'me.mrnavastar.sqlib.libs.org.checkerframework'
     relocate 'org.jdbi', 'me.mrnavastar.sqlib.libs.org.jdbi'
+    relocate 'me.mrnavastar.r', 'me.mrnavastar.sqlib.libs.me.mrnavastar.r'
     //relocate 'org.sqlite', 'me.mrnavastar.sqlib.libs.org.sqlite'
     //relocate 'org.mariadb', 'me.mrnavastar.sqlib.libs.org.mariadb'
     //relocate 'org.postgresql', 'me.mrnavastar.sqlib.libs.org.postgresql'

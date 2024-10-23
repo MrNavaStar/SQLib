@@ -2,6 +2,7 @@ package me.mrnavastar.sqlib.api.types;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.mrnavastar.sqlib.impl.SQLPrimitive;
+import me.mrnavastar.sqlib.impl.SoundParser;
 import me.mrnavastar.sqlib.impl.TextParser;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.StringNbtReader;
@@ -19,7 +20,7 @@ public class MinecraftTypes {
 
     public static final SQLibType<Text> TEXT = new SQLibType<>(SQLPrimitive.STRING, TextParser::textToString, TextParser::stringToText);
     public static final SQLibType<Identifier> IDENTIFIER = new SQLibType<>(SQLPrimitive.STRING, Identifier::toString, Identifier::tryParse);
-    public static final SQLibType<SoundEvent> SOUND = new SQLibType<>(IDENTIFIER, SoundEvent::getId, SoundEvent::of);
+    public static final SQLibType<SoundEvent> SOUND = new SQLibType<>(IDENTIFIER, SoundParser::getId, SoundEvent::of);
 
     public static final SQLibType<NbtElement> NBT = new SQLibType<>(SQLPrimitive.STRING, NbtElement::toString, v -> {
         try {

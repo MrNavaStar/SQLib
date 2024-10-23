@@ -4,15 +4,14 @@ import com.google.gson.JsonObject;
 import lombok.SneakyThrows;
 import me.mrnavastar.easyeula.EasyEula;
 import me.mrnavastar.sqlib.api.DataContainer;
-import me.mrnavastar.sqlib.api.database.SQLite;
 import me.mrnavastar.sqlib.api.types.AdventureTypes;
 import me.mrnavastar.sqlib.api.types.JavaTypes;
 import me.mrnavastar.sqlib.api.types.MinecraftTypes;
 import me.mrnavastar.sqlib.api.types.GsonTypes;
 import me.mrnavastar.sqlib.api.DataStore;
+import me.mrnavastar.sqlib.impl.SoundParser;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.loader.api.FabricLoader;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -26,7 +25,6 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3i;
 
 import java.awt.*;
-import java.io.File;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.UUID;
@@ -173,7 +171,7 @@ public class TestMod implements ModInitializer {
 
         SoundEvent soundEvent = SoundEvents.BLOCK_BARREL_OPEN;
         container.put(MinecraftTypes.SOUND, "sound", soundEvent);
-        assertEquals(soundEvent.getId(), container.get(MinecraftTypes.SOUND, "sound").orElseThrow().getId());
+        assertEquals(SoundParser.getId(soundEvent), SoundParser.getId(container.get(MinecraftTypes.SOUND, "sound").orElseThrow()));
 
         // Test Adventure Key
         Key key = Key.key("cool:guys");
