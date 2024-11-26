@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 import me.mrnavastar.sqlib.api.database.Database;
+import me.mrnavastar.sqlib.api.types.SQLibType;
 import me.mrnavastar.sqlib.impl.SQLConnection;
 
 import java.util.*;
@@ -38,7 +39,7 @@ public class DataStore {
     }
 
     /**
-     * Creates a new {@link DataContainer}
+     * Creates a new {@link DataContainer} with a unique id.
      */
     @SneakyThrows
     public DataContainer createContainer() {
@@ -87,6 +88,14 @@ public class DataStore {
             onCreate.accept(newContainer);
             return newContainer;
         });
+    }
+
+    /**
+     * Tries to get a {@link DataContainer} with a matching key value pair or creates a new {@link DataContainer} with
+     * a matching key value pair if it is missing.
+     */
+    public <T> DataContainer getOrCreateDefaultContainer(@NonNull SQLibType<T> type, @NonNull String field, @NonNull T value) {
+        return getOrCreateContainer(field, value, c -> c.put(type, field, value));
     }
 
     /**
