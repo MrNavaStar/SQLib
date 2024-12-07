@@ -51,7 +51,7 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
     // Quilt
-    modCompileOnly "org.quiltmc:quilt-loader:0.27.0"
+    modCompileOnly "org.quiltmc:quilt-loader:0.27.1"
     // Adventure
     modImplementation "net.kyori:adventure-platform-fabric:${project.adventure_version}"
     // Config
