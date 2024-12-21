@@ -4,5 +4,5 @@
   "version":"debug-build",
   "description":"A simple SQL wrapper with a focus on Minecraft use cases",
   "authors":["MrNavaStar"],
-  "main": "me.mrnavastar.sqlib.SQLib"
+  "main": "me.mrnavastar.sqlib.impl.config.Velocity"
 }

@@ -6,7 +6,6 @@ public class MySQL extends AuthenticatedDatabase {
 
     public MySQL(String name, String address, String port, String username, String password) {
         super(name, address, port, username, password);
-        loadDriver("org.mariadb.jdbc.Driver");
     }
 
     @Override

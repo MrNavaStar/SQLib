@@ -1,6 +1,7 @@
 package me.mrnavastar.sqlib.impl.config;
 
 import com.fasterxml.jackson.dataformat.toml.TomlMapper;
+import lombok.SneakyThrows;
 import me.mrnavastar.sqlib.SQLib;
 import me.mrnavastar.sqlib.api.database.MySQL;
 import me.mrnavastar.sqlib.api.database.PostgreSQL;
@@ -60,8 +61,13 @@ public class Config {
         return database.type.equalsIgnoreCase("postgres") && server.validate();
     }
 
+    @SneakyThrows
     public static void load() {
         if (INSTANCE != null) return;
+
+        Class.forName("org.sqlite.JDBC");
+        Class.forName("org.mariadb.jdbc.Driver");
+        Class.forName("org.postgresql.Driver");
 
         try {
             Class.forName("net.fabricmc.loader.api.FabricLoader");

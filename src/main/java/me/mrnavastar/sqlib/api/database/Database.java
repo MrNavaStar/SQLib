@@ -21,14 +21,6 @@ public abstract class Database {
         Config.load();
     }
 
-    protected static void loadDriver(String driver) {
-        try {
-            Class.forName(driver);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Could not load driver: " + driver);
-        }
-    }
-
     public static List<Database> getDatabases() {
         return List.copyOf(databases);
     }

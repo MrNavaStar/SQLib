@@ -6,7 +6,6 @@ public class PostgreSQL extends AuthenticatedDatabase {
 
     public PostgreSQL(String name, String address, String port, String username, String password) {
         super(name, address, port, username, password);
-        loadDriver("org.postgresql.Driver");
     }
 
     @Override
