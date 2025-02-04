@@ -1,6 +1,7 @@
 package me.mrnavastar.sqlib.impl.config;
 
 import com.fasterxml.jackson.dataformat.toml.TomlMapper;
+import lombok.Setter;
 import lombok.SneakyThrows;
 import me.mrnavastar.sqlib.SQLib;
 import me.mrnavastar.sqlib.api.database.MySQL;
@@ -15,9 +16,9 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Objects;
 
-public class Config {
+public class SQLibConfig {
 
-    public static Config INSTANCE;
+    public static SQLibConfig INSTANCE;
 
     public Database database;
     public Local local;
@@ -61,6 +62,11 @@ public class Config {
         return database.type.equalsIgnoreCase("postgres") && server.validate();
     }
 
+    @Setter
+    private static Path customConfigPath;
+    @Setter
+    private static Path customDefaultDirectory;
+
     @SneakyThrows
     public static void load() {
         if (INSTANCE != null) return;
@@ -68,7 +74,12 @@ public class Config {
         Class.forName("org.sqlite.JDBC");
         Class.forName("org.mariadb.jdbc.Driver");
         Class.forName("org.postgresql.Driver");
-
+        
+        if (customConfigPath != null && customDefaultDirectory != null) {
+            load(customDefaultDirectory, customConfigPath);
+            return;
+        }
+        
         try {
             Class.forName("net.fabricmc.loader.api.FabricLoader");
             Fabric.load();
@@ -95,12 +106,13 @@ public class Config {
         try {
             File configFile = new File(configDir + "/sqlib.toml");
             if (!configFile.exists()) {
+                configFile.mkdirs();
                 String data = new String(Objects.requireNonNull(SQLib.class.getResourceAsStream("/sqlib.toml")).readAllBytes()).replace("${local_path}", localDir.toString().replace("\\", "/"));
                 try (FileWriter writer = new FileWriter(configFile)) {
                     writer.write(data);
                 }
             }
-            INSTANCE = new TomlMapper().readValue(configFile, Config.class);
+            INSTANCE = new TomlMapper().readValue(configFile, SQLibConfig.class);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -5,7 +5,7 @@ import lombok.NonNull;
 import me.mrnavastar.sqlib.api.DataStore;
 import me.mrnavastar.sqlib.impl.SQLConnection;
 import me.mrnavastar.sqlib.impl.SQLPrimitive;
-import me.mrnavastar.sqlib.impl.config.Config;
+import me.mrnavastar.sqlib.impl.config.SQLibConfig;
 
 import java.util.*;
 
@@ -18,7 +18,7 @@ public abstract class Database {
 
     static {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> databases.forEach(Database::close)));
-        Config.load();
+        SQLibConfig.load();
     }
 
     public static List<Database> getDatabases() {
