@@ -106,7 +106,7 @@ public class SQLibConfig {
         try {
             File configFile = new File(configDir + "/sqlib.toml");
             if (!configFile.exists()) {
-                configFile.mkdirs();
+                configFile.getParentFile().mkdirs();
                 String data = new String(Objects.requireNonNull(SQLib.class.getResourceAsStream("/sqlib.toml")).readAllBytes()).replace("${local_path}", localDir.toString().replace("\\", "/"));
                 try (FileWriter writer = new FileWriter(configFile)) {
                     writer.write(data);
