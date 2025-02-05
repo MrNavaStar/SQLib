@@ -5,7 +5,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import lombok.Getter;
 import me.mrnavastar.sqlib.api.DataContainer;
 import me.mrnavastar.sqlib.api.DataStore;
-import me.mrnavastar.sqlib.impl.config.SQLibConfig;
+import me.mrnavastar.sqlib.impl.config.Config;
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
 
@@ -24,7 +24,7 @@ public class SQLConnection {
         config.setUsername(properties.getProperty("user"));
         config.setPassword(properties.getProperty("password"));
         config.setMaximumPoolSize(50);
-        config.setConnectionTimeout(SQLibConfig.INSTANCE.database.timeout * 1000L);
+        config.setConnectionTimeout(Config.INSTANCE.database.timeout * 1000L);
         config.setMaxLifetime(1800000); // 30 min
         config.addDataSourceProperty("cachePrepStmts", "true");
         config.addDataSourceProperty("useServerPrepStmts", "true");

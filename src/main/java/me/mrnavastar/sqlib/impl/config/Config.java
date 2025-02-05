@@ -1,7 +1,6 @@
 package me.mrnavastar.sqlib.impl.config;
 
 import com.fasterxml.jackson.dataformat.toml.TomlMapper;
-import lombok.Setter;
 import lombok.SneakyThrows;
 import me.mrnavastar.sqlib.SQLib;
 import me.mrnavastar.sqlib.api.database.MySQL;
@@ -16,9 +15,9 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Objects;
 
-public class SQLibConfig {
+public class Config {
 
-    public static SQLibConfig INSTANCE;
+    public static Config INSTANCE;
 
     public Database database;
     public Local local;
@@ -62,11 +61,6 @@ public class SQLibConfig {
         return database.type.equalsIgnoreCase("postgres") && server.validate();
     }
 
-    @Setter
-    private static Path customConfigPath;
-    @Setter
-    private static Path customDefaultDirectory;
-
     @SneakyThrows
     public static void load() {
         if (INSTANCE != null) return;
@@ -74,12 +68,7 @@ public class SQLibConfig {
         Class.forName("org.sqlite.JDBC");
         Class.forName("org.mariadb.jdbc.Driver");
         Class.forName("org.postgresql.Driver");
-        
-        if (customConfigPath != null && customDefaultDirectory != null) {
-            load(customDefaultDirectory, customConfigPath);
-            return;
-        }
-        
+
         try {
             Class.forName("net.fabricmc.loader.api.FabricLoader");
             Fabric.load();
@@ -95,9 +84,9 @@ public class SQLibConfig {
         try {
             Class.forName("com.velocitypowered.api.plugin.Plugin");
             Velocity.load();
-        } catch (ClassNotFoundException ignore) {
-            throw new RuntimeException("SQLib currently only supports Fabric, Quilt, and Velocity!");
-        }
+        } catch (ClassNotFoundException ignore) {}
+
+        if (!NonMinecraft.load()) throw new RuntimeException("SQLib currently only supports Fabric, Quilt, and Velocity!");
     }
 
     public static me.mrnavastar.sqlib.api.database.Database load(Path localDir, Path configDir) {
@@ -112,7 +101,7 @@ public class SQLibConfig {
                     writer.write(data);
                 }
             }
-            INSTANCE = new TomlMapper().readValue(configFile, SQLibConfig.class);
+            INSTANCE = new TomlMapper().readValue(configFile, Config.class);
         } catch (IOException e) {
             e.printStackTrace();
         }

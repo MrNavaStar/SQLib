@@ -9,6 +9,6 @@ public class Velocity extends SQLib {
     public static void load() {
         if (database != null) return;
         Path dir = Path.of("plugins/sqlib");
-        database = SQLibConfig.load(dir,dir);
+        database = Config.load(dir,dir);
     }
 }

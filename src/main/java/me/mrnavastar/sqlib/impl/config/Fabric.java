@@ -8,6 +8,6 @@ import java.nio.file.Path;
 public class Fabric extends SQLib {
 
     public static void load() {
-        if (database == null) database = SQLibConfig.load(Path.of(FabricLoader.getInstance().getGameDir() + "/sqlib"), FabricLoader.getInstance().getConfigDir());
+        if (database == null) database = Config.load(Path.of(FabricLoader.getInstance().getGameDir() + "/sqlib"), FabricLoader.getInstance().getConfigDir());
     }
 }
