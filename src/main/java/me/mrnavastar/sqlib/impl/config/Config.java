@@ -37,7 +37,7 @@ public class Config {
         public String directory;
 
         public boolean validate() {
-            return directory != null && !directory.isEmpty() && !directory.startsWith("/") && new File(directory).exists();
+            return directory != null && !directory.isEmpty() && new File(directory).exists();
         }
     }
 
