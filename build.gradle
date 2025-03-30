@@ -51,7 +51,7 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
     // Quilt
-    modCompileOnly "org.quiltmc:quilt-loader:0.28.0"
+    modCompileOnly "org.quiltmc:quilt-loader:0.28.1"
     //Velocity
     compileOnly 'com.velocitypowered:velocity-api:3.4.0-SNAPSHOT'
     annotationProcessor 'com.velocitypowered:velocity-api:3.4.0-SNAPSHOT'
