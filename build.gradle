@@ -66,8 +66,8 @@ dependencies {
     shadow implementation("org.mariadb.jdbc:mariadb-java-client:${project.mariadb_version}")
     shadow implementation("org.postgresql:postgresql:${project.postgres_version}")
     // Extra
-    compileOnly "org.projectlombok:lombok:1.18.40"
-	annotationProcessor "org.projectlombok:lombok:1.18.40"
+    compileOnly "org.projectlombok:lombok:1.18.42"
+	annotationProcessor "org.projectlombok:lombok:1.18.42"
     modImplementation "maven.modrinth:easy-eula:1.1.1-fabric"
 }
 
